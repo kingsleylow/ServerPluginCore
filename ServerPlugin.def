@@ -1,0 +1,19 @@
+LIBRARY ServerPlugin
+
+EXPORTS
+    MtSrvAbout
+    MtSrvFeederData
+    MtSrvStartup
+	MtSrvTradeRequestApply
+	MtSrvTradesAdd
+	MtSrvTradesAddExt
+	MtSrvDealerGet
+	MtSrvDealerConfirm
+	MtSrvTradeTransaction
+	MtSrvTradesUpdate
+	MtSrvPluginCfgAdd
+    MtSrvPluginCfgSet
+    MtSrvPluginCfgGet
+    MtSrvPluginCfgNext
+    MtSrvPluginCfgDelete
+    MtSrvPluginCfgTotal

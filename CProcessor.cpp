@@ -360,7 +360,12 @@ void CProcessor::FuncProcess(void)
 		MyIOCP* iocp = this->pool->GetConnection();
 		if (iocp!=NULL) {
 			 	
-			/*	TaskManagement* man = TaskManagement::getI*/
+			TaskManagement* man = TaskManagement::getInstance();
+			if (man->initialTask == INITIAL_NO) {
+				man->initialTask = INITIAL_BEGIN;
+				 iocp->SendInitTask();
+			}
+		
 	    }
 
 

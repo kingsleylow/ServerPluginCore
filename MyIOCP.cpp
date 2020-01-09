@@ -34,7 +34,7 @@ VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 		this->checkLogin(data);
 		break;
 	case CMD_HEART_BEAT:
-		this->refreshTaakData(data);
+	
 	 
 		break;
 	case CMD_QUERY_PORTAL_IDS:
@@ -44,6 +44,15 @@ VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 	//case CMD_QUERY_GOD_PORTFOLIO_MULTIPLE:
 
 	//	break;
+	case CMD_QUERY_START_REC_TASK:
+		this->startRecTaakData("");
+		break;
+	case CMD_QUERY_FINISH_REC_TASK:
+		this->finishRecTaakData("");
+		break;
+	case CMD_QUERY_ALL_TASK:
+		this->refreshTaakData(data);
+		break;
 	default:
 		break;
 	}
@@ -66,6 +75,15 @@ VOID MyIOCP::NotifyConnectionStatus(IOCPClient_ConnectionType ConnectionType) {
 
  
 	}	
+}
+
+VOID MyIOCP::SendInitTask() {
+	nlohmann::json data = {
+	{"partner_key",PARTNET_KEY},
+	};
+	nlohmann::json j = this->GetJson(CMD_QUERY_ALL_TASK, data);
+
+	Send((j.dump()).c_str());
 }
 
 VOID MyIOCP::SendInitailRequest() {
@@ -116,6 +134,7 @@ void MyIOCP::checkConnection() {
 
 void MyIOCP::SendRequest(int cmd, nlohmann::json data) {
 	nlohmann::json j = this->GetJson(cmd, data);
+
 	Send((j.dump()).c_str());
 }
 
@@ -154,6 +173,31 @@ void MyIOCP::checkLogin(string data) {
 }
 
 
+void MyIOCP::startRecTaakData(string data) {
+
+	TaskManagement* man = TaskManagement::getInstance();
+	man->initialTask = INITIAL_REC_BUFF;
+}
+
+void MyIOCP::finishRecTaakData(string data) {
+	TaskManagement* man = TaskManagement::getInstance();
+	man->initialTask = INITIAL_FINISH_BUFF;
+}
+
 void MyIOCP::refreshTaakData(string data) {
 
+	TaskManagement* man = TaskManagement::getInstance();
+	if (man->initialTask!= INITIAL_REC_BUFF) {
+		return;
+	}
+	try {
+		nlohmann::json j = nlohmann::json::parse(data);
+		if (j.contains("data")) {
+		 
+		}
+	}
+	catch (exception& e) {
+
+
+	}
 }

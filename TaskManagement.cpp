@@ -2,7 +2,7 @@
 #include "TaskManagement.h"
 
 TaskManagement* TaskManagement::taskManager;
-TaskManagement* TaskManagement::getIntance() {
+TaskManagement* TaskManagement::getInstance() {
 	if (taskManager == NULL) {
 		taskManager = new TaskManagement();
 	}
@@ -25,12 +25,13 @@ TaskManagement::~TaskManagement()
 	this->initialTask = false;
 }
 
-bool TaskManagement::inital(MyIOCP* iocp)
+bool TaskManagement::inital()
 {
 	bool res = true;
-	iocp->SendRequest(CMD_QUERY_GOD_PORTFOLIO_MULTIPLE, NULL);
+	//this->initialTask = INITIAL_BEGIN;
+	//iocp->SendRequest(CMD_QUERY_ALL_TASK, NULL);
 
-	//this->initalTask = res;
+	////this->initalTask = res;
 	return res;
 }
 

@@ -9,8 +9,8 @@
 #include "TextIOCPClient.h"
 #include "TextIOCPServer.h"
 #include "nlohmann/json.hpp"
-
-
+#include "TaskManagement.h"
+#define PARTNET_KEY "M7DyRzGaTBHJn8gWnaY7GF3VewbfEn2Z"
 #define ADM_LEVEL 1
 #define NOR_LEVEL 2
 #define NO_RIGHT -1
@@ -24,6 +24,10 @@
 #define CMD_INI_TASK 929
 #define CMD_QUERY_PORTAL_IDS 926
 #define CMD_QUERY_GOD_PORTFOLIO_MULTIPLE 913
+
+#define CMD_QUERY_ALL_TASK 950
+#define CMD_QUERY_START_REC_TASK 951
+#define CMD_QUERY_FINISH_REC_TASK 952
 class MyIOCP :
 	public CTextIOCPClient
 {
@@ -49,5 +53,8 @@ public:
 
 	void MyIOCP::checkLogin(string data);
 	void MyIOCP::refreshTaakData(string data);
+	VOID MyIOCP::SendInitTask();
+	void MyIOCP::startRecTaakData(string data);
+	void MyIOCP::finishRecTaakData(string data);
 };
 

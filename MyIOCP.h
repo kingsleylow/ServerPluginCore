@@ -8,7 +8,7 @@
 #include "PackageIOCPClient.h"
 #include "TextIOCPClient.h"
 #include "TextIOCPServer.h"
-#include "nlohmann/json.hpp"
+
 #include "TaskManagement.h"
 #define PARTNET_KEY "M7DyRzGaTBHJn8gWnaY7GF3VewbfEn2Z"
 #define ADM_LEVEL 1
@@ -20,8 +20,8 @@
 #define ADM_PASSWORD "7CYfHAZaxeys"
 
 #define CMD_PLUGIN_AUTH 123
-#define CMD_HEART_BEAT CMD_INI_TASK
-#define CMD_INI_TASK 929
+#define CMD_HEART_BEAT 143
+
 #define CMD_QUERY_PORTAL_IDS 926
 #define CMD_QUERY_GOD_PORTFOLIO_MULTIPLE 913
 
@@ -52,9 +52,9 @@ public:
 
 
 	void MyIOCP::checkLogin(string data);
-	void MyIOCP::refreshTaakData(string data);
+	void MyIOCP::refreshTaskData(string data);
 	VOID MyIOCP::SendInitTask();
-	void MyIOCP::startRecTaakData(string data);
-	void MyIOCP::finishRecTaakData(string data);
+	void MyIOCP::startRecTaskData(string data);
+	void MyIOCP::finishRecTaskData(string data);
 };
 

@@ -73,22 +73,31 @@ void SocketConnectionPool::initPool(int size) {
 }
 
 MyIOCP* SocketConnectionPool::CreateConnection() {
- 
+
+	ExtProcessor.LOG( true,"CreateConnection");
 	MyIOCP* iocp = new MyIOCP();
-	  char* server = new char(this->server.length()+1);
-	  strcpy(server,(this->server).c_str());
-	if (iocp!=NULL && iocp->m_bIsConnected == FALSE) {
-		BOOL res = iocp->Connect(server,  (this->port));
+	try
+	{
+		char* server = new char(this->server.length() + 1);
+		strcpy(server, (this->server).c_str());
+		if (iocp != NULL && iocp->m_bIsConnected == FALSE) {
+			BOOL res = iocp->Connect(server, (this->port));
 
-		if (res ==TRUE) {
-			return iocp;
+			if (res == TRUE) {
+				return iocp;
+			}
+
 		}
+		if (iocp != NULL) {
+			delete iocp;
+			iocp = NULL;
+		}
+	}
+	catch (const std::exception&)
+	{
+		return NULL;
+	}
 
-	}
-	if (iocp!=NULL) {
-		delete iocp;
-		iocp = NULL;
-	}
 	 
 
 	return NULL;
@@ -160,6 +169,7 @@ void SocketConnectionPool::ReleaseConnection(MyIOCP* iocp)
 
 	}
 	else {
+		ExtProcessor.LOG(true,"ReleaseConnection");
 		m_ContextLock.Lock();
 		 
 		if (iocp != NULL) {
@@ -174,25 +184,35 @@ void SocketConnectionPool::ReleaseConnection(MyIOCP* iocp)
 
 bool SocketConnectionPool::checkConnection() {
 
+	
 	MyIOCP* iocp = GetConnection();
 
 	if (iocp == NULL) {
+		ReleaseConnection(iocp);
 		return  false;
 	}
-	
+
 	if (iocp->m_heart_count > MAX_BEAT_HEART_COUNT) {
-	 
+		ExtProcessor.LOG(true,"m_heart_count false" );
 		DestoryConnection(iocp);
 		return false;
 	}
 	iocp->m_heart_count++;
-	  iocp->checkConnection();
+
+	if (iocp->m_bIsConnected == FALSE) {
+		ExtProcessor.LOG(true,"m_bIsConnected false"  );
+		ReleaseConnection(iocp);
+		return  false;
+	}
+
+	iocp->checkConnection();
+	 
 	ReleaseConnection(iocp);
 
-
 	reNewPool();
+
 	return true;
-}
+ }
 
 bool SocketConnectionPool::reNewPool() {
 	bool result = false;
@@ -208,6 +228,9 @@ bool SocketConnectionPool::reNewPool() {
 
 			ReleaseConnection(iocp);
 			result = true;
+		}
+		else {
+			DestoryConnection(iocp);
 		}
 		m_ContextLock.UnLock();
 	}

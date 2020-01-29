@@ -2,7 +2,7 @@
  
 #include <map>
 
-#include "spdlog/sinks/daily_file_sink.h"
+ 
 #include "Threadpool.h"
 #include "SocketConnectionPool.h"
 #include <thread>
@@ -22,22 +22,27 @@ public:
 	void SrvTradeTransaction(TradeTransInfo* trans, const UserInfo *user, int *request_id);
 	 
 	int UserInfoGet(const int login, UserInfo *info);
+	void CProcessor::askLPtoCloseTrade(int login, int order, int cmd,string symbol, string comment,int volumeInCentiLots);
 	void askLPtoOpenTrade(int login, const std::string& symbol, int cmd, int volumeInCentiLots, const std::string& comment, double tp, double sl);
 	void setupSocket();
-	void LOG(string msg); 
+	void LOG(bool debug = false,string msg = "", ... ) const;
 	void LOG(const int code, LPCSTR ip, LPCSTR msg, ...) const;
 	void CProcessor::Initialize(void);
 	SocketConnectionPool* pool;
 private:
 	//---- out to server log
-
+	int OrdersClose(const int order, const int volume, const double close_price,   const string comment);
 	int OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
-		const double open_price, const int volume);
+		const double open_price, const int volum,const string comment);
 
+	void CProcessor::HandlerAddOrder(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
+	void CProcessor::HandlerCloseOrder(TradeRecord *trade, UserInfo *user, const int mode);
+	void CProcessor::HandlerActiveOrder(TradeRecord *trade, UserInfo *user, const int mode);
+	bool CProcessor::ActionCheck();
 	IOCPMutex m_ContextLock;
  
 
-	std::shared_ptr<spdlog::logger> _logger;
+ 
             
 	char              m_ip[128];       //ip
 	char              m_port[32];   // port
@@ -46,6 +51,7 @@ private:
 	char			  m_key[64];   // key
 	char			  m_key_backup[64];   // key
 	char	          m_plugin_id[32]; // plugin id
+	int				  plugin_id;
 	HANDLE            m_threadServer;    // thread handle
 	HANDLE            m_funcThread;    // thread handle
 protected:

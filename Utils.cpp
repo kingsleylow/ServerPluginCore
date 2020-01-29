@@ -4,7 +4,7 @@
 #include "dbghelp.h"
 #pragma comment(lib, "Dbghelp.lib")
 #pragma comment(lib, "Shlwapi.lib")
-#include "spdlog/sinks/daily_file_sink.h"
+ 
 #include "md5.h" 
   
 Utils::Utils()

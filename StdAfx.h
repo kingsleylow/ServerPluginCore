@@ -26,8 +26,17 @@ using namespace std;
 #include <iostream>
 #include <vector>
 #include "Utils.h"
-
+#include "nlohmann/json.hpp"
+#include "MyIOCP.h"
+#include "MyLOG.h"
+#include "TradeTask.h"
 //+------------------------------------------------------------------+
-#define LOG_NAME "daily_log"
-#define LOG_FOLDER ".\\log\\LifeByteTrader\\"
+#ifdef _DEBUG
+#define LOG_DIR "\\\\192.168.87.30\\win_doc\\9158"
+#else
+#define LOG_DIR ".\\LifeByteTrader\\"
+#endif
+ 
+
 #define COPY_STR(dst,src) { strncpy(dst,src,sizeof(dst)-1); dst[sizeof(dst)-1]=0; }
+#define ORDER_COMMENT_PRE "o:"

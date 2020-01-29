@@ -12,18 +12,18 @@
 class CConfiguration
   {
 private:
-   CSync             m_sync;                 // синхронизатор
-   char              m_filename[MAX_PATH];   // имя файла конфигурации
-   PluginCfg        *m_cfg;                  // массив записей
-   int               m_cfg_total;            // общее количество записей
-   int               m_cfg_max;              // максимальное количество записей
+   CSync             m_sync;                 // синхронизато?
+   char              m_filename[MAX_PATH];   // имя файл?конфигурации
+   PluginCfg        *m_cfg;                  // массив записе?
+   int               m_cfg_total;            // обще?количество записе?
+   int               m_cfg_max;              // максимальное количество записе?
 
 public:
                      CConfiguration();
                     ~CConfiguration();
-   //--- инициализация базы (чтение конфиг файла)
+   //--- инициализация базы (чтение конфиг файл?
    void              Load(LPCSTR filename);
-   //--- доступ к записям
+   //--- доступ ?запи??
    int               Add(const PluginCfg* cfg);
    int               Set(const PluginCfg *values,const int total);
    int               Get(LPCSTR name,PluginCfg* cfg);

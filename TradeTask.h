@@ -4,20 +4,24 @@ class TradeTask
 public:
 	TradeTask();
 	~TradeTask();
-	bool disable;
+	bool follower_disable;
 	string portal_id;
 	string follower_id;
-	string master_id;
-	double ratio;
-	string symbol;
-	int strategy;
-	int max_vol;
-	int min_vol;
+	
+	double follower_ratio;
+ 
+ 
+	int follower_max_vol;
+ 
 	string task_id;
-
+	int auto_reconciliation;
 
 	int master_server_id;
 	int follower_server_id;
-
+	bool master_disable;
+	int master_strategy;
+	double master_ratio;
+	string master_id;
+	double follower_max_drawback;
 };
 

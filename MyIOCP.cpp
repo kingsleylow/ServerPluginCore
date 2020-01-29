@@ -24,14 +24,17 @@ MyIOCP::~MyIOCP()
 VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 {
 	 
-	string data = lpszBuffer;
-	int cmd = this->getCommand(data);
- 
+	string tmp = lpszBuffer;
+	int cmd = this->getCommand(tmp);
+//	string data = this->getData( tmp, "data");
+	if (cmd!= CMD_HEART_BEAT&&cmd!= CMD_PLUGIN_AUTH) {
+		ExtProcessor.LOG(false,tmp);
+	}
 	this->m_heart_count = 0;
 	switch (cmd)
 	{
 	case CMD_PLUGIN_AUTH:
-		this->checkLogin(data);
+		this->checkLogin(tmp);
 		break;
 	case CMD_HEART_BEAT:
 	
@@ -45,13 +48,15 @@ VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 
 	//	break;
 	case CMD_QUERY_START_REC_TASK:
-		this->startRecTaakData("");
+		this->startRecTaskData("");
 		break;
 	case CMD_QUERY_FINISH_REC_TASK:
-		this->finishRecTaakData("");
+		
+		this->refreshTaskData(tmp);
+		this->finishRecTaskData("");
 		break;
 	case CMD_QUERY_ALL_TASK:
-		this->refreshTaakData(data);
+		this->refreshTaskData(tmp);
 		break;
 	default:
 		break;
@@ -63,10 +68,7 @@ VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 
 VOID MyIOCP::NotifyConnectionStatus(IOCPClient_ConnectionType ConnectionType) {
 	if (ConnectionType == IOCPClient_ConnectionType_Connected) {
-		//Send("hello");
-	//	ExtProcessor.LOG("New Connection");
-	//	ExtProcessor.LOG(CmdOK, "IOCPClient_ConnectionType_Connected", "IOCPClient_ConnectionType_Connected");
-	//	SendInitailRequest();
+ 
 	}
 	else if(ConnectionType == IOCPClient_ConnectionType_Disconnected){
  
@@ -122,6 +124,9 @@ nlohmann::json MyIOCP::GetJson(int cmd, nlohmann::json data) {
 
 void MyIOCP::checkConnection() {
 
+
+
+
 	if (this->level == NO_RIGHT) {
 		this->SendInitailRequest();
 	}
@@ -158,46 +163,58 @@ int MyIOCP::getCommand(string data) {
  }
 
 nlohmann::json MyIOCP::getData(string data,string key) {
+	try {
 	nlohmann::json j = nlohmann::json::parse(data);
 	if (j.contains(key)) {
 		return   j[key];
+	}
+
+	}
+	catch (exception& e) {
+
+
 	}
 	return NULL;
 }
 
 void MyIOCP::checkLogin(string data) {
-	nlohmann::json j = nlohmann::json::parse(data);
-	if (j.contains("Level")) {
-		this->level = j["Level"];
+	try {
+		nlohmann::json j = nlohmann::json::parse(data);
+
+		if (!j.contains("data")) {
+			return;
+		}
+		if (!j["data"].contains("Level")) {
+			return;
+		}
+		this->level = j["data"]["Level"];
+		}
+	catch (exception& e) {
+
+
 	}
 }
 
 
-void MyIOCP::startRecTaakData(string data) {
+void MyIOCP::startRecTaskData(string data) {
 
 	TaskManagement* man = TaskManagement::getInstance();
 	man->initialTask = INITIAL_REC_BUFF;
 }
 
-void MyIOCP::finishRecTaakData(string data) {
+void MyIOCP::finishRecTaskData(string data) {
 	TaskManagement* man = TaskManagement::getInstance();
 	man->initialTask = INITIAL_FINISH_BUFF;
 }
 
-void MyIOCP::refreshTaakData(string data) {
+void MyIOCP::refreshTaskData(string data) {
 
 	TaskManagement* man = TaskManagement::getInstance();
 	if (man->initialTask!= INITIAL_REC_BUFF) {
 		return;
 	}
-	try {
-		nlohmann::json j = nlohmann::json::parse(data);
-		if (j.contains("data")) {
-		 
-		}
-	}
-	catch (exception& e) {
-
-
+	bool res = man->inital(data);
+	if (res==true) {
+		man->initialTask = INITIAL_FINISH;
 	}
 }

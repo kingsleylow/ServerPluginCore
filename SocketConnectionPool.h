@@ -2,14 +2,14 @@
 #include "StdAfx.h"
 
  
-#include "MyIOCP.h"
 
-#define POOL_MAX 4
 
-#define MAN_POOL_SIZE POOL_MAX/2
+#define POOL_MAX 1
 
-#define MAN_POOL_SIZE_INIT POOL_MAX/4
-
+//#define MAN_POOL_SIZE POOL_MAX/2
+#define MAN_POOL_SIZE POOL_MAX 
+//#define MAN_POOL_SIZE_INIT POOL_MAX/4
+#define MAN_POOL_SIZE_INIT POOL_MAX
 #define MAX_BEAT_HEART_COUNT 2
 
  

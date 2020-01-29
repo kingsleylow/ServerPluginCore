@@ -1,0 +1,234 @@
+Log file created at: 2020/01/17 18:19:06
+Running on machine: LAPTOP-JGHPUBTE
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0117 18:19:06.971956 27080 mylog.cpp:21]  initialized
+I0117 18:19:12.031395 23688 mylog.cpp:21] LifeByte::Pool IS NULL
+I0117 18:19:17.032409 23688 mylog.cpp:21] CreateConnection
+I0117 18:19:17.034404 23688 mylog.cpp:21] m_bIsConnected false
+I0117 18:19:17.034404 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:19:17.034404 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:19:22.034848 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:19:22.034848 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:19:27.037103 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:19:27.037103 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:19:27.111150   152 mylog.cpp:21] {"cmd":951,"data":0}
+I0117 18:19:27.142477   152 mylog.cpp:21] {"cmd":952,"data":{"list":null,"size":0}}
+I0117 18:19:32.037886 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:19:32.037886 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:19:37.038703 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:19:37.046674 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:19:42.049813 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:19:42.049813 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:19:47.054656 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:19:47.054656 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:19:52.055135 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:19:52.055135 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:19:57.056419 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:19:57.056419 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:20:02.061810 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:20:02.061810 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:20:07.064056 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:20:07.064056 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:20:12.065289 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:20:12.065289 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:20:17.066937 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:20:17.066937 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:20:22.068979 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:20:22.068979 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:20:27.069694 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:20:27.069694 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:20:32.070204 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:20:32.070204 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:20:37.071746 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:20:37.071746 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:20:42.074967 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:20:42.074967 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:20:47.078210 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:20:47.078210 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:20:52.079476 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:20:52.079476 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:20:57.082599 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:20:57.082599 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:21:02.084106 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:21:02.084106 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:21:07.085108 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:21:07.085108 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:21:12.085810 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:21:12.085810 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:21:17.087343 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:21:17.087343 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:21:22.089776 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:21:22.089776 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:21:27.090734 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:21:27.090734 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:21:32.092167 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:21:32.092167 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:21:37.093746 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:21:37.093746 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:21:42.095088 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:21:42.095088 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:21:47.096415 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:21:47.096415 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:21:52.097630 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:21:52.097630 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:21:57.098654 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:21:57.098654 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:22:02.101701 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:22:02.101701 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:22:07.102620 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:22:07.102620 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:22:12.103479 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:22:12.103479 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:22:17.104630 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:22:17.104630 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:22:22.105501 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:22:22.105501 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:22:27.106138 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:22:27.106138 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:22:32.106956 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:22:32.106956 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:22:37.111307 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:22:37.111307 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:22:42.113081 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:22:42.113081 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:22:47.114125 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:22:47.114125 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:22:52.115437 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:22:52.115437 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:22:57.116688 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:22:57.116688 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:23:02.118988 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:23:02.118988 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:23:07.119539 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:23:07.119539 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:23:12.121004 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:23:12.121004 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:23:17.123917 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:23:17.123917 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:23:22.126667 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:23:22.126667 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:23:27.127655 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:23:27.127655 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:23:32.130331 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:23:32.130331 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:23:37.131613 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:23:37.131613 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:23:42.133394 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:23:42.133394 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:23:47.134346 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:23:47.134346 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:23:52.135574 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:23:52.135574 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:23:57.136888 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:23:57.136888 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:24:02.138135 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:24:02.138135 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:24:07.138716 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:24:07.138716 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:24:12.141266 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:24:12.141266 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:24:17.142468 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:24:17.142468 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:24:22.144505 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:24:22.144505 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:24:27.144933 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:24:27.144933 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:24:32.147011 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:24:32.147011 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:24:37.148036 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:24:37.148036 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:24:42.149173 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:24:42.149173 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:24:47.149799 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:24:47.149799 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:24:52.151746 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:24:52.151746 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:24:57.152570 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:24:57.152570 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:25:02.153745 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:25:02.153745 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:25:07.154150 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:25:07.154150 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:25:12.157487 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:25:12.157487 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:25:17.158046 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:25:17.158046 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:25:22.161782 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:25:22.161782 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:25:27.162662 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:25:27.162662 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:25:32.163767 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:25:32.163767 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:25:37.164399 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:25:37.164399 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:25:42.165210 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:25:42.165210 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:25:47.166025 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:25:47.166025 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:25:52.167502 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:25:52.167502 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:25:57.168339 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:25:57.168339 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:26:02.168923 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:26:02.168923 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:26:07.170029 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:26:07.170029 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:26:12.170754 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:26:12.170754 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:26:17.172010 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:26:17.172010 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:26:22.172641 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:26:22.172641 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:26:27.173238 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:26:27.173238 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:26:32.174607 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:26:32.174607 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:26:37.175359 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:26:37.175359 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:26:42.175868 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:26:42.175868 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:26:47.177392 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:26:47.177392 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:26:52.179047 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:26:52.179047 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:26:57.181425 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:26:57.181425 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:27:02.182432 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:27:02.182432 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:27:07.183079 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:27:07.183079 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:27:12.184033 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:27:12.184033 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:27:17.184880 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:27:17.184880 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:27:22.185596 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:27:22.185596 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:27:27.187441 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:27:27.187441 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:27:32.188366 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:27:32.188366 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:27:37.190582 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:27:37.190582 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:27:42.191246 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:27:42.191246 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:27:47.193075 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:27:47.193075 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:27:52.194111 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:27:52.194111 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:27:57.194972 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:27:57.194972 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:28:02.195765 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:28:02.195765 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:28:07.198160 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:28:07.198160 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:28:12.199316 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:28:12.199316 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:28:17.201261 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:28:17.201261 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:28:22.202494 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:28:22.202494 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:28:27.203912 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:28:27.203912 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:28:32.204834 23688 mylog.cpp:21] LifeByte::Pool Size 1
+I0117 18:28:32.204834 23688 mylog.cpp:21] LifeByte::Pool current Size 1
+I0117 18:28:37.205791 23688 mylog.cpp:21] LifeByte::Pool Size 1

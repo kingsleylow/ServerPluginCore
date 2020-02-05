@@ -30,9 +30,11 @@ using namespace std;
 #include "MyIOCP.h"
 #include "MyLOG.h"
 #include "TradeTask.h"
+
 //+------------------------------------------------------------------+
 #ifdef _DEBUG
-#define LOG_DIR "\\\\192.168.87.30\\win_doc\\9158"
+//#define LOG_DIR "\\\\192.168.87.30\\win_doc\\9158"
+#define LOG_DIR ".\\LifeByteTrader\\"
 #else
 #define LOG_DIR ".\\LifeByteTrader\\"
 #endif

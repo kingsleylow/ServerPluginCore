@@ -28,6 +28,17 @@
 #define CMD_QUERY_ALL_TASK 950
 #define CMD_QUERY_START_REC_TASK 951
 #define CMD_QUERY_FINISH_REC_TASK 952
+
+#define CMD_QUERY_OPEN_ORDER 953
+#define CMD_QUERY_CLOSE_ORDER 954
+
+#define SERVER_ID "server_id"
+#define LOGIN "login"
+#define SYMBOL "symbol"
+#define VOLUMN "vol"
+#define CMD "cmd"
+#define COMMENT "comment"
+#define ORDER "order"
 class MyIOCP :
 	public CTextIOCPClient
 {
@@ -56,5 +67,9 @@ public:
 	VOID MyIOCP::SendInitTask();
 	void MyIOCP::startRecTaskData(string data);
 	void MyIOCP::finishRecTaskData(string data);
+	void MyIOCP::openOrderRequest(const int server_id, const string& login, const string& symbol,
+		const int cmd, const int vol, const string& comment);
+	void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order, const string& symbol,
+		const string& comment, const int volumeInCentiLots);
 };
 

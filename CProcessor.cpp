@@ -2,7 +2,7 @@
 #include "CProcessor.h"
 #include "TaskManagement.h"
 #include "MyLOG.h"
-
+#include "Common.h"
  
 extern CServerInterface *ExtServer;
 CProcessor               ExtProcessor;
@@ -164,7 +164,29 @@ int CProcessor::UserInfoGet(const int login, UserInfo *info)
 	return(TRUE);
 }
 
+int CProcessor::UpdateComment(const int order, const string comment) {
+	TradeRecord    oldtrade = { 0 };
+	ConSymbol      symcfg = { 0 };
+	UserInfo       info = { 0 };
+	//--- Checks
+	if (order <= 0 || ExtServer == NULL) return(FALSE);
+	//--- Getting order
+	if (ExtServer->OrdersGet(order, &oldtrade) == FALSE)
+		return(FALSE); // Error
+	//--- Receiving client data
+	if (UserInfoGet(oldtrade.login, &info) == FALSE)
+		return(FALSE); // Error
 
+
+	string newComment = oldtrade.comment + string(" ") + comment;
+	COPY_STR(oldtrade.comment, newComment.c_str(), sizeof(oldtrade.comment) - 1);
+	//--- Position closure
+	
+	if (ExtServer->OrdersUpdate(&oldtrade, &info, UPDATE_NORMAL) == FALSE)
+		return(FALSE); // Error
+  //--- Position closed
+	return(TRUE);
+}
 
 void CProcessor::SrvTradesAdd(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol)
 {
@@ -183,7 +205,7 @@ void CProcessor::SrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const
 	if (mode != OPEN_NEW) {
 		return;
 	}
-	if (trade->cmd !=OP_SELL || trade->cmd != OP_BUY) {
+	if (trade->cmd !=OP_SELL && trade->cmd != OP_BUY) {
 		return;
 	}
 
@@ -280,7 +302,7 @@ void CProcessor::askLPtoCloseTrade(int login, int order, int cmd, string symbol,
 	TradeTransInfo trans = { 0 };
 	trans.type = TT_ORDER_MK_CLOSE;
 	trans.flags = TT_FLAG_API;
-	  trans.cmd = cmd;
+	trans.cmd = cmd;
 	trans.volume = volumeInCentiLots;
 	//trans.tp = tp;
 	//trans.sl = sl;
@@ -327,8 +349,6 @@ void CProcessor::askLPtoCloseTrade(int login, int order, int cmd, string symbol,
 		m_ContextLock.UnLock();
 	}
 }
-
-
 
 void CProcessor::askLPtoOpenTrade(int login, const std::string& symbol, int cmd, int volumeInCentiLots, const std::string& comment, double tp, double sl) {
 	//Check if cmd is OP_BUY, OP_SELL, volume is positive
@@ -395,17 +415,42 @@ void CProcessor::askLPtoOpenTrade(int login, const std::string& symbol, int cmd,
 int CProcessor::OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
 	const double open_price, const int volume, string comment)
 {
-
+	ConGroup       grpcfg = { 0 };
+	time_t         currtime;
+	ConSymbol      symcfg = { 0 };
 	UserInfo       info = { 0 };
 	TradeTransInfo trans = { 0 };
 	int            order = 0;
 	//--- Checks
 	if (login <= 0 || cmd<OP_BUY || cmd>OP_SELL || symbol == NULL || open_price <= 0 || volume <= 0 || ExtServer == NULL)
 		return(0);
-	//--- Receiving client data
-	if (UserInfoGet(login, &info) == FALSE)
+
+	//--- get symbol config
+	if (ExtServer->SymbolsGet(symbol, &symcfg) == FALSE)
+	{
+		LOG(false, " OpenAnOrder: SymbolsGet failed [%s]", string(symbol));
 		return(FALSE); // error
-					   //--- Preparing transaction
+	}
+	//---- get the current server time  
+	currtime = ExtServer->TradeTime();
+	if (ExtServer->TradesCheckSessions(&symcfg, currtime) == FALSE) {
+		LOG(false, " OpenAnOrder: invalid time");
+		return false;
+	}
+
+	//--- Receiving client data
+	if (UserInfoGet(login, &info) == FALSE) {
+		LOG(false, " OpebnAnOrder: UserInfoGet failed");
+		return(FALSE); // error
+	}
+
+	//--- get group config
+	if (ExtServer->GroupsGet(info.group, &grpcfg) == FALSE) {
+		LOG(false, " OpenAnOrder: GroupsGet failed [%s]", string(info.group));
+		return(FALSE); // Error
+	}
+
+	//--- Preparing transaction
 	trans.cmd = cmd;
 	trans.volume = volume;
 	trans.price = open_price;
@@ -414,12 +459,42 @@ int CProcessor::OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
 	//--- Adding SL, TP, comment
 	COPY_STR(trans.comment, comment.c_str());
 	//--- Check of long-only permission
+	if (cmd == OP_BUY && symcfg.long_only != 0) {
+		LOG(false, " OpenAnOrder: long-only");
+		return(FALSE); // Error
+	}
 	//--- Check of close-only permission
+	if (symcfg.trade != TRADE_FULL) {
+		LOG(false, " OpenAnOrder: Not TRADE_FULL");
+		return(FALSE); // Error
+	}
 	//--- Check of tick size
+ 
+	if (ExtServer->TradesCheckTickSize(open_price, &symcfg) == FALSE)
+	{
+		LOG(false, " OpenbAnOrder: invalid price");
+		return(FALSE); // invalid price
+	}
 	//--- Symbol check
+		//--- check secutiry
+	if (ExtServer->TradesCheckSecurity(&symcfg, &grpcfg) != RET_OK)
+	{
+		LOG(false, " CloseAnOrder: trade disabled or market closed");
+		return(FALSE); // trade disabled, market closed, or no prices for long time
+	}
 	//--- Volume check
-	//--- Check of stop levels
+		//--- check volume
+	if (ExtServer->TradesCheckVolume(&trans, &symcfg, &grpcfg, TRUE) != RET_OK)
+	{
+		LOG(false, "OpenAnOrder: invalid volume");
+		//return(FALSE); // invalid volume
+	}
+	//--- Check of stop levels// for pendig order
+ 
+
 	//--- Opening an order and checking margin
+ 
+
 	if ((order = ExtServer->OrdersOpen(&trans, &info)) == 0)
 		return(0); // Error
 				   //--- Position is open: return order
@@ -428,39 +503,216 @@ int CProcessor::OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
 //+------------------------------------------------------------------+
 //| Closing a BUY or SELL position using OrdersClose                 |
 //+------------------------------------------------------------------+
-int CProcessor::OrdersClose(const int order, const int volume, const double close_price, const string comment) {
+int CProcessor::OrdersClose(const int order,  const int volume, const double close_price, const string comment) {
 	UserInfo       info = { 0 };
 	TradeTransInfo trans = { 0 };
 	int            login;
+
+
+	time_t         currtime;
+	TradeRecord    old_trade = { 0 };
+ 
+	ConGroup       grpcfg = { 0 };
+	ConSymbol      symcfg = { 0 };
+ 
+
+
 	//--- Checks
 	if (order <= 0 || volume <= 0 || close_price <= 0 || ExtServer == NULL) return(FALSE);
+
+	//--- get order
+	if (ExtServer->OrdersGet(order, &old_trade) == FALSE) {
+		LOG(false, "CloseAnOrder: OrdersGet failed");
+		return(FALSE); // Error
+	}
+		
 	//--- Getting login from the order
-	if ((login = ExtServer->TradesFindLogin(order)) == 0)
-		return(FALSE); // Error
+	//if ((login = ExtServer->TradesFindLogin(order)) == 0) {
+	//
+	//	return(FALSE); // Error
+	//}
+	login = old_trade.login;
   //--- Getting client data
-	if (UserInfoGet(login, &info) == FALSE)
+	if (UserInfoGet(login, &info) == FALSE) {
+		LOG(false, " CloseAnOrder: UserInfoGet failed");
 		return(FALSE); // Error
+	}
+	
+
+		//--- get group config
+	if (ExtServer->GroupsGet(info.group, &grpcfg) == FALSE) {
+		LOG(false, " CloseAnOrder: GroupsGet failed [%s]",string(info.group));
+		return(FALSE); // Error
+	}
+	 
+   //--- get symbol config
+	if (ExtServer->SymbolsGet(old_trade.symbol, &symcfg) == FALSE)
+	{	 
+		LOG(false, " CloseAnOrder: SymbolsGet failed [%s]", string( old_trade.symbol));
+		return(FALSE); // error
+	}
+
   //--- Preparing transaction
 	COPY_STR(trans.comment, comment.c_str());
 	trans.order = order;
 	trans.volume = volume;
 	trans.price = close_price;
 	 
-	//--- Check of tick size
-	//--- Instrument check
-	//--- Volume check
-	//--- Freeze level check
+ 
+	//--- Instrument check   no
+
+		//---- get the current server time  
+	currtime = ExtServer->TradeTime();
+	if (ExtServer->TradesCheckSessions(&symcfg, currtime) == FALSE) {
+		LOG(false, " CloseAnOrder: invalid time");
+		return false;
+	}
+ //--- check tick size
+	if (ExtServer->TradesCheckTickSize(close_price, &symcfg) == FALSE)
+	{
+		LOG(false, " CloseAnOrder: invalid price");
+		return(FALSE); // invalid price
+	}
+	//--- check secutiry
+	if (ExtServer->TradesCheckSecurity(&symcfg, &grpcfg) != RET_OK)
+	{
+		LOG(false, " CloseAnOrder: trade disabled or market closed");
+		return(FALSE); // trade disabled, market closed, or no prices for long time
+	}
+	//--- check volume
+  if(ExtServer->TradesCheckVolume(&trans,&symcfg,&grpcfg,TRUE)!=RET_OK)
+    {
+	  LOG(false, "CloseAnOrder: invalid volume");
+     //return(FALSE); // invalid volume
+    }
+	//--- Freeze level check  
+	if (ExtServer->TradesCheckFreezed(&symcfg, &grpcfg, &old_trade) != RET_OK)
+	{
+		LOG(false, " CloseAnOrder: position freezed");
+		return(FALSE); // position freezed
+	}
+	//--- check stops 
+	if (ExtServer->TradesCheckStops(&trans, &symcfg, &grpcfg, &old_trade) != RET_OK)
+	{
+		LOG(false, " CloseAnOrder: stop level");
+		return(FALSE); // position freezed
+	}
+ 
+
 	//--- Closing position
 	if (ExtServer->OrdersClose(&trans, &info) == FALSE)
 		return(FALSE); // Error
   //--- Position closed
+
+
+	//-- update new order comment
+	if (volume< old_trade.volume) {
+		//--- get order
+		TradeRecord follower_old_trade = {0};
+		if (ExtServer->OrdersGet(order, &follower_old_trade) == FALSE) {
+			LOG(false, "CloseAnOrder: OrdersGet failed");
+			return(FALSE); // Error
+		}
+		int followerNewOrder = GetToOrderComment(follower_old_trade.comment);
+		 
+		int masterOld = GetOOrderNumberFromComment(comment.c_str());
+
+		TradeRecord master_old_trade = { 0 };
+		//--- get order
+		if (ExtServer->OrdersGet(masterOld, &master_old_trade) == FALSE) {
+			LOG(false, "CloseAnOrder: OrdersGet failed");
+			return(FALSE); // Error
+		}
+		int masterNewOrder = GetToOrderComment(master_old_trade.comment);
+
+
+
+		string newComment = ORDER_COMMENT_PRE + to_string(masterNewOrder);
+		if (this->UpdateComment(followerNewOrder, newComment) == FALSE) {
+			LOG(false, "CloseAnOrder: update failed");
+			return(FALSE); // Error
+		}
+
+	}
+
+
+
+
+
 	return(TRUE);
 }
 
-bool CProcessor::ActionCheck() {
+bool CProcessor::ActionCheck(const int order,  const int login, const double price) {
 	time_t         currtime;
+ 
+	TradeRecord    src_trade = { 0 };
+	UserInfo       info = { 0 };
+	ConGroup       grpcfg = { 0 };
+	ConSymbol      symcfg = { 0 };
+	TradeTransInfo trans = { 0 };
+	//--- checks
+	if (order <= 0 || ExtServer == NULL) {
+		return false;
+	}
+	//--- get order
+	if (ExtServer->OrdersGet(order, &src_trade) == FALSE)
+	{
+	 
+		return false; // error
+	}
+	//--- get user info
+	if (UserInfoGet(login, &info) == FALSE)
+	{
+		 
+		return false; // error
+	}
+
+	//--- get group config
+	if (ExtServer->GroupsGet(info.group, &grpcfg) == FALSE)
+	{
+	 
+		return false; // error
+	}
+
+	//--- get symbol config
+	if (ExtServer->SymbolsGet(src_trade.symbol, &symcfg) == FALSE)
+	{ 
+		return false; // error
+	}
+
 	//---- get the current server time  
 	currtime=ExtServer->TradeTime();
+	if (ExtServer->TradesCheckSessions(&symcfg, currtime) == FALSE) {
+		return false;
+	}
+
+	//--- check tick size
+	if (ExtServer->TradesCheckTickSize(price, &symcfg) == FALSE)
+	{
+	 
+		return false; // invalid price
+	}
+
+	//--- check secutiry
+	if (ExtServer->TradesCheckSecurity(&symcfg, &grpcfg) != RET_OK)
+	{
+		 
+		return  false; // trade disabled, market closed, or no prices for long time
+	}
+
+	//--- check volume
+  if(ExtServer->TradesCheckVolume(&trans,&symcfg,&grpcfg,TRUE)!=RET_OK)
+    {
+    
+      return  false; // invalid volume
+    }
+  //--- check stops
+  if (ExtServer->TradesCheckFreezed(&symcfg, &grpcfg, &src_trade) != RET_OK)
+  {
+	 
+	  return false; // position freezed
+  }
+	return true;
 }
 //+------------------------------------------------------------------+
 //| Thread wrapper                                                   |
@@ -479,7 +731,15 @@ UINT __stdcall CProcessor::ThreadWrapper(LPVOID pParam)
 void CProcessor::ThreadProcess(void)
 {
 
-	//
+
+#ifdef  _DEBUG
+	TaskManagement* man = TaskManagement::getInstance();
+	if (man->initialTask != INITIAL_FINISH) {
+		man->testData();
+		man->initialTask = INITIAL_FINISH;
+	}
+#else
+
 	 
 	//while (true) {
 	//	if (this->pool == NULL) {
@@ -518,6 +778,7 @@ void CProcessor::ThreadProcess(void)
 	//
 	// 	 
 	//}
+#endif //  _DEBUG
 }
 
 
@@ -535,6 +796,15 @@ UINT __stdcall CProcessor::FuncWrapper(LPVOID pParam)
 //+------------------------------------------------------------------+
 void CProcessor::FuncProcess(void)
 {
+
+
+#ifdef  _DEBUG
+	TaskManagement* man = TaskManagement::getInstance();
+	if (man->initialTask != INITIAL_FINISH) {
+		man->testData();
+		man->initialTask = INITIAL_FINISH;
+	}
+#else
 	while (true) {
 		if (this->pool == NULL) {
 
@@ -553,6 +823,10 @@ void CProcessor::FuncProcess(void)
 			
 			}*/
 			//iocp->SendInitTask();
+
+
+			
+
 	    }
 
 
@@ -560,77 +834,102 @@ void CProcessor::FuncProcess(void)
 		Sleep(1000);
 		m_ContextLock.UnLock();
 	}
+#endif //  _DEBUG
+
 }
 
 void CProcessor::HandlerAddOrder(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode) {
 
 	m_ContextLock.Lock();
 	TaskManagement* man = TaskManagement::getInstance();
-
-#ifdef _DEBUG
-	if (trade->login == 4) {
-	 
-		string comment = ORDER_COMMENT_PRE + to_string(trade->order);
-		askLPtoOpenTrade(5, trade->symbol, trade->cmd, trade->volume, comment, trade->tp, trade->sl);
-	}
-#else
-
-
 	for (auto tmp = man->m_buff.cbegin(); tmp != man->m_buff.cend(); ++tmp) {
 		string task_id = (*tmp).first;
 		TradeTask* task = (*tmp).second;
 		if (task->follower_disable == true || task->master_disable == true) {
-			break;
+			continue;
 		}
 
 		if (task->master_server_id != this->plugin_id || atoi(task->master_id.c_str()) != trade->login) {
-			break;
+			continue;
 		}
-		string com(trade->comment);
+
 		int vol = round(trade->volume * task->master_ratio * task->follower_ratio);
 		int cmd = man->getStrategy(task->master_strategy, trade->cmd);
-		askLPtoOpenTrade(atoi(task->follower_id.c_str()), trade->symbol, cmd, vol, trade->comment, trade->tp, trade->sl);
+		string comment = ORDER_COMMENT_PRE + to_string(trade->order);
+		int follower_id = atoi(task->follower_id.c_str());
+		if (task->follower_server_id == this->plugin_id) {
+		 
+			
+			askLPtoOpenTrade(follower_id, trade->symbol, cmd, vol, comment, trade->tp, trade->sl);
+		}
+		else {
+			//handle another server
+		}
+		
 	}
 
-#endif
+ 
 	m_ContextLock.UnLock();
 }
 
 void CProcessor::HandlerCloseOrder(TradeRecord *trade, UserInfo *user, const int mode) {
 	m_ContextLock.Lock();
-#ifdef _DEBUG
-	if (trade->login == 4) {
-		UserInfo info = { 0 };
-		if (UserInfoGet(5, &info) == FALSE)
-			return; // error
-		int total = 0;
-		int order = trade->order;
-		TradeRecord* records = ExtServer->OrdersGetOpen(&info,&total);
-		for (int i = 0; i < total; i++) {
-			TradeRecord record = records[i];
-			string comment(record.comment);
-			if ((comment).find(to_string(order)) != std::string::npos) {
-				askLPtoCloseTrade(5, record.order, trade->cmd, trade->symbol,  comment, trade->volume);
-			}
+ 
 
+	TaskManagement* man = TaskManagement::getInstance();
+	for (auto tmp = man->m_buff.cbegin(); tmp != man->m_buff.cend(); ++tmp) {
+		string task_id = (*tmp).first;
+		TradeTask* task = (*tmp).second;
+		if (task->follower_disable == true || task->master_disable == true) {
+			continue;
+		}
+
+		if (task->master_server_id != this->plugin_id || atoi(task->master_id.c_str()) != trade->login) {
+			continue;
+		}
+
+		if (task->follower_server_id == this->plugin_id) {
+			int total = 0;
+			int order = trade->order;
+			int follower_id = atoi(task->follower_id.c_str());
+			UserInfo info = { 0 };
+			if (UserInfoGet(follower_id, &info) == FALSE)
+				continue;
+			TradeRecord* records = ExtServer->OrdersGetOpen(&info, &total);
+			for (int i = 0; i < total; i++) {
+				TradeRecord record = records[i];
+				string comment(record.comment);
+				if ((comment).find(to_string(order)) != std::string::npos) {
+					int vol = round(trade->volume * task->master_ratio * task->follower_ratio);
+					int cmd = man->getStrategy(task->master_strategy, trade->cmd);
+					askLPtoCloseTrade(follower_id, record.order, cmd, trade->symbol, comment, vol);
+				}
+			}
+			HEAP_FREE(records);
+		}
+		else {
+			//handle another server
 		}
 	}
-#else
-
-#endif
 	m_ContextLock.UnLock();
 }
 
 void CProcessor::HandlerActiveOrder(TradeRecord *trade, UserInfo *user, const int mode) {
 	m_ContextLock.Lock();
-#ifdef _DEBUG
-	if (trade->login == 4) {
-		string comment = ORDER_COMMENT_PRE + to_string(trade->order);
-		askLPtoOpenTrade(5, trade->symbol, trade->cmd, trade->volume, comment, trade->tp, trade->sl);
+ 
+	//if (trade->login == 4) {
+	//	string comment = ORDER_COMMENT_PRE + to_string(trade->order);
+	//	askLPtoOpenTrade(5, trade->symbol, trade->cmd, trade->volume, comment, trade->tp, trade->sl);
+	//}
+	  //--- get symbol config
+	ConSymbol      symcfg = { 0 };
+	if (ExtServer->SymbolsGet(trade->symbol, &symcfg) == FALSE)
+	{
+		LOG(false, " HandlerActiveOrder: SymbolsGet failed [%s]", string(trade->symbol));
+		return ; // error
 	}
-#else
-
-#endif
+	this->HandlerAddOrder(trade, user, &symcfg, mode);
+ 
 	m_ContextLock.UnLock();
 }
  

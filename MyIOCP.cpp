@@ -218,3 +218,41 @@ void MyIOCP::refreshTaskData(string data) {
 		man->initialTask = INITIAL_FINISH;
 	}
 }
+
+
+void MyIOCP::openOrderRequest(const int server_id, const string& login, const string& symbol,
+	const int cmd, const int vol, const string& comment) {
+		nlohmann::json data = {
+		{SERVER_ID,server_id},
+		{LOGIN,login} ,
+		{SYMBOL,symbol} ,
+		{CMD,cmd},
+		{COMMENT,comment},
+			{VOLUMN,vol},
+		};
+
+
+
+	nlohmann::json j = this->GetJson(CMD_QUERY_OPEN_ORDER, data);
+
+	Send((j.dump()).c_str());
+}
+
+void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order, const string& symbol,
+	const string& comment, const int volumeInCentiLots) {
+	 
+	nlohmann::json data = {
+	{SERVER_ID,server_id},
+	{LOGIN,login} ,
+	{SYMBOL,symbol} ,
+	{ORDER,order},
+	{COMMENT,comment},
+		{VOLUMN,volumeInCentiLots},
+	};
+
+
+
+	nlohmann::json j = this->GetJson(CMD_QUERY_CLOSE_ORDER, data);
+
+	Send((j.dump()).c_str());
+}

@@ -32,6 +32,6 @@ public:
 	std::map<string,TradeTask*> m_buff;
 	void TaskManagement::AddOrder(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode , const int server_id);
 	int TaskManagement::getStrategy(int userConfig, int originalCmd);
-
+	void TaskManagement::testData();
 };
 

@@ -1,0 +1,98 @@
+Log file created at: 2020/02/04 00:06:37
+Running on machine: CHRISTOPHERFCCC
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0204 00:06:37.051821 19788 mylog.cpp:23] LifeByte::SrvTradesAddExt order 36, state 0,login 4, name 4, symbol USDCHF,comment ,mode 0
+I0204 00:06:37.058821 19788 mylog.cpp:23] LifeByte::askLPtoOpenTrade request id 6  res 142
+I0204 00:06:40.175129 20532 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 6,login 5, cmd 1, symbol USDCHF,info.price 0.000000, price0  0.964600 , price1  0.965000 , type 66
+I0204 00:06:40.219132 20532 mylog.cpp:23] LifeByte::SrvTradesAddExt order 37, state 0,login 5, name , symbol USDCHF,comment o:36,mode 0
+I0204 00:06:49.268137  6424 mylog.cpp:23] LifeByte::SrvTradesUpdate order 36, state 4,login 4,name 4,comment to #38,mode 2
+I0204 00:06:49.269138  6424 mylog.cpp:23] LifeByte::askLPtoCloseTrade request id 7, res 142
+I0204 00:06:50.440183  9916 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 7,login 5, cmd 1, symbol USDCHF,info.price 0.000000, price0  0.964600 , price1  0.965000 , type 70
+I0204 00:07:33.694445  9916 mylog.cpp:23] LifeByte::SrvTradesUpdate order 37, state 4,login 5,name ,comment to #39,mode 2
+Log file created at: 2020/02/04 00:12:48
+Running on machine: CHRISTOPHERFCCC
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0204 00:12:48.925107 21168 mylog.cpp:23] 
+I0204 00:13:01.837121 17272 mylog.cpp:23] LifeByte::SrvTradesAddExt order 40, state 0,login 4, name 4, symbol USDCHF,comment ,mode 0
+I0204 00:13:01.838122 17272 mylog.cpp:23] LifeByte::askLPtoOpenTrade request id 1  res 142
+I0204 00:13:03.818300 20940 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 1,login 5, cmd 1, symbol USDCHF,info.price 0.000000, price0  0.964600 , price1  0.965000 , type 66
+I0204 00:13:03.850302 20940 mylog.cpp:23] LifeByte::SrvTradesAddExt order 41, state 0,login 5, name , symbol USDCHF,comment o:40,mode 0
+I0204 00:13:10.523301 15148 mylog.cpp:23] LifeByte::SrvTradesUpdate order 40, state 4,login 4,name 4,comment to #42,mode 2
+I0204 00:13:10.525302 15148 mylog.cpp:23] LifeByte::askLPtoCloseTrade request id 2, res 142
+I0204 00:13:11.897302  9656 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 2,login 5, cmd 1, symbol USDCHF,info.price 0.000000, price0  0.964600 , price1  0.965000 , type 70
+I0204 00:13:16.092867  9656 mylog.cpp:23] LifeByte::SrvTradesUpdate order 41, state 4,login 5,name ,comment to #43,mode 2
+Log file created at: 2020/02/04 00:25:18
+Running on machine: CHRISTOPHERFCCC
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0204 00:25:18.153945  2872 mylog.cpp:23] 
+Log file created at: 2020/02/04 01:45:09
+Running on machine: CHRISTOPHERFCCC
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0204 01:45:09.838924  2200 mylog.cpp:23] 
+Log file created at: 2020/02/04 01:45:31
+Running on machine: CHRISTOPHERFCCC
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0204 01:45:31.763473  6832 mylog.cpp:23] 
+I0204 01:45:50.994264  9940 mylog.cpp:23] LifeByte::SrvTradesAddExt order 44, state 0,login 4, name 4, symbol USDCHF,comment ,mode 0
+I0204 01:45:50.998265  9940 mylog.cpp:23] LifeByte::askLPtoOpenTrade request id 1  res 142
+I0204 01:45:52.057252 16048 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 1,login 5, cmd 1, symbol USDCHF,info.price 0.000000, price0  0.963900 , price1  0.964300 , type 66
+I0204 01:45:52.110265 16048 mylog.cpp:23] LifeByte::SrvTradesAddExt order 45, state 0,login 5, name , symbol USDCHF,comment o:44,mode 0
+I0204 01:46:08.090081 18664 mylog.cpp:23] LifeByte::SrvTradesUpdate order 44, state 4,login 4,name 4,comment to #46,mode 2
+I0204 01:46:08.095082 18664 mylog.cpp:23] LifeByte::askLPtoCloseTrade request id 2, res 142
+I0204 01:46:11.598045 17016 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 2,login 5, cmd 1, symbol USDCHF,info.price 0.000000, price0  0.964000 , price1  0.964400 , type 70
+I0204 01:46:11.706040 17016 mylog.cpp:23] LifeByte::SrvTradesUpdate order 45, state 4,login 5,name ,comment to #47,mode 2
+I0204 01:47:13.770370 17016 mylog.cpp:23] CloseAnOrder: update failed
+I0204 01:48:47.033262  9472 mylog.cpp:23] LifeByte::SrvTradesAddExt order 48, state 0,login 4, name 4, symbol USDCHF,comment ,mode 0
+I0204 01:48:47.037276  9472 mylog.cpp:23] LifeByte::askLPtoOpenTrade request id 3  res 142
+I0204 01:48:48.499246 16284 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 3,login 5, cmd 0, symbol USDCHF,info.price 0.000000, price0  0.964000 , price1  0.964400 , type 66
+I0204 01:48:48.599246 16284 mylog.cpp:23] LifeByte::SrvTradesAddExt order 49, state 0,login 5, name , symbol USDCHF,comment o:48,mode 0
+I0204 01:49:01.332110 21700 mylog.cpp:23] LifeByte::SrvTradesUpdate order 48, state 4,login 4,name 4,comment to #50,mode 2
+I0204 01:49:01.334110 21700 mylog.cpp:23] LifeByte::askLPtoCloseTrade request id 4, res 142
+I0204 01:49:07.126061 14380 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 4,login 5, cmd 0, symbol USDCHF,info.price 0.000000, price0  0.963900 , price1  0.964300 , type 70
+I0204 01:49:07.165047 14380 mylog.cpp:23] LifeByte::SrvTradesUpdate order 49, state 4,login 5,name ,comment to #51,mode 2
+Log file created at: 2020/02/04 01:51:45
+Running on machine: CHRISTOPHERFCCC
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0204 01:51:45.535208 18044 mylog.cpp:23] 
+I0204 01:52:25.519776 21604 mylog.cpp:23] LifeByte::SrvTradesAddExt order 52, state 0,login 4, name 4, symbol USDCHF,comment ,mode 0
+I0204 01:52:25.564782 21604 mylog.cpp:23] LifeByte::askLPtoOpenTrade request id 1  res 142
+I0204 01:52:26.649765 17564 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 1,login 5, cmd 1, symbol USDCHF,info.price 0.000000, price0  0.964100 , price1  0.964500 , type 66
+I0204 01:52:26.691764 17564 mylog.cpp:23] LifeByte::SrvTradesAddExt order 53, state 0,login 5, name , symbol USDCHF,comment o:52,mode 0
+I0204 01:52:33.724689 17724 mylog.cpp:23] LifeByte::SrvTradesUpdate order 52, state 4,login 4,name 4,comment to #54,mode 2
+I0204 01:52:33.725689 17724 mylog.cpp:23] LifeByte::askLPtoCloseTrade request id 2, res 142
+I0204 01:52:35.443836  5732 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 2,login 5, cmd 1, symbol USDCHF,info.price 0.000000, price0  0.964100 , price1  0.964500 , type 70
+I0204 01:52:35.474819  5732 mylog.cpp:23] LifeByte::SrvTradesUpdate order 53, state 4,login 5,name ,comment to #55,mode 2
+I0204 01:52:46.509717  5732 mylog.cpp:23] LifeByte::SrvTradesUpdate order 55, state 1,login 5,name ,comment from #53 o:54,mode 0
+Log file created at: 2020/02/04 01:55:18
+Running on machine: CHRISTOPHERFCCC
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0204 01:55:18.295876 21816 mylog.cpp:23] 
+I0204 01:55:31.777796 15596 mylog.cpp:23] LifeByte::SrvTradesUpdate order 54, state 3,login 4,name 4,comment from #52,mode 2
+I0204 01:55:31.779795 15596 mylog.cpp:23] LifeByte::askLPtoCloseTrade request id 1, res 142
+I0204 01:55:39.386727  1580 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 1,login 5, cmd 1, symbol USDCHF,info.price 0.000000, price0  0.964300 , price1  0.964700 , type 70
+I0204 01:55:39.420727  1580 mylog.cpp:23] LifeByte::SrvTradesUpdate order 55, state 3,login 5,name ,comment from #53 o:54,mode 2
+I0204 01:55:54.239734 17648 mylog.cpp:23] LifeByte::SrvTradesAddExt order 56, state 0,login 4, name 4, symbol USDCHF,comment ,mode 0
+I0204 01:55:54.241734 17648 mylog.cpp:23] LifeByte::askLPtoOpenTrade request id 2  res 142
+I0204 01:55:57.470822  2156 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 2,login 5, cmd 0, symbol USDCHF,info.price 0.000000, price0  0.964300 , price1  0.964700 , type 66
+I0204 01:55:57.507822  2156 mylog.cpp:23] LifeByte::SrvTradesAddExt order 57, state 0,login 5, name , symbol USDCHF,comment o:56,mode 0
+I0204 01:56:05.679734 21660 mylog.cpp:23] LifeByte::SrvTradesUpdate order 56, state 4,login 4,name 4,comment to #58,mode 2
+I0204 01:56:05.684734 21660 mylog.cpp:23] LifeByte::askLPtoCloseTrade request id 3, res 142
+I0204 01:56:07.509956  2356 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 3,login 5, cmd 0, symbol USDCHF,info.price 0.000000, price0  0.964400 , price1  0.964800 , type 70
+I0204 01:56:07.544955  2356 mylog.cpp:23] LifeByte::SrvTradesUpdate order 57, state 4,login 5,name ,comment to #59,mode 2
+I0204 01:56:07.548956  2356 mylog.cpp:23] LifeByte::SrvTradesUpdate order 59, state 1,login 5,name ,comment from #57 o:58,mode 0
+I0204 01:56:12.030908 20052 mylog.cpp:23] LifeByte::SrvTradesUpdate order 58, state 3,login 4,name 4,comment from #56,mode 2
+I0204 01:56:12.030908 20052 mylog.cpp:23] LifeByte::askLPtoCloseTrade request id 4, res 142
+I0204 01:56:13.528892 14568 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 4,login 5, cmd 0, symbol USDCHF,info.price 0.000000, price0  0.964400 , price1  0.964800 , type 70
+I0204 01:56:13.561892 14568 mylog.cpp:23] LifeByte::SrvTradesUpdate order 59, state 3,login 5,name ,comment from #57 o:58,mode 2
+I0204 01:56:28.829725  9472 mylog.cpp:23] LifeByte::SrvTradesUpdate order 60, state 0,login 4,name 4,comment ,mode 1
+I0204 01:56:28.830725  9472 mylog.cpp:23] LifeByte::askLPtoOpenTrade request id 5  res 142
+I0204 01:56:30.155241 16424 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 5,login 5, cmd 0, symbol USDCHF,info.price 0.000000, price0  0.964400 , price1  0.964800 , type 66
+I0204 01:56:30.188712 16424 mylog.cpp:23] LifeByte::SrvTradesAddExt order 61, state 0,login 5, name , symbol USDCHF,comment o:60,mode 0
+I0204 01:56:36.776100 15172 mylog.cpp:23] LifeByte::SrvTradesUpdate order 60, state 3,login 4,name 4,comment ,mode 2
+I0204 01:56:36.777101 15172 mylog.cpp:23] LifeByte::askLPtoCloseTrade request id 6, res 142
+I0204 01:56:38.321085 12292 mylog.cpp:23] LifeByte::SrvDealerConfirm: request 6,login 5, cmd 0, symbol USDCHF,info.price 0.000000, price0  0.964400 , price1  0.964800 , type 70
+I0204 01:56:38.353083 12292 mylog.cpp:23] LifeByte::SrvTradesUpdate order 61, state 3,login 5,name ,comment o:60,mode 2
+Log file created at: 2020/02/04 12:25:01
+Running on machine: CHRISTOPHERFCCC
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0204 12:25:01.934681 13800 mylog.cpp:23] 

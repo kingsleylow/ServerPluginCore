@@ -74,7 +74,7 @@ bool TaskManagement::inital(string data)
 		 
 		this->m_buff.clear();
 
-		for (int i = 0; i < tasks.size(); i++) {
+		for (size_t i = 0; i < tasks.size(); i++) {
 			nlohmann::json tmp = tasks[i];
 			TradeTask* task = this->getTask(tmp);
 			if (task != NULL) {
@@ -104,7 +104,7 @@ void TaskManagement::updataTask(TradeTask* buf, TradeTask* run) {
 
 }
 TradeTask* TaskManagement::getTask(nlohmann::json data) {
-	TradeTask* task = new TradeTask();
+	
 	if (data.contains("task_id") == false||
 		data.contains("follower_ratio") == false ||
 		data.contains("follower_max_vol") == false ||
@@ -122,7 +122,7 @@ TradeTask* TaskManagement::getTask(nlohmann::json data) {
 		) {
 		return NULL;
 	}
-	 
+	TradeTask* task = new TradeTask();
 
 	task->task_id = data["task_id"].get<string>();
 	task->follower_ratio = data["follower_ratio"].get<double>();
@@ -171,6 +171,26 @@ void TaskManagement::checkData() {
 	m_ContextLock.UnLock();
 }
 
+
+void TaskManagement::testData() {
+	TradeTask* task = new TradeTask();
+
+	task->task_id = 1;
+	task->follower_ratio = 1.0;
+	task->follower_max_vol = 500;
+	task->follower_id = "5";
+	task->master_id = "4";
+	task->portal_id = "1";
+	task->follower_disable = false;
+	task->follower_max_drawback = 10000.0;
+	task->auto_reconciliation = 0;
+	task->master_ratio = 1.0;
+	task->master_strategy = 0;
+	task->master_disable = false;
+	task->master_server_id = 1;
+	task->follower_server_id = 1;
+	this->m_buff.insert(make_pair(task->task_id, task));
+}
  
 void TaskManagement::AddOrder(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode, int server_id) {
 	m_ContextLock.Lock();

@@ -31,14 +31,15 @@ public:
 	SocketConnectionPool* pool;
 private:
 	//---- out to server log
-	int OrdersClose(const int order, const int volume, const double close_price,   const string comment);
+	int CProcessor::UpdateComment(const int order, const string comment);
+	int OrdersClose(const int order,   const int volume, const double close_price,   const string comment);
 	int OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
 		const double open_price, const int volum,const string comment);
 
 	void CProcessor::HandlerAddOrder(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
 	void CProcessor::HandlerCloseOrder(TradeRecord *trade, UserInfo *user, const int mode);
 	void CProcessor::HandlerActiveOrder(TradeRecord *trade, UserInfo *user, const int mode);
-	bool CProcessor::ActionCheck();
+	bool CProcessor::ActionCheck(const int order,  const int login, const double price);
 	IOCPMutex m_ContextLock;
  
 

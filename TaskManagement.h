@@ -22,16 +22,20 @@ public:
 	TaskManagement();
 	~TaskManagement();
 	int initialTask;
-	std::map<string,TradeTask*> m_task;
+	std::list<TradeTask*> m_buff;
+	std::list<TradeTask*> m_task;
 	bool inital(string data);
 	bool updataTask(nlohmann::json task);
 	TradeTask* TaskManagement::getTask(nlohmann::json task);
 	void TaskManagement::checkData();
 	void TaskManagement::updataTask(TradeTask* buf, TradeTask* run);
 	IOCPMutex m_ContextLock;
-	std::map<string,TradeTask*> m_buff;
+
 	void TaskManagement::AddOrder(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode , const int server_id);
 	int TaskManagement::getStrategy(int userConfig, int originalCmd);
 	void TaskManagement::testData();
+	void TaskManagement::startInit();
+	void TaskManagement::finishInit();
+	string TaskManagement::printTask();
 };
 

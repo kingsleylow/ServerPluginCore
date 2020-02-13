@@ -12,6 +12,9 @@ TaskManagement* TaskManagement::getInstance() {
 
 
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 TaskManagement::TaskManagement()
 {
@@ -19,11 +22,18 @@ TaskManagement::TaskManagement()
 	 
 }
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 TaskManagement::~TaskManagement()
 {
 	this->initialTask = false;
 }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+
 int TaskManagement::getStrategy(int userConfig, int originalCmd) {
 
 	int tCmd = STRATEGY_ERROR;
@@ -54,8 +64,36 @@ int TaskManagement::getStrategy(int userConfig, int originalCmd) {
 
 	return tCmd;
 }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+
+void TaskManagement::startInit() {
+	m_ContextLock.Lock();
+	this->initialTask = INITIAL_REC_BUFF;
+	this->m_buff.clear();
+	m_ContextLock.UnLock();
+}	
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+
+void TaskManagement::finishInit() {
+	m_ContextLock.Lock();
+	this->initialTask = INITIAL_FINISH;
+	this->m_task.clear();
+	this->m_task = this->m_buff ;
+	m_ContextLock.UnLock();
+}
+//+------------------------------------------------------------------+
+//|                    
+//| inital copy trade task
+//+------------------------------------------------------------------+
+
 bool TaskManagement::inital(string data)
 {
+	m_ContextLock.Lock();
 	bool res = true;
 	try {
 		nlohmann::json j = nlohmann::json::parse(data);
@@ -72,13 +110,13 @@ bool TaskManagement::inital(string data)
 		nlohmann::json tasks = j["data"]["list"];
 		int size = j["data"]["size"];
 		 
-		this->m_buff.clear();
+		
 
 		for (size_t i = 0; i < tasks.size(); i++) {
 			nlohmann::json tmp = tasks[i];
 			TradeTask* task = this->getTask(tmp);
 			if (task != NULL) {
-				this->m_buff.insert(make_pair(task->task_id, task));
+				this->m_buff.push_back(   task);
 			}
 			 
 		}
@@ -90,8 +128,12 @@ bool TaskManagement::inital(string data)
 
 		res = false;
 	}
+	m_ContextLock.UnLock();
 	return res;
 }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 bool TaskManagement::updataTask(nlohmann::json task)
 {
@@ -99,10 +141,17 @@ bool TaskManagement::updataTask(nlohmann::json task)
 	return res;
 }
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 void TaskManagement::updataTask(TradeTask* buf, TradeTask* run) {
 
 }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+
 TradeTask* TaskManagement::getTask(nlohmann::json data) {
 	
 	if (data.contains("task_id") == false||
@@ -141,6 +190,9 @@ TradeTask* TaskManagement::getTask(nlohmann::json data) {
 	return task;
 }
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 void TaskManagement::checkData() {
 	/*if (this->m_buff.size() != this->m_task.size()) {
@@ -148,21 +200,10 @@ void TaskManagement::checkData() {
 	}*/
 	m_ContextLock.Lock();
 	for (auto tmp = this->m_buff.cbegin(); tmp != this->m_buff.cend(); ++tmp) {
-		string task_id = (*tmp).first;
-		TradeTask* task = (*tmp).second;
+	 
+		TradeTask* task = (*tmp);
 		map<string, TradeTask*>::iterator it;
-		it = this->m_task.find(task_id);
-		if (it == this->m_task.end()) {
-			//new item
-			this->m_buff.insert(make_pair(task_id, task));
-			 
-		}
-		else {
-
-
-
-
-		}
+		 
 
 
 
@@ -171,6 +212,9 @@ void TaskManagement::checkData() {
 	m_ContextLock.UnLock();
 }
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 void TaskManagement::testData() {
 	TradeTask* task = new TradeTask();
@@ -189,14 +233,17 @@ void TaskManagement::testData() {
 	task->master_disable = false;
 	task->master_server_id = 1;
 	task->follower_server_id = 1;
-	this->m_buff.insert(make_pair(task->task_id, task));
+	this->m_buff.push_back(task);
 }
- 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+
 void TaskManagement::AddOrder(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode, int server_id) {
 	m_ContextLock.Lock();
-	for (auto tmp = this->m_buff.cbegin(); tmp != this->m_buff.cend(); ++tmp) {
-		string task_id = (*tmp).first;
-		TradeTask* task = (*tmp).second;
+	for (auto tmp = this->m_task.cbegin(); tmp != this->m_task.cend(); ++tmp) {
+	 
+		TradeTask* task = (*tmp);
 
 		if (task->follower_disable == true || task->master_disable == true) {
 			return;
@@ -215,4 +262,16 @@ void TaskManagement::AddOrder(TradeRecord *trade, const UserInfo *user, const Co
 	m_ContextLock.UnLock();
 }
 
- 
+string TaskManagement::printTask() {
+	m_ContextLock.Lock();
+	string str = "task list: ";
+	for (auto tmp = this->m_task.cbegin(); tmp != this->m_task.cend(); ++tmp) {
+	 
+		TradeTask* task = (*tmp);
+		str += task->dumpTask();
+	}
+	m_ContextLock.UnLock();
+	return str;
+
+
+ }

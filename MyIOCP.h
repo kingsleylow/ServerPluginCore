@@ -25,7 +25,7 @@
 #define CMD_QUERY_PORTAL_IDS 926
 #define CMD_QUERY_GOD_PORTFOLIO_MULTIPLE 913
 
-#define CMD_QUERY_ALL_TASK 950
+#define CMD_QUERY_ALL_TASK 950  //first step
 #define CMD_QUERY_START_REC_TASK 951
 #define CMD_QUERY_FINISH_REC_TASK 952
 
@@ -64,12 +64,11 @@ public:
 
 	void MyIOCP::checkLogin(string data);
 	void MyIOCP::refreshTaskData(string data);
-	VOID MyIOCP::SendInitTask();
+	VOID MyIOCP::SendInitTask(int server_id);
 	void MyIOCP::startRecTaskData(string data);
 	void MyIOCP::finishRecTaskData(string data);
 	void MyIOCP::openOrderRequest(const int server_id, const string& login, const string& symbol,
 		const int cmd, const int vol, const string& comment);
-	void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order, const string& symbol,
-		const string& comment, const int volumeInCentiLots);
+	void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots);
 };
 

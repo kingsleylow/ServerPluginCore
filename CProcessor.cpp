@@ -77,6 +77,7 @@ void CProcessor::setupSocket() {
 	if (pool==NULL) {
 		pool = new SocketConnectionPool();
 	}
+	pool->DestoryConnPool();
 	if (pool->checkParams(m_ip, atoi(m_port), m_key) == false) {
 		return;
 	}
@@ -642,78 +643,78 @@ int CProcessor::OrdersClose(const int order,  const int volume, const double clo
 	return(TRUE);
 }
 
-bool CProcessor::ActionCheck(const int order,  const int login, const double price) {
-	time_t         currtime;
- 
-	TradeRecord    src_trade = { 0 };
-	UserInfo       info = { 0 };
-	ConGroup       grpcfg = { 0 };
-	ConSymbol      symcfg = { 0 };
-	TradeTransInfo trans = { 0 };
-	//--- checks
-	if (order <= 0 || ExtServer == NULL) {
-		return false;
-	}
-	//--- get order
-	if (ExtServer->OrdersGet(order, &src_trade) == FALSE)
-	{
-	 
-		return false; // error
-	}
-	//--- get user info
-	if (UserInfoGet(login, &info) == FALSE)
-	{
-		 
-		return false; // error
-	}
-
-	//--- get group config
-	if (ExtServer->GroupsGet(info.group, &grpcfg) == FALSE)
-	{
-	 
-		return false; // error
-	}
-
-	//--- get symbol config
-	if (ExtServer->SymbolsGet(src_trade.symbol, &symcfg) == FALSE)
-	{ 
-		return false; // error
-	}
-
-	//---- get the current server time  
-	currtime=ExtServer->TradeTime();
-	if (ExtServer->TradesCheckSessions(&symcfg, currtime) == FALSE) {
-		return false;
-	}
-
-	//--- check tick size
-	if (ExtServer->TradesCheckTickSize(price, &symcfg) == FALSE)
-	{
-	 
-		return false; // invalid price
-	}
-
-	//--- check secutiry
-	if (ExtServer->TradesCheckSecurity(&symcfg, &grpcfg) != RET_OK)
-	{
-		 
-		return  false; // trade disabled, market closed, or no prices for long time
-	}
-
-	//--- check volume
-  if(ExtServer->TradesCheckVolume(&trans,&symcfg,&grpcfg,TRUE)!=RET_OK)
-    {
-    
-      return  false; // invalid volume
-    }
-  //--- check stops
-  if (ExtServer->TradesCheckFreezed(&symcfg, &grpcfg, &src_trade) != RET_OK)
-  {
-	 
-	  return false; // position freezed
-  }
-	return true;
-}
+//bool CProcessor::ActionCheck(const int order,  const int login, const double price) {
+//	time_t         currtime;
+// 
+//	TradeRecord    src_trade = { 0 };
+//	UserInfo       info = { 0 };
+//	ConGroup       grpcfg = { 0 };
+//	ConSymbol      symcfg = { 0 };
+//	TradeTransInfo trans = { 0 };
+//	//--- checks
+//	if (order <= 0 || ExtServer == NULL) {
+//		return false;
+//	}
+//	//--- get order
+//	if (ExtServer->OrdersGet(order, &src_trade) == FALSE)
+//	{
+//	 
+//		return false; // error
+//	}
+//	//--- get user info
+//	if (UserInfoGet(login, &info) == FALSE)
+//	{
+//		 
+//		return false; // error
+//	}
+//
+//	//--- get group config
+//	if (ExtServer->GroupsGet(info.group, &grpcfg) == FALSE)
+//	{
+//	 
+//		return false; // error
+//	}
+//
+//	//--- get symbol config
+//	if (ExtServer->SymbolsGet(src_trade.symbol, &symcfg) == FALSE)
+//	{ 
+//		return false; // error
+//	}
+//
+//	//---- get the current server time  
+//	currtime=ExtServer->TradeTime();
+//	if (ExtServer->TradesCheckSessions(&symcfg, currtime) == FALSE) {
+//		return false;
+//	}
+//
+//	//--- check tick size
+//	if (ExtServer->TradesCheckTickSize(price, &symcfg) == FALSE)
+//	{
+//	 
+//		return false; // invalid price
+//	}
+//
+//	//--- check secutiry
+//	if (ExtServer->TradesCheckSecurity(&symcfg, &grpcfg) != RET_OK)
+//	{
+//		 
+//		return  false; // trade disabled, market closed, or no prices for long time
+//	}
+//
+//	//--- check volume
+//  if(ExtServer->TradesCheckVolume(&trans,&symcfg,&grpcfg,TRUE)!=RET_OK)
+//    {
+//    
+//      return  false; // invalid volume
+//    }
+//  //--- check stops
+//  if (ExtServer->TradesCheckFreezed(&symcfg, &grpcfg, &src_trade) != RET_OK)
+//  {
+//	 
+//	  return false; // position freezed
+//  }
+//	return true;
+//}
 //+------------------------------------------------------------------+
 //| Thread wrapper                                                   |
 //+------------------------------------------------------------------+
@@ -728,57 +729,70 @@ UINT __stdcall CProcessor::ThreadWrapper(LPVOID pParam)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
+static volatile int task_check_cycle = 0;
 void CProcessor::ThreadProcess(void)
 {
 
 
-#ifdef  _DEBUG
-	TaskManagement* man = TaskManagement::getInstance();
-	if (man->initialTask != INITIAL_FINISH) {
-		man->testData();
-		man->initialTask = INITIAL_FINISH;
-	}
-#else
+ 
+	//TaskManagement* man = TaskManagement::getInstance();
+	//if (man->initialTask != INITIAL_FINISH) {
+	//	man->testData();
+	//	man->initialTask = INITIAL_FINISH;
+	//}
+ 
 
 	 
-	//while (true) {
-	//	if (this->pool == NULL) {
-	//	
-	//		Sleep(5000);
-	//	 	LOG("LifeByte::Pool IS NULL");
-	//		continue;
-	//	}
-	//	Sleep(5000);
-	//	bool res = this->pool->checkConnection();
- //	//LOG(true, "LifeByte::Pool Size " +   to_string(this->pool->GetPoolSize()));
-	////LOG(true,"LifeByte::Pool current Size " + to_string(this->pool->current_size));
+	while (true) {
+		if (this->pool == NULL) {
+		
+			Sleep(5000);
+		 	LOG("LifeByte::Pool IS NULL");
+			continue;
+		}
+		Sleep(5000);
+		bool res = this->pool->checkConnection();
+ 	//LOG(true, "LifeByte::Pool Size " +   to_string(this->pool->GetPoolSize()));
+	//LOG(true,"LifeByte::Pool current Size " + to_string(this->pool->current_size));
 
-	//	if (res==false) {
-	//		continue;
-	//	}
+		if (res==false) {
+			continue;
+		}
 
-	//	MyIOCP* iocp = this->pool->GetConnection();
-	//	if (iocp == NULL ) {
-	//		continue;
-	//	}
-	//	if(res == false){
-	//		this->pool->ReleaseConnection(iocp);
-	//	 continue;
-	//	}
-	//	if (iocp->level != ADM_LEVEL) {
-	//		this->pool->ReleaseConnection(iocp);
-	//		continue;
-	//	}
-	//	TaskManagement* man = TaskManagement::getInstance();
-	//	if (  man->initialTask == INITIAL_NO || man->initialTask == INITIAL_FINISH) {
-	//		iocp->SendInitTask();
-	//	}
-	//	
-	//	this->pool->ReleaseConnection(iocp);
-	//
-	// 	 
-	//}
-#endif //  _DEBUG
+		MyIOCP* iocp = this->pool->GetConnection();
+		if (iocp == NULL ) {
+			continue;
+		}
+		if(res == false){
+			this->pool->ReleaseConnection(iocp);
+		 continue;
+		}
+		if (iocp->level != ADM_LEVEL) {
+			this->pool->ReleaseConnection(iocp);
+			continue;
+		}
+		TaskManagement* man = TaskManagement::getInstance();
+		if (  man->initialTask == INITIAL_NO) {
+			iocp->SendInitTask(this->plugin_id);
+		}
+		
+		this->pool->ReleaseConnection(iocp);
+	
+
+		if (man->initialTask == INITIAL_FINISH) {
+
+			task_check_cycle++;
+			if (task_check_cycle > 2) {
+				task_check_cycle = 0;
+				//10 sec
+				iocp->SendInitTask(this->plugin_id);
+			}
+
+			 
+			LOG(false, man->printTask());
+		}
+	}
+ 
 }
 
 
@@ -843,8 +857,8 @@ void CProcessor::HandlerAddOrder(TradeRecord *trade, const UserInfo *user, const
 	m_ContextLock.Lock();
 	TaskManagement* man = TaskManagement::getInstance();
 	for (auto tmp = man->m_buff.cbegin(); tmp != man->m_buff.cend(); ++tmp) {
-		string task_id = (*tmp).first;
-		TradeTask* task = (*tmp).second;
+		 
+		TradeTask* task = (*tmp) ;
 		if (task->follower_disable == true || task->master_disable == true) {
 			continue;
 		}
@@ -864,6 +878,12 @@ void CProcessor::HandlerAddOrder(TradeRecord *trade, const UserInfo *user, const
 		}
 		else {
 			//handle another server
+		 
+			MyIOCP* iocp = this->pool->GetConnection();
+			if (iocp == NULL) {
+				continue;
+			}
+			iocp->openOrderRequest(task->follower_server_id, task->follower_id, trade->symbol, cmd, vol, comment);
 		}
 		
 	}
@@ -878,8 +898,8 @@ void CProcessor::HandlerCloseOrder(TradeRecord *trade, UserInfo *user, const int
 
 	TaskManagement* man = TaskManagement::getInstance();
 	for (auto tmp = man->m_buff.cbegin(); tmp != man->m_buff.cend(); ++tmp) {
-		string task_id = (*tmp).first;
-		TradeTask* task = (*tmp).second;
+	 
+		TradeTask* task = (*tmp) ;
 		if (task->follower_disable == true || task->master_disable == true) {
 			continue;
 		}
@@ -887,7 +907,8 @@ void CProcessor::HandlerCloseOrder(TradeRecord *trade, UserInfo *user, const int
 		if (task->master_server_id != this->plugin_id || atoi(task->master_id.c_str()) != trade->login) {
 			continue;
 		}
-
+		int vol = round(trade->volume * task->master_ratio * task->follower_ratio);
+		int cmd = man->getStrategy(task->master_strategy, trade->cmd);
 		if (task->follower_server_id == this->plugin_id) {
 			int total = 0;
 			int order = trade->order;
@@ -900,15 +921,19 @@ void CProcessor::HandlerCloseOrder(TradeRecord *trade, UserInfo *user, const int
 				TradeRecord record = records[i];
 				string comment(record.comment);
 				if ((comment).find(to_string(order)) != std::string::npos) {
-					int vol = round(trade->volume * task->master_ratio * task->follower_ratio);
-					int cmd = man->getStrategy(task->master_strategy, trade->cmd);
+				
 					askLPtoCloseTrade(follower_id, record.order, cmd, trade->symbol, comment, vol);
 				}
 			}
 			HEAP_FREE(records);
 		}
 		else {
-			//handle another server
+			MyIOCP* iocp = this->pool->GetConnection();
+			if (iocp == NULL) {
+				continue;
+			}
+		 
+			iocp->closeOrderRequest(task->follower_server_id, task->follower_id, trade->order,vol);
 		}
 	}
 	m_ContextLock.UnLock();

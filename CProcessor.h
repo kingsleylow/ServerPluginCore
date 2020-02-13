@@ -39,7 +39,7 @@ private:
 	void CProcessor::HandlerAddOrder(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
 	void CProcessor::HandlerCloseOrder(TradeRecord *trade, UserInfo *user, const int mode);
 	void CProcessor::HandlerActiveOrder(TradeRecord *trade, UserInfo *user, const int mode);
-	bool CProcessor::ActionCheck(const int order,  const int login, const double price);
+	//bool CProcessor::ActionCheck(const int order,  const int login, const double price);
 	IOCPMutex m_ContextLock;
  
 

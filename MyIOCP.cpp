@@ -1,6 +1,9 @@
 #include "Stdafx.h"
 #include "MyIOCP.h"
 #include "CProcessor.h"
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 MyIOCP::MyIOCP()
 {
@@ -10,6 +13,9 @@ MyIOCP::MyIOCP()
  
 }
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 MyIOCP::~MyIOCP()
 {
@@ -20,6 +26,9 @@ MyIOCP::~MyIOCP()
 
 }
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 {
@@ -65,6 +74,9 @@ VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 	//this->receiveFlag = true;
 	
 }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 VOID MyIOCP::NotifyConnectionStatus(IOCPClient_ConnectionType ConnectionType) {
 	if (ConnectionType == IOCPClient_ConnectionType_Connected) {
@@ -78,15 +90,22 @@ VOID MyIOCP::NotifyConnectionStatus(IOCPClient_ConnectionType ConnectionType) {
  
 	}	
 }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
-VOID MyIOCP::SendInitTask() {
+VOID MyIOCP::SendInitTask(int server_id) {
 	nlohmann::json data = {
 	{"partner_key",PARTNET_KEY},
+	{SERVER_ID,server_id},
 	};
 	nlohmann::json j = this->GetJson(CMD_QUERY_ALL_TASK, data);
 
 	Send((j.dump()).c_str());
 }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 VOID MyIOCP::SendInitailRequest() {
 	string loginTime = "";
@@ -111,16 +130,26 @@ VOID MyIOCP::SendInitailRequest() {
 	Send((j.dump()).c_str());
 }
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+
 VOID MyIOCP::SendHeartBeat() {
 
 	SendRequest(CMD_HEART_BEAT, NULL);
 }
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 nlohmann::json MyIOCP::GetJson(int cmd, nlohmann::json data) {
 	nlohmann::json j = { {"cmd",cmd},{"data",data} };
 	return j;
 }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 void MyIOCP::checkConnection() {
 
@@ -136,6 +165,9 @@ void MyIOCP::checkConnection() {
 	
 }
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 void MyIOCP::SendRequest(int cmd, nlohmann::json data) {
 	nlohmann::json j = this->GetJson(cmd, data);
@@ -145,6 +177,9 @@ void MyIOCP::SendRequest(int cmd, nlohmann::json data) {
 
 
  ///receive
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 int MyIOCP::getCommand(string data) {
 	int cmd = CMD_INVALID;
@@ -161,6 +196,9 @@ int MyIOCP::getCommand(string data) {
 
 	return cmd;
  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 nlohmann::json MyIOCP::getData(string data,string key) {
 	try {
@@ -176,6 +214,9 @@ nlohmann::json MyIOCP::getData(string data,string key) {
 	}
 	return NULL;
 }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 void MyIOCP::checkLogin(string data) {
 	try {
@@ -195,17 +236,27 @@ void MyIOCP::checkLogin(string data) {
 	}
 }
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 void MyIOCP::startRecTaskData(string data) {
-
+	ExtProcessor.LOG(false, "startRecTaskData");
 	TaskManagement* man = TaskManagement::getInstance();
-	man->initialTask = INITIAL_REC_BUFF;
+	man->startInit();
 }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 void MyIOCP::finishRecTaskData(string data) {
+	ExtProcessor.LOG(false, "finishRecTaskData");
 	TaskManagement* man = TaskManagement::getInstance();
-	man->initialTask = INITIAL_FINISH_BUFF;
+	man->finishInit();
 }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 void MyIOCP::refreshTaskData(string data) {
 
@@ -213,12 +264,14 @@ void MyIOCP::refreshTaskData(string data) {
 	if (man->initialTask!= INITIAL_REC_BUFF) {
 		return;
 	}
+	ExtProcessor.LOG(false, "refreshTaskData");
 	bool res = man->inital(data);
-	if (res==true) {
-		man->initialTask = INITIAL_FINISH;
-	}
+	
 }
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
 void MyIOCP::openOrderRequest(const int server_id, const string& login, const string& symbol,
 	const int cmd, const int vol, const string& comment) {
@@ -234,25 +287,25 @@ void MyIOCP::openOrderRequest(const int server_id, const string& login, const st
 
 
 	nlohmann::json j = this->GetJson(CMD_QUERY_OPEN_ORDER, data);
-
+	ExtProcessor.LOG(false, (j.dump()).c_str());
 	Send((j.dump()).c_str());
 }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
 
-void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order, const string& symbol,
-	const string& comment, const int volumeInCentiLots) {
+void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots) {
 	 
 	nlohmann::json data = {
 	{SERVER_ID,server_id},
 	{LOGIN,login} ,
-	{SYMBOL,symbol} ,
 	{ORDER,order},
-	{COMMENT,comment},
-		{VOLUMN,volumeInCentiLots},
+    {VOLUMN,volumeInCentiLots},
 	};
 
 
 
 	nlohmann::json j = this->GetJson(CMD_QUERY_CLOSE_ORDER, data);
-
+	ExtProcessor.LOG(false, (j.dump()).c_str());
 	Send((j.dump()).c_str());
 }

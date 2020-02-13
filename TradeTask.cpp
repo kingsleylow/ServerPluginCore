@@ -45,4 +45,21 @@ TradeTask::~TradeTask()
 }
 
 
- 
+string TradeTask::dumpTask() {
+	string str = "\n{";
+	str += string(" task_id:") + this->task_id;
+	str += string(" portal_id:") + this->portal_id;
+	str += string(" follower_disable:") + to_string(this->follower_disable);
+	str += string(" follower_id:") +  (this->follower_id);
+	str += string(" follower_ratio:") + to_string(this->follower_ratio);
+	str += string(" follower_max_vol:") + to_string(this->follower_max_vol);
+	str += string(" auto_reconciliation:") + to_string(this->auto_reconciliation);
+	str += string(" master_server_id:") + to_string(this->master_server_id);
+	str += string(" follower_server_id:") + to_string(this->follower_server_id);
+	str += string(" master_disable:") + to_string(this->master_disable);
+	str += string(" master_strategy:") + to_string(this->master_strategy);
+	str += string(" master_ratio:") + to_string(this->master_ratio);
+	str += string(" master_id:") + (this->master_id);
+	str += "}";
+	return str;
+}

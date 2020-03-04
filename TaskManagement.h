@@ -24,18 +24,26 @@ public:
 	int initialTask;
 	std::list<TradeTask*> m_buff;
 	std::list<TradeTask*> m_task;
+	std::map<string,MyTrade*> m_close_trade;
 	bool inital(string data);
 	bool updataTask(nlohmann::json task);
 	TradeTask* TaskManagement::getTask(nlohmann::json task);
 	void TaskManagement::checkData();
 	void TaskManagement::updataTask(TradeTask* buf, TradeTask* run);
 	IOCPMutex m_ContextLock;
-
+	bool isWorking;
 	void TaskManagement::AddOrder(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode , const int server_id);
 	int TaskManagement::getStrategy(int userConfig, int originalCmd);
 	void TaskManagement::testData();
 	void TaskManagement::startInit();
 	void TaskManagement::finishInit();
 	string TaskManagement::printTask();
+	void TaskManagement::clearTask();
+
+
+	void TaskManagement::addToCloseOrder(int login, MyTrade* trade);
+	MyTrade* TaskManagement::findCloseOrder(int login, int order);
+
+	string TaskManagement::genMissOrderKey(int login, int master_order);
 };
 

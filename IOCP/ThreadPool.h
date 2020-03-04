@@ -56,7 +56,7 @@
 #include <map>
 #include "RunObject.h"
 
-#define POOL_SIZE		  20
+#define POOL_SIZE		  4
 #define SHUTDOWN_EVT_NAME _T("PoolEventShutdown")
 using namespace std;
 

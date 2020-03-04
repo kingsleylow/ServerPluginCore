@@ -7,6 +7,8 @@
 #include "SocketConnectionPool.h"
 #include <thread>
 #include "executePool.h"
+
+ 
 class CProcessor
 {
 public:
@@ -29,6 +31,9 @@ public:
 	void LOG(const int code, LPCSTR ip, LPCSTR msg, ...) const;
 	void CProcessor::Initialize(void);
 	SocketConnectionPool* pool;
+	std::threadpool excutor{0};
+	IOCPMutex m_ContextLock;
+	int				  plugin_id;
 private:
 	//---- out to server log
 	int CProcessor::UpdateComment(const int order, const string comment);
@@ -40,10 +45,11 @@ private:
 	void CProcessor::HandlerCloseOrder(TradeRecord *trade, UserInfo *user, const int mode);
 	void CProcessor::HandlerActiveOrder(TradeRecord *trade, UserInfo *user, const int mode);
 	//bool CProcessor::ActionCheck(const int order,  const int login, const double price);
-	IOCPMutex m_ContextLock;
- 
-
- 
+	void CProcessor::HandleQuickCloseIssue(int login, int order);
+	void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade* trade);
+	static UINT __cdecl order_worker_thread(void* param);
+	static UINT __cdecl add_order_worker_thread(void* param);
+	static UINT __cdecl close_order_worker_thread(void* param);
             
 	char              m_ip[128];       //ip
 	char              m_port[32];   // port
@@ -52,7 +58,7 @@ private:
 	char			  m_key[64];   // key
 	char			  m_key_backup[64];   // key
 	char	          m_plugin_id[32]; // plugin id
-	int				  plugin_id;
+
 	HANDLE            m_threadServer;    // thread handle
 	HANDLE            m_funcThread;    // thread handle
 protected:
@@ -60,7 +66,7 @@ protected:
 	static UINT __stdcall ThreadWrapper(LPVOID pParam);
 
 
-	virtual void      FuncProcess(void);
-	static UINT __stdcall FuncWrapper(LPVOID pParam);
+ 
+	
 };
 extern CProcessor ExtProcessor;

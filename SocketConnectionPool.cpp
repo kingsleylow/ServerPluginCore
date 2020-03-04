@@ -74,16 +74,17 @@ void SocketConnectionPool::initPool(int size) {
 
 MyIOCP* SocketConnectionPool::CreateConnection() {
 
-	ExtProcessor.LOG( true,"CreateConnection");
+	 
 	MyIOCP* iocp = new MyIOCP();
-	try
-	{
-		char* server = new char(this->server.length() + 1);
-		strcpy(server, (this->server).c_str());
+	//try
+	//{
+	char server[100];
+		COPY_STR(server, (this->server).c_str());
 		if (iocp != NULL && iocp->m_bIsConnected == FALSE) {
 			BOOL res = iocp->Connect(server, (this->port));
 
 			if (res == TRUE) {
+			 
 				return iocp;
 			}
 
@@ -92,48 +93,61 @@ MyIOCP* SocketConnectionPool::CreateConnection() {
 			delete iocp;
 			iocp = NULL;
 		}
-	}
-	catch (const std::exception&)
-	{
-		return NULL;
-	}
-
+	//}
+	//catch (const std::exception&)
+	//{
+	//	return NULL;
+	//}
+ 
 	 
 
 	return NULL;
 }
 
 MyIOCP* SocketConnectionPool::GetConnection() {
+
+
+	 
 	m_ContextLock.Lock();
 	MyIOCP* iocp = NULL;
+
 	if (pool.size() > 0)//the pool have a conn 
 	{
+	 
 		iocp = pool.front();
 		pool.pop_front();//move the first conn 
 		if (iocp == NULL) {
+		 
 			m_ContextLock.UnLock();
 			return NULL;
 		}
 		if (iocp->m_bIsConnected == FALSE) {
+			 
 			if (iocp != NULL) {
+				 
 				delete iocp;
 				iocp = NULL;
-
+			}
 				//man = NULL;
 				iocp = this->CreateConnection();
-			}
+			
 
 			if (iocp == NULL )
 			{
-				--this->current_size;
+				 
+				if (this->current_size >= 0) {
+					--this->current_size;
+				}
 			}
 		}
+		 
 		m_ContextLock.UnLock();
 
 		return iocp;
 	}
 	else
 	{
+		 
 		if (this->current_size <  POOL_MAX)//the pool no conn
 		{
 			iocp = this->CreateConnection();
@@ -152,6 +166,7 @@ MyIOCP* SocketConnectionPool::GetConnection() {
 		}
 		else //the conn count > maxSize
 		{
+		 
 			m_ContextLock.UnLock();
 			return NULL;
 		}
@@ -169,14 +184,16 @@ void SocketConnectionPool::ReleaseConnection(MyIOCP* iocp)
 
 	}
 	else {
-		ExtProcessor.LOG(true,"ReleaseConnection");
+		 
 		m_ContextLock.Lock();
 		 
-		if (iocp != NULL) {
-			delete iocp;
-			iocp = NULL;
+		 
+		delete iocp;
+		iocp = NULL; 
+		if (this->current_size>=0) {
+			--this->current_size;
 		}
-		--this->current_size;
+	
 		m_ContextLock.UnLock();
 	}
 
@@ -184,23 +201,24 @@ void SocketConnectionPool::ReleaseConnection(MyIOCP* iocp)
 
 bool SocketConnectionPool::checkConnection() {
 
-	
+	 
 	MyIOCP* iocp = GetConnection();
-
+ 
 	if (iocp == NULL) {
+		 
 		ReleaseConnection(iocp);
 		return  false;
 	}
 
 	if (iocp->m_heart_count > MAX_BEAT_HEART_COUNT) {
-		ExtProcessor.LOG(true,"m_heart_count false" );
+		 
 		DestoryConnection(iocp);
 		return false;
 	}
 	iocp->m_heart_count++;
 
 	if (iocp->m_bIsConnected == FALSE) {
-		ExtProcessor.LOG(true,"m_bIsConnected false"  );
+		 
 		ReleaseConnection(iocp);
 		return  false;
 	}

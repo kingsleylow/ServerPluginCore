@@ -69,17 +69,17 @@ int Utils::CheckGroup(char* grouplist, const char *group)
 {
 	//--- проверки
 	if (grouplist == NULL || group == NULL) return(FALSE);
-	//--- проходимся по всем группам
+	//--- проходим? по всем группа?
 	char *tok_start = grouplist, end;
 	int  res = TRUE, deep = 0, normal_mode;
 	while (*tok_start != 0)
 	{
-		//--- пропустим запятые
+		//--- пропусти?за?ты?
 		while (*tok_start != 0 && *tok_start == ',') tok_start++;
 		//---
 		if (*tok_start == '!') { tok_start++; normal_mode = FALSE; }
 		else                 normal_mode = TRUE;
-		//--- найдем границы токена
+		//--- найдем границ?токена
 		char *tok_end = tok_start;
 		while (*tok_end != ',' && *tok_end != 0) tok_end++;
 		end = *tok_end; *tok_end = NULL;
@@ -91,7 +91,7 @@ int Utils::CheckGroup(char* grouplist, const char *group)
 		res = TRUE;
 		while (tp != tok_end && *gp != NULL)
 		{
-			//--- нашли звёздочку? проверяем как регэксп
+			//--- нашл?звёздочк? проверяем ка?регэкс?
 			if (*tp == '*')
 			{
 				deep = 0;
@@ -106,11 +106,11 @@ int Utils::CheckGroup(char* grouplist, const char *group)
 			if (*tp != *gp) { *tok_end = end; res = FALSE; break; }
 			tp++; gp++;
 		}
-		//--- восстанавливаем
+		//--- восстанавливае?
 		*tok_end = end;
-		//--- проверяем, мы нашли точную цитату и всё хорошо?
+		//--- проверяем, мы нашл?точную цитату ?вс?хорошо?
 		if (*gp == NULL && (tp == tok_end || *tp == '*') && res == TRUE) return(normal_mode);
-		//--- переход к следующему токену
+		//--- перехо??следующему токену
 		if (*tok_end == 0) break;
 		tok_start = tok_end + 1;
 	}

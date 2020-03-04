@@ -67,6 +67,13 @@ VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 	case CMD_QUERY_ALL_TASK:
 		this->refreshTaskData(tmp);
 		break;
+
+	case CMD_OPEN_ORDER:
+		this->openOrderRequest(tmp);
+		break;
+	case CMD_CLOSE_ORDER:
+		this->closeOrderRequest(tmp);
+		break;
 	default:
 		break;
 	}
@@ -214,6 +221,51 @@ nlohmann::json MyIOCP::getData(string data,string key) {
 	}
 	return NULL;
 }
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void MyIOCP::openOrderRequest(string data) {
+	try {
+		nlohmann::json j = nlohmann::json::parse(data);
+
+		if (!j.contains("data")) {
+			return;
+		}
+		if (!j["data"].contains("num")) {
+			return;
+		}
+		int num = j["data"]["num"];
+		for (int i = 0; i < num;i++) {
+			ExtProcessor.askLPtoOpenTrade(2000, "EURUSD", OP_BUY, 1, "My Test", 0, 0);
+			ExtProcessor.askLPtoOpenTrade(2004, "EURUSD", OP_BUY, 1, "My Test", 0, 0);
+		}
+	}
+	catch (exception& e) {
+
+
+	}
+
+}
+extern CServerInterface *ExtServer;
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void MyIOCP::closeOrderRequest(string data) {
+	UserInfo info = { 0 };
+	int total = 0;
+	if (ExtProcessor.UserInfoGet(2000, &info) == FALSE)
+		return;
+	TradeRecord* records = ExtServer->OrdersGetOpen(&info, &total);
+	for (int i = 0; i < total; i++) {
+		TradeRecord record = records[i];
+		 
+	 
+		ExtProcessor.askLPtoCloseTrade(2000, record.order, record.cmd, record.symbol, "", record.volume);
+		 
+	}
+}
+
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+

@@ -139,6 +139,8 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <AdditionalIncludeDirectories>C:\Dev\MYIOCP;\\Mac\Home\Documents\WIN_DOC\vm\ServerAPi\myPlugin\MYIOCP;\\192.168.87.30\win_doc\vm\ServerAPi\myPlugin\MYIOCP;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerOutput>All</AssemblerOutput>
+      <AdditionalOptions>/Oy- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -156,11 +158,15 @@
       <ImportLibrary>.\Debug\ServerPlugin.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalDependencies>%(AdditionalDependencies);glogd.lib;</AdditionalDependencies>
+      <GenerateMapFile>true</GenerateMapFile>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <OutputFile>.\Debug/ServerPlugin.bsc</OutputFile>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>.\DebugInfo.fixed.exe C:\MetaTrader4Server\plugins\$(ProjectName).dll</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common.cpp" />

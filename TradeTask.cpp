@@ -46,7 +46,7 @@ TradeTask::~TradeTask()
 
 
 string TradeTask::dumpTask() {
-	string str = "\n{";
+	string str = "{";
 	str += string(" task_id:") + this->task_id;
 	str += string(" portal_id:") + this->portal_id;
 	str += string(" follower_disable:") + to_string(this->follower_disable);

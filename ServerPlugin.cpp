@@ -15,7 +15,7 @@ PluginInfo        ExtPluginInfo={ PLUGIN_NAME,101,COMPANY_NAME,{0} };
 char              ExtProgramPath[MAX_PATH]="";
 CSync             ExtSync;
 CServerInterface *ExtServer=NULL;
-
+ 
 //+------------------------------------------------------------------+
 //| DLL entry point                                                  |
 //+------------------------------------------------------------------+
@@ -130,8 +130,8 @@ int  APIENTRY  MtSrvTradeTransaction(TradeTransInfo* trans, const UserInfo *user
 }
 
 void APIENTRY MtSrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int mode)
-{ 
-	ExtProcessor.SrvTradesUpdate(trade, user, mode); 
+{
+	ExtProcessor.SrvTradesUpdate(trade, user, mode);
 }
 
 

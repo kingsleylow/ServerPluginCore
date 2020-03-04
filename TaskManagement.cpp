@@ -1,6 +1,6 @@
 #include "Stdafx.h"
 #include "TaskManagement.h"
-
+#include "CProcessor.h"
 TaskManagement* TaskManagement::taskManager;
 TaskManagement* TaskManagement::getInstance() {
 	if (taskManager == NULL) {
@@ -19,8 +19,12 @@ TaskManagement* TaskManagement::getInstance() {
 TaskManagement::TaskManagement()
 {
 	this->initialTask = false;
-	 
+	this->isWorking = false;
+	this->m_task.clear();
+	this->m_buff.clear();
+	this->m_close_trade.clear();
 }
+
 
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -29,6 +33,43 @@ TaskManagement::TaskManagement()
 TaskManagement::~TaskManagement()
 {
 	this->initialTask = false;
+	this->isWorking = false;
+
+
+
+	for (auto tmp = this->m_task.cbegin(); tmp != this->m_task.cend(); ++tmp) {
+
+		TradeTask* task = (*tmp);
+		if (task != NULL) {
+			delete task;
+			task = NULL;
+		}
+	}
+
+	for (auto tmp = this->m_buff.cbegin(); tmp != this->m_buff.cend(); ++tmp) {
+
+		TradeTask* task = (*tmp);
+		if (task != NULL) {
+			delete task;
+			task = NULL;
+		}
+	}
+
+
+
+	for (auto tmp = this->m_close_trade.cbegin(); tmp != this->m_close_trade.cend(); ++tmp) {
+
+		MyTrade* task = tmp->second;
+		if (task != NULL) {
+			delete task;
+			task = NULL;
+		}
+	}
+
+	this->m_task.clear();
+	this->m_buff.clear();
+	this->m_close_trade.clear();
+
 }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -80,11 +121,18 @@ void TaskManagement::startInit() {
 //+------------------------------------------------------------------+
 
 void TaskManagement::finishInit() {
+	if (this->isWorking == true) {
+		return;
+	 }
+	 
 	m_ContextLock.Lock();
+
 	this->initialTask = INITIAL_FINISH;
-	this->m_task.clear();
+	this->clearTask();
 	this->m_task = this->m_buff ;
+	this->m_buff.clear();
 	m_ContextLock.UnLock();
+ 
 }
 //+------------------------------------------------------------------+
 //|                    
@@ -217,23 +265,30 @@ void TaskManagement::checkData() {
 //+------------------------------------------------------------------+
 
 void TaskManagement::testData() {
-	TradeTask* task = new TradeTask();
-
-	task->task_id = 1;
-	task->follower_ratio = 1.0;
-	task->follower_max_vol = 500;
-	task->follower_id = "5";
-	task->master_id = "4";
-	task->portal_id = "1";
-	task->follower_disable = false;
-	task->follower_max_drawback = 10000.0;
-	task->auto_reconciliation = 0;
-	task->master_ratio = 1.0;
-	task->master_strategy = 0;
-	task->master_disable = false;
-	task->master_server_id = 1;
-	task->follower_server_id = 1;
-	this->m_buff.push_back(task);
+	 
+	for (int i = 0; i < 50;i++) {
+		TradeTask* task = new TradeTask();
+		time_t myTime;
+		time(&myTime);
+		 
+		task->task_id = to_string(myTime);;
+		task->follower_ratio = 1.0;
+		task->follower_max_vol = 500;
+		task->follower_id = "5";
+		task->master_id = "4";
+		task->portal_id = "1";
+		task->follower_disable = false;
+		task->follower_max_drawback = 10000.0;
+		task->auto_reconciliation = 0;
+		task->master_ratio = 1.0;
+		task->master_strategy = 0;
+		task->master_disable = false;
+		task->master_server_id = 1;
+		task->follower_server_id = 1;
+		this->m_buff.push_back(task);
+	}
+	this->finishInit();
+	
 }
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -268,10 +323,63 @@ string TaskManagement::printTask() {
 	for (auto tmp = this->m_task.cbegin(); tmp != this->m_task.cend(); ++tmp) {
 	 
 		TradeTask* task = (*tmp);
-		str += task->dumpTask();
+		ExtProcessor.LOG(CmdTrade, "LifeByte::Testing", task->dumpTask().c_str());
+		str = str+ task->dumpTask()  ;
 	}
 	m_ContextLock.UnLock();
 	return str;
 
 
  }
+
+
+void TaskManagement::clearTask() {
+	for (auto tmp = this->m_task.cbegin(); tmp != this->m_task.cend(); ++tmp) {
+
+		TradeTask* task = (*tmp);
+		if (task!=NULL) {
+			delete task;
+			task = NULL;
+		}
+	}
+}
+
+
+string TaskManagement::genMissOrderKey(int login, int master_order) {
+	return to_string(login) + "_" + to_string(master_order);
+}
+
+
+
+void TaskManagement::addToCloseOrder(int login,MyTrade* trade) {
+
+	if (trade==NULL) {
+		return;
+	}
+
+	m_ContextLock.Lock();
+
+
+	string key = this->genMissOrderKey(login, trade->order);
+	this->m_close_trade[key] = trade;
+	ExtProcessor.LOG(CmdTrade, "LifeByte::close", "LifeByte::addToCloseOrder login   %d  order %d", login, trade->order);
+	m_ContextLock.UnLock();
+}
+MyTrade* TaskManagement::findCloseOrder(int login,int order) {
+	m_ContextLock.Lock();
+	 
+	string key = this->genMissOrderKey(login, order);
+	MyTrade* trade = this->m_close_trade[key];
+
+
+	if  (trade ==NULL) {
+		ExtProcessor.LOG(CmdTrade, "LifeByte::close", "LifeByte::findCloseOrder  cannot find  login   %d  order %d", login, order);
+	}
+	else {
+		ExtProcessor.LOG(CmdTrade, "LifeByte::close", "LifeByte::findCloseOrder login   %d  order %d", login, trade->order);
+	}
+
+
+	m_ContextLock.UnLock();
+	return trade;
+}

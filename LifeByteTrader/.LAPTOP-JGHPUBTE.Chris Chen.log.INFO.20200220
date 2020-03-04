@@ -1,0 +1,343 @@
+Log file created at: 2020/02/20 20:12:12
+Running on machine: LAPTOP-JGHPUBTE
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0220 20:12:12.892832 48796 mylog.cpp:23] coming
+I0220 20:12:12.902807 34952 mylog.cpp:23] 
+I0220 20:12:17.966588 48796 mylog.cpp:23] CreateConnection
+I0220 20:12:17.967586 48796 mylog.cpp:23] checkConnection
+I0220 20:12:17.967586 48796 mylog.cpp:23] m_bIsConnected false
+I0220 20:12:17.968583 48796 mylog.cpp:23] coming
+I0220 20:12:22.969499 48796 mylog.cpp:23] checkConnection
+I0220 20:12:22.969499 48796 mylog.cpp:23] coming
+I0220 20:12:27.971107 48796 mylog.cpp:23] checkConnection
+I0220 20:12:27.971107 48796 mylog.cpp:23] coming
+I0220 20:12:32.973067 48796 mylog.cpp:23] checkConnection
+I0220 20:12:32.973067 48796 mylog.cpp:23] coming
+I0220 20:12:37.974145 48796 mylog.cpp:23] checkConnection
+I0220 20:12:37.974145 48796 mylog.cpp:23] coming
+I0220 20:12:42.976294 48796 mylog.cpp:23] checkConnection
+I0220 20:12:42.976294 48796 mylog.cpp:23] m_heart_count false
+I0220 20:12:43.007220 48796 mylog.cpp:23] coming
+I0220 20:12:48.008311 48796 mylog.cpp:23] checkConnection
+I0220 20:12:48.008311 48796 mylog.cpp:23] ReleaseConnection
+I0220 20:12:48.008311 48796 mylog.cpp:23] coming
+I0220 20:12:53.011205 48796 mylog.cpp:23] CreateConnection
+I0220 20:12:53.012194 48796 mylog.cpp:23] checkConnection
+I0220 20:12:53.012194 48796 mylog.cpp:23] m_bIsConnected false
+I0220 20:12:53.012194 48796 mylog.cpp:23] coming
+I0220 20:12:58.013407 48796 mylog.cpp:23] checkConnection
+I0220 20:12:58.013407 48796 mylog.cpp:23] coming
+I0220 20:13:03.021075 48796 mylog.cpp:23] checkConnection
+I0220 20:13:03.021075 48796 mylog.cpp:23] coming
+I0220 20:13:03.103142 37032 mylog.cpp:23] {"cmd":951,"data":0}
+I0220 20:13:03.103142 37032 mylog.cpp:23] startRecTaskData
+I0220 20:13:03.135057 37032 mylog.cpp:23] {"cmd":952,"data":{"list":[{"follower_disable":false,"follower_id":"2004","follower_max_vol":8000,"follower_ratio":2.0,"follower_server_id":1,"master_disable":false,"master_id":"2000","master_ratio":2.0,"master_server_id":1,"master_strategy":0,"max_drawBack":1000.0,"portal_id":"990000023","reconciliation_type":0,"task_id":"1581492425928563258131"}],"size":1}}
+I0220 20:13:03.135057 37032 mylog.cpp:23] refreshTaskData
+I0220 20:13:03.136054 37032 mylog.cpp:23] finishRecTaskData
+I0220 20:13:08.023245 48796 mylog.cpp:23] checkConnection
+I0220 20:13:08.024243 48796 mylog.cpp:23] Testing
+I0220 20:13:08.025241 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:13:08.025241 48796 mylog.cpp:23] coming
+I0220 20:13:13.026104 48796 mylog.cpp:23] checkConnection
+I0220 20:13:13.034611 48796 mylog.cpp:23] Testing
+I0220 20:13:13.034611 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:13:13.034611 48796 mylog.cpp:23] coming
+I0220 20:13:18.035996 48796 mylog.cpp:23] checkConnection
+I0220 20:13:18.035996 48796 mylog.cpp:23] Testing
+I0220 20:13:18.037983 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:13:18.038980 48796 mylog.cpp:23] coming
+I0220 20:13:23.039171 48796 mylog.cpp:23] checkConnection
+I0220 20:13:23.039171 48796 mylog.cpp:23] m_heart_count false
+I0220 20:13:23.064308 48796 mylog.cpp:23] coming
+I0220 20:13:28.067903 48796 mylog.cpp:23] checkConnection
+I0220 20:13:28.067903 48796 mylog.cpp:23] ReleaseConnection
+I0220 20:13:28.067903 48796 mylog.cpp:23] coming
+I0220 20:13:33.068845 48796 mylog.cpp:23] CreateConnection
+I0220 20:13:33.069833 48796 mylog.cpp:23] checkConnection
+I0220 20:13:33.069833 48796 mylog.cpp:23] m_bIsConnected false
+I0220 20:13:33.069833 48796 mylog.cpp:23] coming
+I0220 20:13:38.099042 48796 mylog.cpp:23] CreateConnection
+I0220 20:13:38.100030 48796 mylog.cpp:23] checkConnection
+I0220 20:13:38.100030 48796 mylog.cpp:23] m_bIsConnected false
+I0220 20:13:38.100030 48796 mylog.cpp:23] coming
+I0220 20:13:43.101872 48796 mylog.cpp:23] checkConnection
+I0220 20:13:43.101872 48796 mylog.cpp:23] coming
+I0220 20:13:48.104219 48796 mylog.cpp:23] checkConnection
+I0220 20:13:48.104219 48796 mylog.cpp:23] Testing
+I0220 20:13:48.108211 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:13:48.108211 48796 mylog.cpp:23] coming
+I0220 20:13:53.109913 48796 mylog.cpp:23] checkConnection
+I0220 20:13:53.109913 48796 mylog.cpp:23] Testing
+I0220 20:13:53.112896 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:13:53.112896 48796 mylog.cpp:23] coming
+I0220 20:13:58.117664 48796 mylog.cpp:23] checkConnection
+I0220 20:13:58.118662 48796 mylog.cpp:23] Testing
+I0220 20:13:58.121654 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:13:58.121654 48796 mylog.cpp:23] coming
+I0220 20:13:58.195466 40600 mylog.cpp:23] {"cmd":951,"data":0}
+I0220 20:13:58.195466 40600 mylog.cpp:23] startRecTaskData
+I0220 20:13:58.226374 40600 mylog.cpp:23] {"cmd":952,"data":{"list":[{"follower_disable":false,"follower_id":"2004","follower_max_vol":8000,"follower_ratio":2.0,"follower_server_id":1,"master_disable":false,"master_id":"2000","master_ratio":2.0,"master_server_id":1,"master_strategy":0,"max_drawBack":1000.0,"portal_id":"990000023","reconciliation_type":0,"task_id":"1581492425928563258131"}],"size":1}}
+I0220 20:13:58.227371 40600 mylog.cpp:23] refreshTaskData
+I0220 20:13:58.228368 40600 mylog.cpp:23] finishRecTaskData
+I0220 20:14:03.123324 48796 mylog.cpp:23] checkConnection
+I0220 20:14:03.123324 48796 mylog.cpp:23] Testing
+I0220 20:14:03.126308 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:14:03.126308 48796 mylog.cpp:23] coming
+I0220 20:14:08.127202 48796 mylog.cpp:23] checkConnection
+I0220 20:14:08.127202 48796 mylog.cpp:23] Testing
+I0220 20:14:08.129201 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:14:08.130184 48796 mylog.cpp:23] coming
+I0220 20:14:13.130740 48796 mylog.cpp:23] checkConnection
+I0220 20:14:13.130740 48796 mylog.cpp:23] Testing
+I0220 20:14:13.133733 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:14:13.133733 48796 mylog.cpp:23] coming
+I0220 20:14:13.198650 40600 mylog.cpp:23] {"cmd":951,"data":0}
+I0220 20:14:13.198650 40600 mylog.cpp:23] startRecTaskData
+I0220 20:14:13.231007 40600 mylog.cpp:23] {"cmd":952,"data":{"list":[{"follower_disable":false,"follower_id":"2004","follower_max_vol":8000,"follower_ratio":2.0,"follower_server_id":1,"master_disable":false,"master_id":"2000","master_ratio":2.0,"master_server_id":1,"master_strategy":0,"max_drawBack":1000.0,"portal_id":"990000023","reconciliation_type":0,"task_id":"1581492425928563258131"}],"size":1}}
+I0220 20:14:13.231007 40600 mylog.cpp:23] refreshTaskData
+I0220 20:14:13.232005 40600 mylog.cpp:23] finishRecTaskData
+I0220 20:14:18.135033 48796 mylog.cpp:23] checkConnection
+I0220 20:14:18.146983 48796 mylog.cpp:23] Testing
+I0220 20:14:18.146983 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:14:18.146983 48796 mylog.cpp:23] coming
+I0220 20:14:23.152603 48796 mylog.cpp:23] checkConnection
+I0220 20:14:23.152603 48796 mylog.cpp:23] Testing
+I0220 20:14:23.155596 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:14:23.155596 48796 mylog.cpp:23] coming
+I0220 20:14:28.155980 48796 mylog.cpp:23] checkConnection
+I0220 20:14:28.155980 48796 mylog.cpp:23] Testing
+I0220 20:14:28.158998 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:14:28.158998 48796 mylog.cpp:23] coming
+I0220 20:14:33.160081 48796 mylog.cpp:23] checkConnection
+I0220 20:14:33.160081 48796 mylog.cpp:23] Testing
+I0220 20:14:33.163074 48796 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:14:33.163074 48796 mylog.cpp:23] coming
+I0220 20:14:38.166272 48796 mylog.cpp:23] checkConnection
+I0220 20:14:38.166272 48796 mylog.cpp:23] m_heart_count false
+I0220 20:14:38.184288 48796 mylog.cpp:23] coming
+I0220 20:14:43.185232 48796 mylog.cpp:23] checkConnection
+I0220 20:14:43.185232 48796 mylog.cpp:23] ReleaseConnection
+I0220 20:14:43.185232 48796 mylog.cpp:23] coming
+I0220 20:14:48.186583 48796 mylog.cpp:23] CreateConnection
+I0220 20:14:48.187574 48796 mylog.cpp:23] checkConnection
+I0220 20:14:48.187574 48796 mylog.cpp:23] m_bIsConnected false
+I0220 20:14:48.187574 48796 mylog.cpp:23] coming
+I0220 20:14:53.213472 48796 mylog.cpp:23] CreateConnection
+I0220 20:14:53.214462 48796 mylog.cpp:23] checkConnection
+I0220 20:14:53.214462 48796 mylog.cpp:23] m_bIsConnected false
+I0220 20:14:53.214462 48796 mylog.cpp:23] coming
+I0220 20:14:58.217958 48796 mylog.cpp:23] CreateConnection
+I0220 20:14:58.218948 48796 mylog.cpp:23] checkConnection
+I0220 20:14:58.218948 48796 mylog.cpp:23] m_bIsConnected false
+I0220 20:14:58.218948 48796 mylog.cpp:23] coming
+I0220 20:15:03.245039 48796 mylog.cpp:23] CreateConnection
+I0220 20:15:03.246026 48796 mylog.cpp:23] checkConnection
+I0220 20:15:03.246026 48796 mylog.cpp:23] m_bIsConnected false
+I0220 20:15:03.246026 48796 mylog.cpp:23] coming
+I0220 20:15:10.448076 48796 mylog.cpp:23] CreateConnection
+I0220 20:15:10.450070 48796 mylog.cpp:23] checkConnection
+I0220 20:15:10.450070 48796 mylog.cpp:23] m_bIsConnected false
+I0220 20:15:14.140210 48796 mylog.cpp:23] coming
+I0220 20:15:22.048262 48796 mylog.cpp:23] CreateConnection
+I0220 20:15:22.049262 48796 mylog.cpp:23] checkConnection
+I0220 20:15:22.049262 48796 mylog.cpp:23] m_bIsConnected false
+Log file created at: 2020/02/20 20:42:09
+Running on machine: LAPTOP-JGHPUBTE
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0220 20:42:09.853128 25468 mylog.cpp:23] coming
+I0220 20:42:09.862103 49776 mylog.cpp:23] 
+I0220 20:42:28.690881 25468 mylog.cpp:23] CreateConnection
+I0220 20:42:28.694861 25468 mylog.cpp:23] checkConnection
+I0220 20:42:28.694861 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:42:28.694861 25468 mylog.cpp:23] coming
+I0220 20:42:33.698266 25468 mylog.cpp:23] checkConnection
+I0220 20:42:33.698266 25468 mylog.cpp:23] coming
+I0220 20:42:38.700218 25468 mylog.cpp:23] checkConnection
+I0220 20:42:38.700218 25468 mylog.cpp:23] coming
+I0220 20:42:38.785980 39820 mylog.cpp:23] {"cmd":951,"data":0}
+I0220 20:42:38.785980 39820 mylog.cpp:23] startRecTaskData
+I0220 20:42:38.817900 39820 mylog.cpp:23] {"cmd":952,"data":{"list":[{"follower_disable":false,"follower_id":"2004","follower_max_vol":8000,"follower_ratio":2.0,"follower_server_id":1,"master_disable":false,"master_id":"2000","master_ratio":2.0,"master_server_id":1,"master_strategy":0,"max_drawBack":1000.0,"portal_id":"990000023","reconciliation_type":0,"task_id":"1581492425928563258131"}],"size":1}}
+I0220 20:42:38.817900 39820 mylog.cpp:23] refreshTaskData
+I0220 20:42:38.819888 39820 mylog.cpp:23] finishRecTaskData
+I0220 20:42:43.701635 25468 mylog.cpp:23] checkConnection
+I0220 20:42:43.701635 25468 mylog.cpp:23] Testing
+I0220 20:42:43.704620 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:42:43.704620 25468 mylog.cpp:23] coming
+I0220 20:42:48.706249 25468 mylog.cpp:23] checkConnection
+I0220 20:42:48.706249 25468 mylog.cpp:23] Testing
+I0220 20:42:48.709241 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:42:48.709241 25468 mylog.cpp:23] coming
+I0220 20:42:53.710122 25468 mylog.cpp:23] checkConnection
+I0220 20:42:53.710122 25468 mylog.cpp:23] Testing
+I0220 20:42:53.713106 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:42:53.713106 25468 mylog.cpp:23] coming
+I0220 20:42:53.816836 39820 mylog.cpp:23] {"cmd":951,"data":0}
+I0220 20:42:53.816836 39820 mylog.cpp:23] startRecTaskData
+I0220 20:42:53.847754 39820 mylog.cpp:23] {"cmd":952,"data":{"list":[{"follower_disable":false,"follower_id":"2004","follower_max_vol":8000,"follower_ratio":2.0,"follower_server_id":1,"master_disable":false,"master_id":"2000","master_ratio":2.0,"master_server_id":1,"master_strategy":0,"max_drawBack":1000.0,"portal_id":"990000023","reconciliation_type":0,"task_id":"1581492425928563258131"}],"size":1}}
+I0220 20:42:53.848743 39820 mylog.cpp:23] refreshTaskData
+I0220 20:42:53.849740 39820 mylog.cpp:23] finishRecTaskData
+I0220 20:42:58.715123 25468 mylog.cpp:23] checkConnection
+I0220 20:42:58.715123 25468 mylog.cpp:23] Testing
+I0220 20:42:58.717111 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:42:58.718107 25468 mylog.cpp:23] coming
+I0220 20:43:03.722445 25468 mylog.cpp:23] checkConnection
+I0220 20:43:03.722445 25468 mylog.cpp:23] Testing
+I0220 20:43:03.724431 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:43:03.724431 25468 mylog.cpp:23] coming
+I0220 20:43:08.726989 25468 mylog.cpp:23] checkConnection
+I0220 20:43:08.727977 25468 mylog.cpp:23] Testing
+I0220 20:43:08.729972 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:43:08.729972 25468 mylog.cpp:23] coming
+I0220 20:43:08.817737 39820 mylog.cpp:23] {"cmd":951,"data":0}
+I0220 20:43:08.817737 39820 mylog.cpp:23] startRecTaskData
+I0220 20:43:08.848655 39820 mylog.cpp:23] {"cmd":952,"data":{"list":[{"follower_disable":false,"follower_id":"2004","follower_max_vol":8000,"follower_ratio":2.0,"follower_server_id":1,"master_disable":false,"master_id":"2000","master_ratio":2.0,"master_server_id":1,"master_strategy":0,"max_drawBack":1000.0,"portal_id":"990000023","reconciliation_type":0,"task_id":"1581492425928563258131"}],"size":1}}
+I0220 20:43:08.849653 39820 mylog.cpp:23] refreshTaskData
+I0220 20:43:08.850651 39820 mylog.cpp:23] finishRecTaskData
+I0220 20:43:13.731191 25468 mylog.cpp:23] checkConnection
+I0220 20:43:13.740167 25468 mylog.cpp:23] Testing
+I0220 20:43:13.740167 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:43:13.740167 25468 mylog.cpp:23] coming
+I0220 20:43:18.742370 25468 mylog.cpp:23] checkConnection
+I0220 20:43:18.742370 25468 mylog.cpp:23] Testing
+I0220 20:43:18.745362 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:43:18.745362 25468 mylog.cpp:23] coming
+I0220 20:43:23.746699 25468 mylog.cpp:23] checkConnection
+I0220 20:43:23.746699 25468 mylog.cpp:23] Testing
+I0220 20:43:23.748694 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:43:23.748694 25468 mylog.cpp:23] coming
+I0220 20:43:23.816522 39820 mylog.cpp:23] {"cmd":951,"data":0}
+I0220 20:43:23.816522 39820 mylog.cpp:23] startRecTaskData
+I0220 20:43:23.848608 39820 mylog.cpp:23] {"cmd":952,"data":{"list":[{"follower_disable":false,"follower_id":"2004","follower_max_vol":8000,"follower_ratio":2.0,"follower_server_id":1,"master_disable":false,"master_id":"2000","master_ratio":2.0,"master_server_id":1,"master_strategy":0,"max_drawBack":1000.0,"portal_id":"990000023","reconciliation_type":0,"task_id":"1581492425928563258131"}],"size":1}}
+I0220 20:43:23.848608 39820 mylog.cpp:23] refreshTaskData
+I0220 20:43:23.849606 39820 mylog.cpp:23] finishRecTaskData
+I0220 20:43:28.750445 25468 mylog.cpp:23] checkConnection
+I0220 20:43:28.750445 25468 mylog.cpp:23] Testing
+I0220 20:43:28.752434 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:43:28.752434 25468 mylog.cpp:23] coming
+I0220 20:43:33.753942 25468 mylog.cpp:23] checkConnection
+I0220 20:43:33.753942 25468 mylog.cpp:23] Testing
+I0220 20:43:33.755937 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:43:33.755937 25468 mylog.cpp:23] coming
+I0220 20:43:38.756886 25468 mylog.cpp:23] checkConnection
+I0220 20:43:38.756886 25468 mylog.cpp:23] Testing
+I0220 20:43:38.761857 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:43:38.761857 25468 mylog.cpp:23] coming
+I0220 20:43:38.847627 39820 mylog.cpp:23] {"cmd":951,"data":0}
+I0220 20:43:38.847627 39820 mylog.cpp:23] startRecTaskData
+I0220 20:43:38.878553 39820 mylog.cpp:23] {"cmd":952,"data":{"list":[{"follower_disable":false,"follower_id":"2004","follower_max_vol":8000,"follower_ratio":2.0,"follower_server_id":1,"master_disable":false,"master_id":"2000","master_ratio":2.0,"master_server_id":1,"master_strategy":0,"max_drawBack":1000.0,"portal_id":"990000023","reconciliation_type":0,"task_id":"1581492425928563258131"}],"size":1}}
+I0220 20:43:38.879550 39820 mylog.cpp:23] refreshTaskData
+I0220 20:43:38.880548 39820 mylog.cpp:23] finishRecTaskData
+I0220 20:43:43.763002 25468 mylog.cpp:23] checkConnection
+I0220 20:43:43.763002 25468 mylog.cpp:23] Testing
+I0220 20:43:43.765987 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:43:43.765987 25468 mylog.cpp:23] coming
+I0220 20:43:48.766429 25468 mylog.cpp:23] checkConnection
+I0220 20:43:48.766429 25468 mylog.cpp:23] Testing
+I0220 20:43:48.776404 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:43:48.776404 25468 mylog.cpp:23] coming
+I0220 20:43:53.778352 25468 mylog.cpp:23] checkConnection
+I0220 20:43:53.778352 25468 mylog.cpp:23] Testing
+I0220 20:43:53.780349 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:43:53.780349 25468 mylog.cpp:23] coming
+I0220 20:43:53.912412 39820 mylog.cpp:23] {"cmd":951,"data":0}
+I0220 20:43:53.912412 39820 mylog.cpp:23] startRecTaskData
+I0220 20:43:54.067273 39820 mylog.cpp:23] {"cmd":952,"data":{"list":[{"follower_disable":false,"follower_id":"2004","follower_max_vol":8000,"follower_ratio":2.0,"follower_server_id":1,"master_disable":false,"master_id":"2000","master_ratio":2.0,"master_server_id":1,"master_strategy":0,"max_drawBack":1000.0,"portal_id":"990000023","reconciliation_type":0,"task_id":"1581492425928563258131"}],"size":1}}
+I0220 20:43:54.068260 39820 mylog.cpp:23] refreshTaskData
+I0220 20:43:54.069257 39820 mylog.cpp:23] finishRecTaskData
+I0220 20:43:58.781631 25468 mylog.cpp:23] checkConnection
+I0220 20:43:58.781631 25468 mylog.cpp:23] Testing
+I0220 20:43:58.783625 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:43:58.784623 25468 mylog.cpp:23] coming
+I0220 20:44:03.785125 25468 mylog.cpp:23] checkConnection
+I0220 20:44:03.785125 25468 mylog.cpp:23] Testing
+I0220 20:44:03.787112 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:44:03.787112 25468 mylog.cpp:23] coming
+I0220 20:44:08.789538 25468 mylog.cpp:23] checkConnection
+I0220 20:44:08.790536 25468 mylog.cpp:23] Testing
+I0220 20:44:08.793529 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:44:08.793529 25468 mylog.cpp:23] coming
+I0220 20:44:08.880297 39820 mylog.cpp:23] {"cmd":951,"data":0}
+I0220 20:44:08.880297 39820 mylog.cpp:23] startRecTaskData
+I0220 20:44:08.911213 39820 mylog.cpp:23] {"cmd":952,"data":{"list":[{"follower_disable":false,"follower_id":"2004","follower_max_vol":8000,"follower_ratio":2.0,"follower_server_id":1,"master_disable":false,"master_id":"2000","master_ratio":2.0,"master_server_id":1,"master_strategy":0,"max_drawBack":1000.0,"portal_id":"990000023","reconciliation_type":0,"task_id":"1581492425928563258131"}],"size":1}}
+I0220 20:44:08.912212 39820 mylog.cpp:23] refreshTaskData
+I0220 20:44:08.913209 39820 mylog.cpp:23] finishRecTaskData
+I0220 20:44:13.794399 25468 mylog.cpp:23] checkConnection
+I0220 20:44:13.794399 25468 mylog.cpp:23] Testing
+I0220 20:44:13.795388 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:44:13.795388 25468 mylog.cpp:23] coming
+I0220 20:44:18.796077 25468 mylog.cpp:23] checkConnection
+I0220 20:44:18.806051 25468 mylog.cpp:23] Testing
+I0220 20:44:18.806051 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:44:18.806051 25468 mylog.cpp:23] coming
+I0220 20:44:23.807392 25468 mylog.cpp:23] checkConnection
+I0220 20:44:23.807392 25468 mylog.cpp:23] Testing
+I0220 20:44:23.809386 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:44:23.809386 25468 mylog.cpp:23] coming
+I0220 20:44:28.811141 25468 mylog.cpp:23] checkConnection
+I0220 20:44:28.811141 25468 mylog.cpp:23] Testing
+I0220 20:44:28.813128 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:44:28.813128 25468 mylog.cpp:23] coming
+I0220 20:44:33.814325 25468 mylog.cpp:23] checkConnection
+I0220 20:44:33.814325 25468 mylog.cpp:23] Testing
+I0220 20:44:33.816319 25468 mylog.cpp:23] task list: { task_id:1581492425928563258131 portal_id:990000023 follower_disable:0 follower_id:2004 follower_ratio:2.000000 follower_max_vol:8000 auto_reconciliation:0 master_server_id:1 follower_server_id:1 master_disable:0 master_strategy:0 master_ratio:2.000000 master_id:2000}
+I0220 20:44:33.816319 25468 mylog.cpp:23] coming
+I0220 20:44:38.818112 25468 mylog.cpp:23] checkConnection
+I0220 20:44:38.818112 25468 mylog.cpp:23] m_heart_count false
+I0220 20:44:38.825085 25468 mylog.cpp:23] coming
+I0220 20:44:43.826687 25468 mylog.cpp:23] checkConnection
+I0220 20:44:43.826687 25468 mylog.cpp:23] ReleaseConnection
+I0220 20:44:43.826687 25468 mylog.cpp:23] coming
+I0220 20:44:48.827457 25468 mylog.cpp:23] CreateConnection
+I0220 20:44:48.828446 25468 mylog.cpp:23] checkConnection
+I0220 20:44:48.828446 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:44:48.828446 25468 mylog.cpp:23] coming
+I0220 20:44:53.849159 25468 mylog.cpp:23] CreateConnection
+I0220 20:44:53.850147 25468 mylog.cpp:23] checkConnection
+I0220 20:44:53.850147 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:44:53.851145 25468 mylog.cpp:23] coming
+I0220 20:44:58.874356 25468 mylog.cpp:23] CreateConnection
+I0220 20:44:58.875355 25468 mylog.cpp:23] checkConnection
+I0220 20:44:58.875355 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:44:58.875355 25468 mylog.cpp:23] coming
+I0220 20:45:03.902670 25468 mylog.cpp:23] CreateConnection
+I0220 20:45:03.904680 25468 mylog.cpp:23] checkConnection
+I0220 20:45:03.904680 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:45:03.904680 25468 mylog.cpp:23] coming
+I0220 20:45:08.933890 25468 mylog.cpp:23] CreateConnection
+I0220 20:45:08.934887 25468 mylog.cpp:23] checkConnection
+I0220 20:45:08.934887 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:45:08.934887 25468 mylog.cpp:23] coming
+I0220 20:45:13.963265 25468 mylog.cpp:23] CreateConnection
+I0220 20:45:13.964253 25468 mylog.cpp:23] checkConnection
+I0220 20:45:13.965251 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:45:13.965251 25468 mylog.cpp:23] coming
+I0220 20:45:18.987911 25468 mylog.cpp:23] CreateConnection
+I0220 20:45:18.988900 25468 mylog.cpp:23] checkConnection
+I0220 20:45:18.988900 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:45:18.989897 25468 mylog.cpp:23] coming
+I0220 20:45:24.017714 25468 mylog.cpp:23] CreateConnection
+I0220 20:45:24.018712 25468 mylog.cpp:23] checkConnection
+I0220 20:45:24.018712 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:45:24.018712 25468 mylog.cpp:23] coming
+I0220 20:45:29.039724 25468 mylog.cpp:23] CreateConnection
+I0220 20:45:29.041719 25468 mylog.cpp:23] checkConnection
+I0220 20:45:29.041719 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:45:29.041719 25468 mylog.cpp:23] coming
+I0220 20:45:34.068217 25468 mylog.cpp:23] CreateConnection
+I0220 20:45:34.070204 25468 mylog.cpp:23] checkConnection
+I0220 20:45:34.070204 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:45:34.070204 25468 mylog.cpp:23] coming
+I0220 20:45:39.096554 25468 mylog.cpp:23] CreateConnection
+I0220 20:45:39.097553 25468 mylog.cpp:23] checkConnection
+I0220 20:45:39.097553 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:45:39.097553 25468 mylog.cpp:23] coming
+I0220 20:45:44.099612 25468 mylog.cpp:23] CreateConnection
+I0220 20:45:44.100601 25468 mylog.cpp:23] checkConnection
+I0220 20:45:44.100601 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:45:44.100601 25468 mylog.cpp:23] coming
+I0220 20:45:49.103716 25468 mylog.cpp:23] CreateConnection
+I0220 20:45:49.104714 25468 mylog.cpp:23] checkConnection
+I0220 20:45:49.104714 25468 mylog.cpp:23] m_bIsConnected false
+I0220 20:45:49.104714 25468 mylog.cpp:23] coming
+I0220 20:45:54.106055 25468 mylog.cpp:23] checkConnection
+I0220 20:45:54.106055 25468 mylog.cpp:23] coming

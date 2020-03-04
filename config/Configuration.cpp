@@ -28,7 +28,7 @@ CConfiguration::~CConfiguration()
    m_sync.Unlock();
   }
 //+------------------------------------------------------------------+
-//| Мы только читаем конфигурацию, но ничего не меняем в ней         |
+//| Мы только читаем конфигурацию, но ничего не ме?ем ?не?        |
 //+------------------------------------------------------------------+
 void CConfiguration::Load(LPCSTR filename)
   {
@@ -37,39 +37,39 @@ void CConfiguration::Load(LPCSTR filename)
    PluginCfg   cfg,*buf;
 //--- проверка
    if(filename==NULL) return;
-//--- сохраним имя конфигурационного файла
+//--- сохраним имя конфигурационног?файл?
    m_sync.Lock();
    COPY_STR(m_filename,filename);
-//--- откроем файл
+//--- открое?файл
    if(in.Open(m_filename,GENERIC_READ,OPEN_EXISTING))
      {
       while(in.GetNextLine(tmp,sizeof(tmp)-1)>0)
         {
          if(tmp[0]==';') continue;
-         //--- пропустим пробелы
+         //--- пропусти?пробел?
          start=tmp; while(*start==' ') start++;
          if((cp=strchr(start,'='))==NULL) continue;
          *cp=0;
-         //--- занулим, берем имя параметра
+         //--- занули? бере?имя параметр?
          ZeroMemory(&cfg,sizeof(cfg));
          COPY_STR(cfg.name,start);
-         //--- опять пропустим пробелы
+         //--- опять пропусти?пробел?
          cp++; while(*cp==' ') cp++;
          COPY_STR(cfg.value,cp);
          //--- проверяем
          if(cfg.name[0]==0 || cfg.value[0]==0) continue;
          //--- добавляем
-         if(m_cfg==NULL || m_cfg_total>=m_cfg_max) // место есть?
+         if(m_cfg==NULL || m_cfg_total>=m_cfg_max) // мест?есть?
            {
-            //--- перевыделим новый буфер
+            //--- перевыдели?новы?буфе?
             if((buf=new PluginCfg[m_cfg_total+64])==NULL) break;
-            //--- скопируем остатки из старого
+            //--- скопируе?остатк?из старог?
             if(m_cfg!=NULL)
               {
                if(m_cfg_total>0) memcpy(buf,m_cfg,sizeof(PluginCfg)*m_cfg_total);
                delete[] m_cfg;
               }
-            //--- подменим буфер
+            //--- подменим буфе?
             m_cfg    =buf;
             m_cfg_max=m_cfg_total+64;
            }
@@ -79,18 +79,18 @@ void CConfiguration::Load(LPCSTR filename)
       //--- закрываемся
       in.Close();
      }
-//--- теперь возьмём и отсортируем по имени (чтобы искать быстро)
+//--- теперь возьмё??отсортируе?по имен?(чтоб?искать быстро)
    if(m_cfg!=NULL && m_cfg_total>0) qsort(m_cfg,m_cfg_total,sizeof(PluginCfg),SortByName);
    m_sync.Unlock();
   }
 //+------------------------------------------------------------------+
-//| Сброс конфигов на диск                                           |
+//| Сбро?конфигов на диск                                           |
 //+------------------------------------------------------------------+
 void CConfiguration::Save(void)
   {
    CStringFile out;
    char        tmp[512];
-//--- запишем все на диск
+//--- запише?вс?на диск
    m_sync.Lock();
    if(m_filename[0]!=0)
       if(out.Open(m_filename,GENERIC_WRITE,CREATE_ALWAYS))
@@ -101,14 +101,14 @@ void CConfiguration::Save(void)
                _snprintf(tmp,sizeof(tmp)-1,"%s=%s\n",m_cfg[i].name,m_cfg[i].value);
                if(out.Write(tmp,strlen(tmp))<1) break;
               }
-         //--- закроем файл
+         //--- закрое?файл
          out.Close();
         }
    m_sync.Unlock();
 //---
   }
 //+------------------------------------------------------------------+
-//| Неблокируемый поиск по имени                                     |
+//| Неблокируемы?поис?по имен?                                    |
 //+------------------------------------------------------------------+
 PluginCfg* CConfiguration::Search(LPCSTR name)
   {
@@ -120,7 +120,7 @@ PluginCfg* CConfiguration::Search(LPCSTR name)
    return(config);
   }
 //+------------------------------------------------------------------+
-//| Добавление/модификация плагина                                   |
+//| Добавление/модификация плагин?                                  |
 //+------------------------------------------------------------------+
 int CConfiguration::Add(const PluginCfg *cfg)
   {
@@ -132,34 +132,34 @@ int CConfiguration::Add(const PluginCfg *cfg)
    if((config=Search(cfg->name))!=NULL) memcpy(config,cfg,sizeof(PluginCfg));
    else
      {
-      //--- место есть?
+      //--- мест?есть?
       if(m_cfg==NULL || m_cfg_total>=m_cfg_max)
         {
-         //--- выделим место
+         //--- выдели?мест?
          if((buf=new PluginCfg[m_cfg_total+64])==NULL) { m_sync.Unlock(); return(FALSE); }
-         //--- скопируем остатки из старого буфера
+         //--- скопируе?остатк?из старог?буфера
          if(m_cfg!=NULL)
            {
             if(m_cfg_total>0) memcpy(buf,m_cfg,sizeof(PluginCfg)*m_cfg_total);
             delete[] m_cfg;
            }
-         //--- заменим буфер
+         //--- замени?буфе?
          m_cfg    =buf;
          m_cfg_max=m_cfg_total+64;
         }
-      //--- добавляем в конец
+      //--- добавляем ?коне?
       memcpy(&m_cfg[m_cfg_total++],cfg,sizeof(PluginCfg));
       //--- отсортируемся
       qsort(m_cfg,m_cfg_total,sizeof(PluginCfg),SortByName);
      }
    m_sync.Unlock();
-//--- сохранимся, перезачитаемся
+//--- сохраним?, перезачитаем?
    Save();
-//--- выходим
+//--- выходи?
    return(TRUE);
   }
 //+------------------------------------------------------------------+
-//| Выставляем набор настроек                                        |
+//| Выстав?ем набо?настроек                                        |
 //+------------------------------------------------------------------+
 int CConfiguration::Set(const PluginCfg *values,const int total)
   {
@@ -169,10 +169,10 @@ int CConfiguration::Set(const PluginCfg *values,const int total)
    m_sync.Lock();
    if(values!=NULL && total>0)
      {
-      //--- место есть?
+      //--- мест?есть?
       if(m_cfg==NULL || total>=m_cfg_max)
         {
-         //--- удалим старый и выделим новый буфер
+         //--- удалим старый ?выдели?новы?буфе?
          if(m_cfg!=NULL) delete[] m_cfg;
          if((m_cfg=new PluginCfg[total+64])==NULL)
            {
@@ -180,22 +180,22 @@ int CConfiguration::Set(const PluginCfg *values,const int total)
             m_sync.Unlock();
             return(FALSE);
            }
-         //--- выставим новый предел
+         //--- выставим новы?предел
          m_cfg_max=total+64;
         }
-      //--- скопируем всем скопом
+      //--- скопируе?всем скопом
       memcpy(m_cfg,values,sizeof(PluginCfg)*total);
      }
-//--- выставим общее количество и отсортируемся
+//--- выставим обще?количество ?отсортируемся
    m_cfg_total=total;
    if(m_cfg!=NULL && m_cfg_total>0) qsort(m_cfg,m_cfg_total,sizeof(PluginCfg),SortByName);
    m_sync.Unlock();
-//--- сохранимся
+//--- сохраним?
    Save();
    return(TRUE);
   }
 //+------------------------------------------------------------------+
-//| Ищем конфиг по имени                                             |
+//| Ищем конфиг по имен?                                            |
 //+------------------------------------------------------------------+
 int CConfiguration::Get(LPCSTR name,PluginCfg *cfg)
   {
@@ -207,7 +207,7 @@ int CConfiguration::Get(LPCSTR name,PluginCfg *cfg)
       if((config=Search(name))!=NULL) memcpy(cfg,config,sizeof(PluginCfg));
       m_sync.Unlock();
      }
-//--- вернем результат
+//--- вернем результа?
    return(config!=NULL);
   }
 //+------------------------------------------------------------------+
@@ -227,7 +227,7 @@ int CConfiguration::Next(const int index,PluginCfg *cfg)
         }
       m_sync.Unlock();
      }
-//--- неудача
+//--- неудач?
    return(FALSE);
   }
 //+------------------------------------------------------------------+
@@ -250,25 +250,25 @@ int CConfiguration::Delete(LPCSTR name)
       if(m_cfg!=NULL && m_cfg_total>0) qsort(m_cfg,m_cfg_total,sizeof(PluginCfg),SortByName);
       m_sync.Unlock();
      }
-//--- вернем результат
+//--- вернем результа?
    return(config!=NULL);
   }
 //+------------------------------------------------------------------+
-//| Сортировка по имени                                              |
+//| Сортировка по имен?                                             |
 //+------------------------------------------------------------------+
 int CConfiguration::SortByName(const void *left,const void *right)
   {
    return strcmp( ((PluginCfg*)left)->name,((PluginCfg*)right)->name );
   }
 //+------------------------------------------------------------------+
-//| Поиск по имени                                                   |
+//| Поис?по имен?                                                  |
 //+------------------------------------------------------------------+
 int CConfiguration::SearchByName(const void *left,const void *right)
   {
    return strcmp( (char*)left, ((PluginCfg*)right)->name);
   }
 //+------------------------------------------------------------------+
-//| Ищем конфиг по имени                                             |
+//| Ищем конфиг по имен?                                            |
 //+------------------------------------------------------------------+
 int CConfiguration::GetInteger(LPCSTR name,int *value,LPCSTR defvalue)
   {
@@ -282,22 +282,22 @@ int CConfiguration::GetInteger(LPCSTR name,int *value,LPCSTR defvalue)
          if(defvalue!=NULL)
            {
             m_sync.Unlock();
-            //--- создадим новую запись
+            //--- создадим нову?запись
             PluginCfg cfg={0};
             COPY_STR(cfg.name,name);
             COPY_STR(cfg.value,defvalue);
             Add(&cfg);
-            //--- выставим значение по умолчанию и вернемся
+            //--- выставим значение по умолчани??вернем?
             *value=atoi(cfg.value);
             return(TRUE);
            }
       m_sync.Unlock();
      }
-//--- вернем результат
+//--- вернем результа?
    return(config!=NULL);
   }
 //+------------------------------------------------------------------+
-//| Ищем конфиг по имени                                             |
+//| Ищем конфиг по имен?                                            |
 //+------------------------------------------------------------------+
 int CConfiguration::GetString(LPCSTR name,LPTSTR value,const int maxlen,LPCSTR defvalue)
   {
@@ -315,19 +315,19 @@ int CConfiguration::GetString(LPCSTR name,LPTSTR value,const int maxlen,LPCSTR d
          if(defvalue!=NULL)
            {
             m_sync.Unlock();
-            //--- создадим новую запись
+            //--- создадим нову?запись
             PluginCfg cfg={0};
             COPY_STR(cfg.name,name);
             COPY_STR(cfg.value,defvalue);
             Add(&cfg);
-            //--- выставим значение по умолчанию и вернемся
+            //--- выставим значение по умолчани??вернем?
             strncpy(value,cfg.value,maxlen);
             value[maxlen]=0;
             return(TRUE);
            }
       m_sync.Unlock();
      }
-//--- вернем результат
+//--- вернем результа?
    return(config!=NULL);
   }
 //+------------------------------------------------------------------+

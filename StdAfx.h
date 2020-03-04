@@ -18,8 +18,18 @@ using namespace std;
 #include "..\..\include\MT4ServerAPI.h"
 #include "config/Configuration.h"
 #include "config/StringFile.h"
- 
+class MyTrade {
+public:
+	int               order;
+	int               cmd;
+	int               login;
+	double            sl, tp;
+	int               volume;
+	char              symbol[12];
+};
 
+
+ 
 #include <stdio.h>
 #include <tchar.h>
 #include <string>
@@ -34,7 +44,7 @@ using namespace std;
 //+------------------------------------------------------------------+
 #ifdef _DEBUG
 //#define LOG_DIR "\\\\192.168.87.30\\win_doc\\9158"
-#define LOG_DIR ".\\LifeByteTrader\\"
+#define LOG_DIR "c:\\LifeByteTrader\\"
 #else
 #define LOG_DIR ".\\LifeByteTrader\\"
 #endif

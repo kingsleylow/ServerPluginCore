@@ -15,9 +15,9 @@ namespace std
 {
 	 
  
-#define  THREADPOOL_MAX_NUM 8
+#define  THREADPOOL_MAX_NUM  16
 
-	//#define  THREADPOOL_AUTO_GROW
+#define  THREADPOOL_AUTO_GROW
 
 	class threadpool
 	{
@@ -30,7 +30,9 @@ namespace std
 		atomic<int>  _idlThrNum{ 0 };  
 
 	public:
-		inline threadpool(unsigned short size = 4) { addThread(size); }
+		inline threadpool(unsigned short size = 2) { 
+			addThread(size);
+		}
 		inline ~threadpool()
 		{
 			_run = false;
@@ -102,6 +104,9 @@ namespace std
 						_idlThrNum++;
 					}
 				});
+			 
+
+
 				_idlThrNum++;
 			}
 		}

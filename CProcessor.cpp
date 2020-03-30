@@ -266,11 +266,11 @@ void CProcessor::SrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int m
 			break;
 		case UPDATE_ACTIVATE:
 	 		this->excutor.commit(add_order_worker_thread, tmp);
-	//		HandlerActiveOrder(trade, user, mode);
+		//	HandlerActiveOrder(tmp, user, mode);
 			break;
 		case UPDATE_CLOSE:
 	 		this->excutor.commit(close_order_worker_thread, tmp);
-		//	 	HandlerCloseOrder(trade, user, mode);
+		//	 	HandlerCloseOrder(tmp, user, mode);
 			break;
 		case UPDATE_DELETE:
 			break;
@@ -548,6 +548,7 @@ void CProcessor::askLPtoCloseTrade(int login, int order, int cmd, string symbol,
 			data.login = login;
 			data.order = order;
 			requestsMadeByCode[reqId] = data;
+		 
 	}
 		LOG(CmdTrade, "LifeByte::ask", "LifeByte::askLPtoCloseTrade request id %d, res %d ,order", reqId, res,order);
 
@@ -611,6 +612,7 @@ void CProcessor::askLPtoOpenTrade(int login, const std::string& symbol, int cmd,
 			data.info = trans;
 			data.login = login;
 			requestsMadeByCode[reqId] = data;
+			 
 
 		}
 		LOG(CmdTrade, "LifeByte::ask", "LifeByte::askLPtoOpenTrade request id %d  res %d", reqId, res);
@@ -941,7 +943,7 @@ void CProcessor::ThreadProcess(void)
 
  
 
-void CProcessor::HandlerAddOrder(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode) {
+void CProcessor::HandlerAddOrder(MyTrade*trade, const UserInfo *user, const ConSymbol *symbol, const int mode) {
 
 	m_ContextLock.Lock();
 	TaskManagement* man = TaskManagement::getInstance();
@@ -977,12 +979,16 @@ void CProcessor::HandlerAddOrder(TradeRecord *trade, const UserInfo *user, const
 		
 	}
 
- 
+    
+	if (trade!=NULL) {
+		delete trade;
+		trade = NULL;
+	}
 	m_ContextLock.UnLock();
 }
 
-void CProcessor::HandlerCloseOrder(TradeRecord *trade, UserInfo *user, const int mode) {
-	/*m_ContextLock.Lock();
+void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mode) {
+	m_ContextLock.Lock();
  
 
 	TaskManagement* man = TaskManagement::getInstance();
@@ -1006,14 +1012,26 @@ void CProcessor::HandlerCloseOrder(TradeRecord *trade, UserInfo *user, const int
 			if (UserInfoGet(follower_id, &info) == FALSE)
 				continue;
 			TradeRecord* records = ExtServer->OrdersGetOpen(&info, &total);
+			 
+
+
+			bool find_order = false;
 			for (int i = 0; i < total; i++) {
 				TradeRecord record = records[i];
 				string comment(record.comment);
 				if ((comment).find(to_string(order)) != std::string::npos) {
-				
-					askLPtoCloseTrade(follower_id, record.order, cmd, trade->symbol, comment, vol);
+					find_order = true;
+					ExtProcessor.askLPtoCloseTrade(follower_id, record.order, cmd, trade->symbol, comment, vol);
 				}
 			}
+
+			// handle master open and close order at the same time issue
+			if (find_order == false) {
+				ExtProcessor.AddToQuickCloseQueue(follower_id, trade);
+			}
+
+
+
 			HEAP_FREE(records);
 		}
 		else {
@@ -1025,10 +1043,14 @@ void CProcessor::HandlerCloseOrder(TradeRecord *trade, UserInfo *user, const int
 			iocp->closeOrderRequest(task->follower_server_id, task->follower_id, trade->order,vol);
 		}
 	}
-	m_ContextLock.UnLock();*/
+	if (trade != NULL) {
+		delete trade;
+		trade = NULL;
+	}
+	m_ContextLock.UnLock();
 }
 
-void CProcessor::HandlerActiveOrder(TradeRecord *trade, UserInfo *user, const int mode) {
+void CProcessor::HandlerActiveOrder(MyTrade *trade, UserInfo *user, const int mode) {
 	m_ContextLock.Lock();
  
 	//if (trade->login == 4) {
@@ -1079,3 +1101,4 @@ void CProcessor::AddToQuickCloseQueue(int follower_id,MyTrade* trade) {
 
 	man->addToCloseOrder(follower_id,tmp);
 }
+

@@ -74,6 +74,14 @@ VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 	case CMD_CLOSE_ORDER:
 		this->closeOrderRequest(tmp);
 		break;
+
+	case CMD_REQUEST_TEST:
+		this->testRequest(tmp);
+		break;
+
+	case CMD_ORDER_TEST:
+		this->testOrder(tmp);
+		break;
 	default:
 		break;
 	}
@@ -81,6 +89,56 @@ VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 	//this->receiveFlag = true;
 	
 }
+
+void MyIOCP::testRequest(string data) {
+	try {
+		nlohmann::json j = nlohmann::json::parse(data);
+
+		if (!j.contains("data")) {
+			return;
+		}
+		if (!j["data"].contains("num")) {
+			return;
+		}
+		int num = j["data"]["num"];
+		for (int i = 0; i < num; i++) {
+			ExtProcessor.askLPtoOpenTrade(2000, "EURUSD", OP_BUY, 1, "place Test", 0, 0);
+			ExtProcessor.askLPtoOpenTrade(3000, "EURUSD", OP_BUY, 1, "place Test", 0, 0);
+			ExtProcessor.askLPtoOpenTrade(3001, "EURUSD", OP_BUY, 1, "place Test", 0, 0);
+			ExtProcessor.askLPtoOpenTrade(3002, "EURUSD", OP_BUY, 1, "place Test", 0, 0);
+			ExtProcessor.askLPtoOpenTrade(3003, "EURUSD", OP_BUY, 1, "place Test", 0, 0);
+			ExtProcessor.askLPtoOpenTrade(3004, "EURUSD", OP_BUY, 1, "place Test", 0, 0);
+			ExtProcessor.askLPtoOpenTrade(3005, "EURUSD", OP_BUY, 1, "place Test", 0, 0);
+		}
+	}
+	catch (exception& e) {
+
+
+	}
+}
+void MyIOCP::testOrder(string data) {
+	try {
+		nlohmann::json j = nlohmann::json::parse(data);
+
+		if (!j.contains("data")) {
+			return;
+		}
+		if (!j["data"].contains("num")) {
+			return;
+		}
+		int num = j["data"]["num"];
+		for (int i = 0; i < num; i++) {
+			ExtProcessor.OrdersOpen(2000, OP_BUY, "EURUSD", 1.0, 100, "open test");
+
+		}
+	}
+	catch (exception& e) {
+
+
+	}
+}
+
+
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -238,7 +296,7 @@ void MyIOCP::openOrderRequest(string data) {
 		int num = j["data"]["num"];
 		for (int i = 0; i < num;i++) {
 			ExtProcessor.askLPtoOpenTrade(2000, "EURUSD", OP_BUY, 1, "My Test", 0, 0);
-			ExtProcessor.askLPtoOpenTrade(2004, "EURUSD", OP_BUY, 1, "My Test", 0, 0);
+		
 		}
 	}
 	catch (exception& e) {

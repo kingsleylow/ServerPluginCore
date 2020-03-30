@@ -37,6 +37,9 @@
 #define CMD_CLOSE_ORDER 1001
 
 
+#define CMD_REQUEST_TEST 1002
+#define CMD_ORDER_TEST 1003
+
 #define SERVER_ID "server_id"
 #define LOGIN "login"
 #define SYMBOL "symbol"
@@ -77,5 +80,7 @@ public:
 	void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots);
 	void MyIOCP::openOrderRequest(string data);
 	void MyIOCP::closeOrderRequest(string data);
+	void MyIOCP::testRequest(string data);
+	void MyIOCP::testOrder(string data);
 };
 

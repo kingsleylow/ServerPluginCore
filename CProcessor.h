@@ -34,16 +34,17 @@ public:
 	std::threadpool excutor{0};
 	IOCPMutex m_ContextLock;
 	int				  plugin_id;
+	int OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
+		const double open_price, const int volum, const string comment);
 private:
 	//---- out to server log
 	int CProcessor::UpdateComment(const int order, const string comment);
 	int OrdersClose(const int order,   const int volume, const double close_price,   const string comment);
-	int OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
-		const double open_price, const int volum,const string comment);
 
-	void CProcessor::HandlerAddOrder(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
-	void CProcessor::HandlerCloseOrder(TradeRecord *trade, UserInfo *user, const int mode);
-	void CProcessor::HandlerActiveOrder(TradeRecord *trade, UserInfo *user, const int mode);
+
+	void CProcessor::HandlerAddOrder(MyTrade *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
+	void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mode);
+	void CProcessor::HandlerActiveOrder(MyTrade *trade, UserInfo *user, const int mode);
 	//bool CProcessor::ActionCheck(const int order,  const int login, const double price);
 	void CProcessor::HandleQuickCloseIssue(int login, int order);
 	void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade* trade);

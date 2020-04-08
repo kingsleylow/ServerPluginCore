@@ -4,12 +4,8 @@ EXPORTS
     MtSrvAbout
     MtSrvFeederData
     MtSrvStartup
-	MtSrvTradeRequestApply
-	MtSrvTradesAdd
-	MtSrvTradesAddExt
-	MtSrvDealerGet
 	MtSrvDealerConfirm
-	MtSrvTradeTransaction
+	MtSrvTradesAddExt
 	MtSrvTradesUpdate
 	MtSrvPluginCfgAdd
     MtSrvPluginCfgSet

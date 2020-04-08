@@ -21,7 +21,7 @@ MyIOCP::~MyIOCP()
 {
 	this->level = NO_RIGHT;
 	this->m_heart_count = 0;
- 
+	
 
 
 }
@@ -145,7 +145,7 @@ void MyIOCP::testOrder(string data) {
 
 VOID MyIOCP::NotifyConnectionStatus(IOCPClient_ConnectionType ConnectionType) {
 	if (ConnectionType == IOCPClient_ConnectionType_Connected) {
- 
+		this->m_heart_count = 0;
 	}
 	else if(ConnectionType == IOCPClient_ConnectionType_Disconnected){
  

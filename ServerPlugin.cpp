@@ -94,28 +94,22 @@ void APIENTRY MtSrvFeederData(const ConFeeder *feed,FeedData *inf)
   }
 //+------------------------------------------------------------------+
 
-void APIENTRY MtSrvTradeRequestApply(RequestInfo *request, const int isdemo)
-{
-	
-	ExtProcessor.SrvTradeRequestApply(request, isdemo);
-	 
 
-}
 
-void APIENTRY MtSrvTradesAdd(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol) 
-{
-	ExtProcessor.SrvTradesAdd(trade, user, symbol);
-}
+//void APIENTRY MtSrvTradesAdd(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol) 
+//{
+//	ExtProcessor.SrvTradesAdd(trade, user, symbol);
+//}
 void APIENTRY MtSrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode)
 { 
 	ExtProcessor.SrvTradesAddExt(trade, user, symbol, mode);
 }
-int  APIENTRY  MtSrvDealerGet(const ConManager *manager, const RequestInfo *request)
-{
-	ExtProcessor.SrvDealerGet(manager, request);
-	return TRUE;
-}
- 
+//int  APIENTRY  MtSrvDealerGet(const ConManager *manager, const RequestInfo *request)
+//{
+//	ExtProcessor.SrvDealerGet(manager, request);
+//	return TRUE;
+//}
+// 
 int  APIENTRY  MtSrvDealerConfirm(const int id, const UserInfo *us, double *prices) 
 {
 	ExtProcessor.SrvDealerConfirm(id,us,prices);
@@ -123,11 +117,11 @@ int  APIENTRY  MtSrvDealerConfirm(const int id, const UserInfo *us, double *pric
 }
  
 
-int  APIENTRY  MtSrvTradeTransaction(TradeTransInfo* trans, const UserInfo *user, int *request_id)
-{
-	ExtProcessor.SrvTradeTransaction(trans, user, request_id);
-	return RET_OK;
-}
+//int  APIENTRY  MtSrvTradeTransaction(TradeTransInfo* trans, const UserInfo *user, int *request_id)
+//{
+//	ExtProcessor.SrvTradeTransaction(trans, user, request_id);
+//	return RET_OK;
+//}
 
 void APIENTRY MtSrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int mode)
 {

@@ -26,6 +26,7 @@ public:
 	double            sl, tp;
 	int               volume;
 	char              symbol[12];
+	double price;
 };
 
 

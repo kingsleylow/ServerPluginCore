@@ -51,10 +51,10 @@ CProcessor::CProcessor()
 	 
 	plugin_id = D_PLUGIN_ID;
 	UINT id = 0;
-	  m_threadServer = (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapper, (void*)this, 0, &id);
-	  m_funcThread = (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapperRequest, (void*)this, 0, &id);
-	  InitializeCriticalSectionAndSpinCount(&m_cs, 10000);;
-	 this->request_current_id = 0;
+	m_threadServer = (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapper, (void*)this, 0, &id);
+//	m_funcThread = (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapperRequest, (void*)this, 0, &id);
+	InitializeCriticalSectionAndSpinCount(&m_cs, 10000);;
+	this->request_current_id = 0;
 	 
 }
 CProcessor::~CProcessor()
@@ -256,7 +256,7 @@ void CProcessor::SrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const
 
 
 
- //	this->HandlerAddOrder(trade,user,symbol,mode);
+// 	this->HandlerAddOrder(tmp,user,symbol,mode);
 }
 
 
@@ -295,7 +295,7 @@ void CProcessor::SrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int m
 			this->excutor.commit(close_order_worker_thread, tmp);
 #endif
 	 		 
-		//	 	HandlerCloseOrder(tmp, user, mode);
+	// 	 	HandlerCloseOrder(tmp, user, mode);
 			break;
 		case UPDATE_DELETE:
 			break;
@@ -312,16 +312,16 @@ void CProcessor::SrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int m
 
 void CProcessor::SrvDealerConfirm(const int id, const UserInfo *us, double *prices)
 {
-	m_ContextLock.Lock();
-	std::map<int, RequestMetaData>::iterator it = requestsMadeByCode.find(id);
-	if (it == requestsMadeByCode.end()) {
-		m_ContextLock.UnLock();
-		return;
-	}
-	m_ContextLock.UnLock();
-	LOG(CmdTrade,"LifeByte::SrvDealerConfirm", "LifeByte::SrvDealerConfirm: request %d", id);
+	//m_ContextLock.Lock();
+	//std::map<int, RequestMetaData>::iterator it = requestsMadeByCode.find(id);
+	//if (it == requestsMadeByCode.end()) {
+	//	m_ContextLock.UnLock();
+	//	return;
+	//}
+	//m_ContextLock.UnLock();
+	//LOG(CmdTrade,"LifeByte::SrvDealerConfirm", "LifeByte::SrvDealerConfirm: request %d", id);
 
- 
+ //
 
 	OrderTask* task = new OrderTask();
 	task->id = id;
@@ -330,7 +330,7 @@ void CProcessor::SrvDealerConfirm(const int id, const UserInfo *us, double *pric
  
  
 	this->excutor.commit(order_worker_thread, task);
-
+	 
 	
 }
 
@@ -451,9 +451,9 @@ UINT __cdecl CProcessor::open_order_worker_thread(void* param) {
 UINT __cdecl CProcessor::add_order_worker_thread(void* param) {
 
 
+//	
+
 	EnterCriticalSection(&m_cs);
-
-
 	MyTrade* trade = (MyTrade*)param;
 
 	TaskManagement* man = TaskManagement::getInstance();
@@ -473,6 +473,7 @@ UINT __cdecl CProcessor::add_order_worker_thread(void* param) {
 		int cmd = man->getStrategy(task->master_strategy, trade->cmd);
 		string comment = ORDER_COMMENT_PRE + to_string(trade->order);
 		int follower_id = atoi(task->follower_id.c_str());
+	
 		if (task->follower_server_id == ExtProcessor.plugin_id) {
 
         /*    bool processing = ExtProcessor.checkProcessingRequestByLogin(follower_id);
@@ -481,11 +482,19 @@ UINT __cdecl CProcessor::add_order_worker_thread(void* param) {
 				ExtProcessor.AddRequestTask(follower_id, trade->symbol, cmd, vol, comment, trade->tp, trade->sl, 0, TS_OPEN_NORMAL);
 			}
 			else {
-				ExtProcessor.askLPtoOpenTrade(follower_id, trade->symbol, cmd, vol, comment, trade->tp, trade->sl);
+				
 			}*/
-			ExtProcessor.AddRequestTask(follower_id, trade->symbol, cmd, vol, comment, trade->tp, trade->sl, 0, TS_OPEN_NORMAL);
-
-
+			
+	//		ExtProcessor.AddRequestTask(follower_id, trade->symbol, cmd, vol, comment, trade->tp, trade->sl, 0, TS_OPEN_NORMAL);
+	//		ExtProcessor.askLPtoOpenTrade(follower_id, trade->symbol, cmd, vol, comment, trade->tp, trade->sl);
+			if (ExtProcessor.processing_login.find(follower_id)== ExtProcessor.processing_login.end()) {
+				ExtProcessor.askLPtoOpenTrade(follower_id, trade->symbol, cmd, vol, comment, trade->tp, trade->sl);
+				ExtProcessor.processing_login.insert(follower_id);
+			}
+			else {
+				ExtProcessor.AddRequestTask(follower_id, trade->symbol, cmd, vol, comment, trade->tp, trade->sl, 0, TS_OPEN_NORMAL);
+				
+			}
 		}
 		else {
 			//handle another server
@@ -496,7 +505,7 @@ UINT __cdecl CProcessor::add_order_worker_thread(void* param) {
 			}
 			iocp->openOrderRequest(task->follower_server_id, task->follower_id, trade->symbol, cmd, vol, comment);
 		}
-
+		
 	}
 
 	if (trade!=NULL) {
@@ -541,7 +550,7 @@ UINT __cdecl CProcessor::close_order_worker_thread(void* param) {
 				string comment(record.comment);
 				if ((comment).find(to_string(order)) != std::string::npos) {
 				    find_order = true;
-					ExtProcessor.AddRequestTask(follower_id, trade->symbol, cmd, vol, comment, 0, 0, record.order, TS_CLOSED_NORMAL);
+				 
 				
 				/*	bool processing = ExtProcessor.checkProcessingRequestByLogin(follower_id);
 
@@ -551,7 +560,14 @@ UINT __cdecl CProcessor::close_order_worker_thread(void* param) {
 					else {
 						ExtProcessor.askLPtoCloseTrade(follower_id, record.order, cmd, trade->symbol, comment, vol);
 					}*/
-
+					if (ExtProcessor.processing_login.find(follower_id) == ExtProcessor.processing_login.end()) {
+						ExtProcessor.askLPtoCloseTrade(follower_id, record.order, cmd, trade->symbol, comment, vol);
+						ExtProcessor.processing_login.insert(follower_id);
+					}
+					else {
+						ExtProcessor.AddRequestTask(follower_id, trade->symbol, cmd, vol, comment, 0, 0, record.order, TS_CLOSED_NORMAL);
+					
+					}
 
 				}
 			}
@@ -623,27 +639,19 @@ UINT __cdecl  CProcessor::order_worker_thread(void* param) {
 			}
 
 
-		/*	UserInfo us = { 0 };
-			if (ExtProcessor.UserInfoGet(3, &us) == TRUE) {
-				int key = 0;
-				RequestInfo reqs[512];
-				int max = 512;
-
-				int total = ExtServer->RequestsGet(&key, reqs, max);
-				RequestInfo req = reqs[id];
-
-				int res = ExtServer->RequestsReset(id, &us, DC_ANSWERED);
-				total = ExtServer->RequestsGet(&key, reqs, max);
-				req = reqs[id];
-				  res = ExtServer->RequestsDelete(id);
-				  total = ExtServer->RequestsGet(&key, reqs, max);
-				    req = reqs[id];
-			ExtProcessor.LOG(CmdTrade, "LifeByte::close", "LifeByte::close request id %d, res %d ", id, res);
+			UserInfo us = { 0 };
+			if (ExtProcessor.UserInfoGet(data.login, &us) == TRUE) {
+			 
+				int  res = ExtServer->RequestsDelete(id);
+				 
+		    	ExtProcessor.LOG(CmdTrade, "LifeByte::close", "LifeByte::close request id %d, res %d ", id, res);
 
 
-			}*/
+			}
 
 			ExtProcessor.requestsMadeByCode.erase(it);
+			ExtProcessor.processing_login.erase(data.login);
+			ExtProcessor.checkRequestTaskByLogin(data.login);
 		}
 		else {
 			ExtProcessor.LOG(false, "LifeByte::SrvDealerConfirm No request");
@@ -1053,7 +1061,7 @@ UINT __stdcall CProcessor::ThreadWrapperRequest(LPVOID pParam)
 void CProcessor::ThreadProcesRequest(void) {
 	while (true) {
 		ExtProcessor.checkRequestTask();
-		Sleep(500);
+		Sleep(20);
 	}
 }
 //+------------------------------------------------------------------+
@@ -1135,7 +1143,7 @@ void CProcessor::ThreadProcess(void)
 
 void CProcessor::HandlerAddOrder(MyTrade*trade, const UserInfo *user, const ConSymbol *symbol, const int mode) {
 
-	m_ContextLock.Lock();
+//	m_ContextLock.Lock();
 	TaskManagement* man = TaskManagement::getInstance();
 	for (auto tmp = man->m_task.cbegin(); tmp != man->m_task.cend(); ++tmp) {
 		 
@@ -1154,8 +1162,8 @@ void CProcessor::HandlerAddOrder(MyTrade*trade, const UserInfo *user, const ConS
 		int follower_id = atoi(task->follower_id.c_str());
 		if (task->follower_server_id == this->plugin_id) {
 		 
-			
-			askLPtoOpenTrade(follower_id, trade->symbol, cmd, vol, comment, trade->tp, trade->sl);
+			this->AddRequestTask(follower_id, trade->symbol, cmd, vol, comment, trade->tp, trade->sl, 0, TS_OPEN_NORMAL);
+		//	askLPtoOpenTrade(follower_id, trade->symbol, cmd, vol, comment, trade->tp, trade->sl);
 		}
 		else {
 			//handle another server
@@ -1174,11 +1182,11 @@ void CProcessor::HandlerAddOrder(MyTrade*trade, const UserInfo *user, const ConS
 		delete trade;
 		trade = NULL;
 	}
-	m_ContextLock.UnLock();
+//	m_ContextLock.UnLock();
 }
 
 void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mode) {
-	m_ContextLock.Lock();
+//	m_ContextLock.Lock();
  
 
 	TaskManagement* man = TaskManagement::getInstance();
@@ -1211,7 +1219,8 @@ void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mod
 				string comment(record.comment);
 				if ((comment).find(to_string(order)) != std::string::npos) {
 					find_order = true;
-					ExtProcessor.askLPtoCloseTrade(follower_id, record.order, cmd, trade->symbol, comment, vol);
+				//	ExtProcessor.askLPtoCloseTrade(follower_id, record.order, cmd, trade->symbol, comment, vol);
+					ExtProcessor.AddRequestTask(follower_id, trade->symbol, cmd, vol, comment, 0, 0, record.order, TS_CLOSED_NORMAL);
 				}
 			}
 
@@ -1237,7 +1246,7 @@ void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mod
 		delete trade;
 		trade = NULL;
 	}
-	m_ContextLock.UnLock();
+//	m_ContextLock.UnLock();
 }
 
 void CProcessor::HandlerActiveOrder(MyTrade *trade, UserInfo *user, const int mode) {
@@ -1303,22 +1312,58 @@ void CProcessor::AddRequestTask(int login, string symbol, int cmd, int volume, s
 	task.symbol = symbol;
 	task.tp = tp;
 	task.volumeInCentiLots = volume;
-	task.task_id = to_string(this->getTaskId());
+
+	if (this->request_current_id > 60000 || this->request_current_id < 0) {
+		this->request_current_id = 0;
+	}
+ 
+
+
+	task.task_id = to_string(this->request_current_id++);
 	task.type  = type;
 	this->request_task.push_back( task);
 
 	m_ContextLock.UnLock();
 }
+void CProcessor::checkRequestTaskByLogin(int login) {
+	m_ContextLock.Lock();
+	list<RequestTask>::iterator it;
+	for ( it = this->request_task.begin(); it != this->request_task.end();it++) {
+		RequestTask task = *it;
+		if (task.login == login) {
+			if (task.type == TS_OPEN_NORMAL) {
+				this->askLPtoOpenTrade(task.login, task.symbol, task.cmd, task.volumeInCentiLots, task.comment, task.tp, task.sl);
+				this->processing_login.insert(task.login);
+				break;
+			}
+			else if (task.type == TS_CLOSED_NORMAL) {
+				this->askLPtoCloseTrade(task.login, task.order, task.cmd, task.symbol, task.comment, task.volumeInCentiLots);
+				this->processing_login.insert(task.login);
 
+				break;
+			}
+		}
+
+	}
+
+	if (it != this->request_task.end()) {
+		this->request_task.erase(it);
+	}
+
+	
+
+	m_ContextLock.UnLock();
+}
 void CProcessor::checkRequestTask() {
 
 	if (this->request_task.size() <= 0) {
 		return;
 	}
-	m_ContextLock.Lock();
+//	m_ContextLock.Lock();
 
-	set<int> logins;//record request login in one loop
-	while (this->request_task.size()>0) {
+	 
+ 	while (this->request_task.size()>0) 
+	{
 		RequestTask task = this->request_task.front();
 		this->request_task.pop_front();
 
@@ -1326,37 +1371,45 @@ void CProcessor::checkRequestTask() {
 		int login = task.login;
 		bool processing = this->checkProcessingRequestByLogin(login);
 
-		if (processing == true || logins.find(login)!=logins.end()) {
-			this->buffer.push_back(task);
-			continue;
+		if (processing == true ) {
+		//	this->buffer.push_back(task);
+		//	continue;
+			return;
 		}
 
 
 		if (task.type == TS_OPEN_NORMAL) {
 			this->askLPtoOpenTrade(task.login, task.symbol, task.cmd, task.volumeInCentiLots, task.comment, task.tp, task.sl);
-			logins.insert(task.login);
-
+			 
+			break;
 		}
 		else if (task.type == TS_CLOSED_NORMAL) {
 			this->askLPtoCloseTrade(task.login, task.order, task.cmd, task.symbol, task.comment, task.volumeInCentiLots);
 
-			logins.insert(task.login);
+		 
+			break;
 		}
 	}
 
-	this->request_task.swap(this->buffer);
+// 	this->request_task.swap(this->buffer);
 	 
 
-	m_ContextLock.UnLock();
+//	m_ContextLock.UnLock();
+}
+
+bool CProcessor::DealAddRequest(int login, string symbol, int cmd, int volume, string comment, double tp, double sl, int order, int type) {
+
+
+	return true;
 }
 
 int CProcessor::getTaskId() {
-	m_ContextLock.Lock();
+//	m_ContextLock.Lock();
 	if (this->request_current_id > 60000 || this->request_current_id <0) {
 		this->request_current_id = 0;
 	} 
 	this->request_current_id++;
-	m_ContextLock.UnLock();
+//	m_ContextLock.UnLock();
 	return this->request_current_id;
 	
 }

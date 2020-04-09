@@ -82,6 +82,7 @@ private:
 	int request_current_id;
 	list<RequestTask> request_task;
 	list<RequestTask> buffer;
+	set<int> processing_login;
 	std::map<int, RequestMetaData> requestsMadeByCode;
 
 protected:
@@ -93,5 +94,7 @@ protected:
 	void CProcessor::checkRequestTask();
 	int CProcessor::getTaskId();
 	bool CProcessor::checkProcessingRequestByLogin(int login);
+	bool CProcessor::DealAddRequest(int login, string symbol, int cmd, int volume, string comment, double tp, double sl, int order, int type);
+	void CProcessor::checkRequestTaskByLogin(int login);
 };
 extern CProcessor ExtProcessor;

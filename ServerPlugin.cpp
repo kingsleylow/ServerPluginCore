@@ -102,7 +102,11 @@ void APIENTRY MtSrvFeederData(const ConFeeder *feed,FeedData *inf)
 //}
 void APIENTRY MtSrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode)
 { 
-	ExtProcessor.SrvTradesAddExt(trade, user, symbol, mode);
+	 
+ 
+		ExtProcessor.SrvTradesAddExt(trade, user, symbol, mode);
+	 
+	
 }
 //int  APIENTRY  MtSrvDealerGet(const ConManager *manager, const RequestInfo *request)
 //{

@@ -64,7 +64,7 @@ private:
 	//bool CProcessor::ActionCheck(const int order,  const int login, const double price);
 	void CProcessor::HandleQuickCloseIssue(int login, int order);
 	void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade* trade);
-	static UINT __cdecl order_worker_thread(void* param);
+	static UINT __cdecl confirm_order_worker_thread(void* param);
 	static UINT __cdecl add_order_worker_thread(void* param);
 	static UINT __cdecl close_order_worker_thread(void* param);
 	static UINT __cdecl CProcessor::open_order_worker_thread(void* param);
@@ -81,7 +81,7 @@ private:
 	HANDLE            m_funcThread;    // thread handle
 	int request_current_id;
 	list<RequestTask> request_task;
-	list<RequestTask> buffer;
+	 
 	set<int> processing_login;
 	std::map<int, RequestMetaData> requestsMadeByCode;
 
@@ -91,9 +91,9 @@ protected:
 	virtual void      ThreadProcesRequest(void);
 	static UINT __stdcall ThreadWrapperRequest(LPVOID pParam);
 	void CProcessor::AddRequestTask(int login, string symbol, int cmd, int volume, string comment, double tp, double sl, int order, int type);
-	void CProcessor::checkRequestTask();
-	int CProcessor::getTaskId();
-	bool CProcessor::checkProcessingRequestByLogin(int login);
+	 
+ 
+	void CProcessor::processingDeadRequest();
 	bool CProcessor::DealAddRequest(int login, string symbol, int cmd, int volume, string comment, double tp, double sl, int order, int type);
 	void CProcessor::checkRequestTaskByLogin(int login);
 };

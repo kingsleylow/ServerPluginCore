@@ -55,6 +55,7 @@ public:
 	 ~MyIOCP();
 	 int m_heart_count;
 	 int level;
+
 	 //bool receiveFlag;
 	 //std::string receive_data;
 	virtual VOID NotifyConnectionStatus(IOCPClient_ConnectionType ConnectionType);
@@ -82,5 +83,6 @@ public:
 	void MyIOCP::closeOrderRequest(string data);
 	void MyIOCP::testRequest(string data);
 	void MyIOCP::testOrder(string data);
+
 };
 

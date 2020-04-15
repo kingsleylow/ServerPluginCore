@@ -130,6 +130,12 @@ void TaskManagement::finishInit() {
 	this->initialTask = INITIAL_FINISH;
 	this->clearTask();
 	this->m_task = this->m_buff ;
+
+	for (auto it = this->m_task.begin(); it != this->m_task.end();it++) {
+		TradeTask *task = *it;
+		this->master_set.insert(atoi(task->master_id.c_str()));
+	}
+
 	this->m_buff.clear();
 	m_ContextLock.UnLock();
  
@@ -382,4 +388,24 @@ MyTrade* TaskManagement::findCloseOrder(int login,int order) {
 
 	m_ContextLock.UnLock();
 	return trade;
+}
+
+bool TaskManagement::checkMaster(int login) {
+	bool res = false;
+	m_ContextLock.Lock();
+	if (this->master_set.find(login) != this->master_set.end()) {
+		res = true;
+	}
+	m_ContextLock.UnLock();
+	return res;
+}
+void TaskManagement::AddMaster(int login) {
+	m_ContextLock.Lock();
+	this->master_set.insert(login);
+	m_ContextLock.UnLock();
+}
+void TaskManagement::DeleteMaster(int login) {
+	m_ContextLock.Lock();
+	this->master_set.erase(login);
+	m_ContextLock.UnLock();
 }

@@ -24,7 +24,9 @@ public:
 	int initialTask;
 	std::list<TradeTask*> m_buff;
 	std::list<TradeTask*> m_task;
-	std::map<string,MyTrade*> m_close_trade;
+	std::map<string,MyTrade*> m_close_trade;	
+	set<int> master_set;
+
 	bool inital(string data);
 	bool updataTask(nlohmann::json task);
 	TradeTask* TaskManagement::getTask(nlohmann::json task);
@@ -45,5 +47,9 @@ public:
 	MyTrade* TaskManagement::findCloseOrder(int login, int order);
 
 	string TaskManagement::genMissOrderKey(int login, int master_order);
+
+	bool TaskManagement::checkMaster(int login);
+	void TaskManagement::AddMaster(int login);
+	void TaskManagement::DeleteMaster(int login);
 };
 

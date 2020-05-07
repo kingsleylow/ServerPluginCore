@@ -27,6 +27,9 @@ public:
 	int               volume;
 	char              symbol[12];
 	double price;
+	int state;
+	char              comment[32];                // comment
+	 
 };
 
 

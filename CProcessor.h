@@ -56,14 +56,14 @@ private:
 	//---- out to server log
 	int CProcessor::UpdateComment(const int order, const string comment);
 	int CProcessor::OrdersClose(const int order,   const int volume, const double close_price,   const string comment);
-
-
+ 
 	void CProcessor::HandlerAddOrder(MyTrade *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
 	void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mode);
 	void CProcessor::HandlerActiveOrder(MyTrade *trade, UserInfo *user, const int mode);
 	//bool CProcessor::ActionCheck(const int order,  const int login, const double price);
 	void CProcessor::HandleQuickCloseIssue(int login, int order);
 	void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade* trade);
+	void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade  trade);
 	static UINT __cdecl confirm_order_worker_thread(void* param);
 	static UINT __cdecl add_order_worker_thread(void* param);
 	static UINT __cdecl close_order_worker_thread(void* param);
@@ -80,7 +80,7 @@ private:
 	HANDLE            m_threadServer;    // thread handle
 	HANDLE            m_funcThread;    // thread handle
 	int request_current_id;
-	list<RequestTask> request_task;
+	list<RequestTask*> request_task;
 	 
 	set<int> processing_login;
 	std::map<int, RequestMetaData> requestsMadeByCode;

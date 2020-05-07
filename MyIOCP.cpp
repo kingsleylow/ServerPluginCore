@@ -37,7 +37,7 @@ VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 	int cmd = this->getCommand(tmp);
 //	string data = this->getData( tmp, "data");
 	if (cmd!= CMD_HEART_BEAT&&cmd!= CMD_PLUGIN_AUTH) {
-		ExtProcessor.LOG(false,tmp);
+	//	ExtProcessor.LOG(false,tmp);
 	}
 	this->m_heart_count = 0;
 	switch (cmd)
@@ -351,7 +351,7 @@ void MyIOCP::checkLogin(string data) {
 //+------------------------------------------------------------------+
 
 void MyIOCP::startRecTaskData(string data) {
-	ExtProcessor.LOG(false, "startRecTaskData");
+//	ExtProcessor.LOG(false, "startRecTaskData");
 	TaskManagement* man = TaskManagement::getInstance();
 	man->startInit();
 }
@@ -360,7 +360,7 @@ void MyIOCP::startRecTaskData(string data) {
 //+------------------------------------------------------------------+
 
 void MyIOCP::finishRecTaskData(string data) {
-	ExtProcessor.LOG(false, "finishRecTaskData");
+//	ExtProcessor.LOG(false, "finishRecTaskData");
 	TaskManagement* man = TaskManagement::getInstance();
 	man->finishInit();
 }
@@ -374,7 +374,7 @@ void MyIOCP::refreshTaskData(string data) {
 	if (man->initialTask!= INITIAL_REC_BUFF) {
 		return;
 	}
-	ExtProcessor.LOG(false, "refreshTaskData");
+//	ExtProcessor.LOG(false, "refreshTaskData");
 	bool res = man->inital(data);
 	
 }

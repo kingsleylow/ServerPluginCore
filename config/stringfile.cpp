@@ -3,10 +3,10 @@
 //|                   Copyright 2001-2014, MetaQuotes Software Corp. |
 //|                                        http://www.metaquotes.net |
 //+------------------------------------------------------------------+
-#include "stdafx.h"
+#include "../stdafx.h"
 #include "stringfile.h"
 //+------------------------------------------------------------------+
-//| Конструктор                                                      |
+//| Конструкто?                                                     |
 //+------------------------------------------------------------------+
 CStringFile::CStringFile(const int nBufSize) :
              m_file(INVALID_HANDLE_VALUE),m_file_size(0),
@@ -19,19 +19,19 @@ CStringFile::CStringFile(const int nBufSize) :
 //+------------------------------------------------------------------+
 CStringFile::~CStringFile()
   {
-//--- закроем соединение
+//--- закрое?соединение
    Close();
-//--- освободим буфер
+//--- освободи?буфе?
    if(m_buffer!=NULL) { delete[] m_buffer; m_buffer=NULL; }
   }
 //+------------------------------------------------------------------+
-//| Открытие файла для чтения                                        |
-//| dwAccess       -GENERIC_READ или GENERIC_WRITE                   |
+//| Открытие файл?для чтен?                                        |
+//| dwAccess       -GENERIC_READ ил?GENERIC_WRITE                   |
 //| dwCreationFlags-CREATE_ALWAYS, OPEN_EXISTING, OPEN_ALWAYS        |
 //+------------------------------------------------------------------+
 bool CStringFile::Open(LPCTSTR lpFileName,const DWORD dwAccess,const DWORD dwCreationFlags)
   {
-//--- закроем на всякий случай предыдущий файл
+//--- закрое?на всяки?случай предыдущий файл
    Close();
 //--- проверки
    if(lpFileName!=NULL)
@@ -39,52 +39,52 @@ bool CStringFile::Open(LPCTSTR lpFileName,const DWORD dwAccess,const DWORD dwCre
       //--- создадим файл
       m_file=CreateFile(lpFileName,dwAccess,FILE_SHARE_READ | FILE_SHARE_WRITE,
                         NULL,dwCreationFlags,FILE_ATTRIBUTE_NORMAL,NULL);
-      //--- определим размер файла (не больше 4Gb)
+      //--- определи?размер файл?(не больше 4Gb)
       if(m_file!=INVALID_HANDLE_VALUE) m_file_size=GetFileSize(m_file,NULL);
      }
-//--- вернем результат
+//--- вернем результа?
    return(m_file!=INVALID_HANDLE_VALUE);
   }
 //+------------------------------------------------------------------+
-//| Запись буфера указанной длины в файл                             |
+//| Запись буфера указанно?длин??файл                             |
 //+------------------------------------------------------------------+
 int CStringFile::Read(void *buffer,const DWORD length)
   {
    DWORD readed=0;
 //--- проверки
    if(m_file==INVALID_HANDLE_VALUE || buffer==NULL || length<1) return(0);
-//--- считаем и вернем результат
+//--- считае??вернем результа?
    if(ReadFile(m_file,buffer,length,&readed,NULL)==0) readed=0;
-//--- вернем кол-во считанных байт
+//--- вернем ко?во считанны?байт
    return(readed);
   }
 //+------------------------------------------------------------------+
-//| Чтение буфера указанной длины из файла                           |
+//| Чтение буфера указанно?длин?из файл?                          |
 //+------------------------------------------------------------------+
 int CStringFile::Write(const void *buffer,const DWORD length)
   {
    DWORD written=0;
 //--- проверки
    if(m_file==INVALID_HANDLE_VALUE || buffer==NULL || length<1) return(0);
-//--- запишем данные
+//--- запише?данные
    if(WriteFile(m_file,buffer,length,&written,NULL)==0) written=0;
-//--- вернем кол-во записанных байт
+//--- вернем ко?во записанных байт
    return(written);
   }
 //+------------------------------------------------------------------+
-//| Выставимся на начало файла                                       |
+//| Выставим? на начало файл?                                      |
 //+------------------------------------------------------------------+
 void CStringFile::Reset()
   {
-//--- сбросим счетчики
+//--- сброси?счетчики
    m_buffer_index=0;
    m_buffer_readed=0;
    m_buffer_line=0;
-//--- выставимся на начало файла
+//--- выставим? на начало файл?
    if(m_file!=INVALID_HANDLE_VALUE) SetFilePointer(m_file,0,NULL,FILE_BEGIN);
   }
 //+------------------------------------------------------------------+
-//| Заполняем строку и возвращаем номер строки. 0-ошибка           |
+//| Заполняем строку ?возвращаем номе?строки. 0-ошибка           |
 //+------------------------------------------------------------------+
 int CStringFile::GetNextLine(char *line,const int maxsize)
   {
@@ -92,46 +92,46 @@ int CStringFile::GetNextLine(char *line,const int maxsize)
    BYTE  *curpos=m_buffer+m_buffer_index;
 //--- проверки
    if(line==NULL || m_file==INVALID_HANDLE_VALUE || m_buffer==NULL) return(0);
-//--- крутимся в цикле
+//--- крутим? ?цикл?
    for(;;)
      {
-      //--- первая строка или прочитали весь буфер
+      //--- перв? строка ил?прочитал?весь буфе?
       if(m_buffer_line==0 || m_buffer_index==m_buffer_readed)
         {
-         //--- зануляем счетчики
+         //--- зану?ем счетчики
          m_buffer_index=0;
          m_buffer_readed=0;
-         //--- читаем в буфер
+         //--- читаем ?буфе?
          if(::ReadFile(m_file,m_buffer,m_buffer_size,(DWORD*)&m_buffer_readed,NULL)==0)
            {
             Close();
             return(0);
            }
-         //--- считали 0 байт? конец файла
+         //--- считал?0 байт? коне?файл?
          if(m_buffer_readed<1) { *currsym=0; return(currsym!=line ? m_buffer_line:0); }
          curpos=m_buffer;
         }
-      //--- анализируем буфер
+      //--- анализируе?буфе?
       while(m_buffer_index<m_buffer_readed)
         {
-         //--- дошли до конца?
+         //--- дошл?до конц?
          if(currsym>=lastsym) { *currsym=0; return(m_buffer_line); }
-         //--- проанализируем символ (нашли конец строки)
+         //--- проанализируем символ (нашл?коне?строки)
          if(*curpos=='\n')
            {
-            //--- был ли перед этим возврат каретки?
-            if(currsym>line && currsym[-1]=='\r') currsym--; // был-вытираем его
+            //--- бы?ли пере?этим возвра?каретк?
+            if(currsym>line && currsym[-1]=='\r') currsym--; // бы?вытираем ег?
             *currsym=0;
-            //--- возвращаем номер строки
+            //--- возвращаем номе?строки
             m_buffer_line++;
             m_buffer_index++;
             return(m_buffer_line);
            }
-         //--- обычный символ-копируем его
+         //--- обычны?символ-копируем ег?
          *currsym++=*curpos++; m_buffer_index++;
         }
      }
-//--- это невозможно...
+//--- эт?невозможно...
    return(0);
   }
 //+------------------------------------------------------------------+

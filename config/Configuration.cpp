@@ -3,7 +3,7 @@
 //|                   Copyright 2001-2014, MetaQuotes Software Corp. |
 //|                                        http://www.metaquotes.net |
 //+------------------------------------------------------------------+
-#include "Stdafx.h"
+#include "../Stdafx.h"
 #include "Configuration.h"
 #include "stringfile.h"
 

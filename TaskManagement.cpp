@@ -128,14 +128,15 @@ void TaskManagement::finishInit() {
 	m_ContextLock.Lock();
 
 	this->initialTask = INITIAL_FINISH;
-	this->clearTask();
-	this->m_task = this->m_buff ;
 
-	for (auto it = this->m_task.begin(); it != this->m_task.end();it++) {
+
+
+	for (auto it = this->m_buff.begin(); it != this->m_buff.end();it++) {
 		TradeTask *task = *it;
 		this->master_set.insert(atoi(task->master_id.c_str()));
 	}
-
+	this->clearTask();
+	this->m_task = this->m_buff;
 	this->m_buff.clear();
 	m_ContextLock.UnLock();
  

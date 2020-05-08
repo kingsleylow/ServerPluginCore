@@ -1246,11 +1246,7 @@ void CProcessor::ThreadProcess(void)
 				iocp->SendInitTask(this->plugin_id);
 			}
 
-#ifdef _DEBUG
-		//	LOG("Testing","Testing", man->printTask());
-#endif
-
-		//	LOG(false, man->printTask());
+ 
 		}
 	}
  
@@ -1263,6 +1259,7 @@ void CProcessor::HandlerAddOrder(MyTrade*trade, const UserInfo *user, const ConS
 
 	m_ContextLock.Lock();
 	TaskManagement* man = TaskManagement::getInstance();
+	man->isWorking = true;
 	for (auto tmp = man->m_task.cbegin(); tmp != man->m_task.cend(); ++tmp) {
 		 
 		TradeTask* task = (*tmp) ;
@@ -1314,6 +1311,7 @@ void CProcessor::HandlerAddOrder(MyTrade*trade, const UserInfo *user, const ConS
 		delete trade;
 		trade = NULL;
 	}
+	man->isWorking = false;
 	m_ContextLock.UnLock();
 }
  
@@ -1323,6 +1321,7 @@ void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mod
  
 
 	TaskManagement* man = TaskManagement::getInstance();
+	man->isWorking = true;
 	for (auto tmp = man->m_task.cbegin(); tmp != man->m_task.cend(); ++tmp) {
 	 
 		TradeTask* task = (*tmp) ;
@@ -1389,6 +1388,7 @@ void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mod
 		delete trade;
 		trade = NULL;
 	}
+	man->isWorking = false;
  	m_ContextLock.UnLock();
 }
 

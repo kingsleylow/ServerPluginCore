@@ -1,0 +1,5 @@
+Log file created at: 2020/05/12 19:50:12
+Running on machine: LAPTOP-JGHPUBTE
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+W0512 19:50:12.196624 30936 mylog.cpp:24] 
+W0512 19:52:24.001586  3052 mylog.cpp:24] LifeByte::New receive open order 20454, state 0,login 3020, name 3020, symbol AUDUSD,comment ,mode 0

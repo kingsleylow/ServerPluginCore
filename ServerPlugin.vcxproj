@@ -45,7 +45,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>.\Release\</OutDir>
     <IntDir>.\Release\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>.\Debug\</OutDir>
@@ -63,10 +63,10 @@
     </Midl>
     <ClCompile>
       <AdditionalOptions>/Oy- %(AdditionalOptions)</AdditionalOptions>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;GLOG_NO_ABBREVIATED_SEVERITIES;GOOGLE_GLOG_DLL_DECL=</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
@@ -84,7 +84,8 @@
       <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalIncludeDirectories>C:\Dev\MYIOCP;\\Mac\Home\Documents\WIN_DOC\vm\ServerAPi\myPlugin\MYIOCP;\\192.168.87.30\win_doc\vm\ServerAPi\myPlugin\MYIOCP;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\ServerPluginCore;C:\Dev\MYIOCP;\\Mac\Home\Documents\WIN_DOC\vm\ServerAPi\myPlugin\MYIOCP;\\192.168.87.30\win_doc\vm\ServerAPi\myPlugin\MYIOCP;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerOutput>All</AssemblerOutput>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -104,14 +105,15 @@
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>.\Release\ServerPlugin.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies);glog.lib;</AdditionalDependencies>
+      <AdditionalDependencies> %(AdditionalDependencies);glog.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Dev\ServerPluginCore;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <OutputFile>.\Release/ServerPlugin.bsc</OutputFile>
     </Bscmake>
     <PostBuildEvent>
-      <Command>..\..\include\debuginfo.exe $(TargetPath)</Command>
+      <Command>.\DebugInfo.fixed.exe C:\MetaTrader4Server\plugins\$(ProjectName).dll</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -158,7 +160,7 @@
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>.\Debug\ServerPlugin.lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>%(AdditionalDependencies);glogd.lib;</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);</AdditionalDependencies>
       <GenerateMapFile>true</GenerateMapFile>
     </Link>
     <Bscmake>

@@ -16,14 +16,17 @@
 
 class TaskManagement
 {
+
+private :
+	std::list<TradeTask*> m_buff;
+	std::list<TradeTask*> m_task;
 public:
 	static TaskManagement* taskManager;
 	static TaskManagement* getInstance();
 	TaskManagement();
 	~TaskManagement();
 	int initialTask;
-	std::list<TradeTask*> m_buff;
-	std::list<TradeTask*> m_task;
+
 	std::map<string,MyTrade*> m_close_trade;	
 	set<int> master_set;
 
@@ -51,5 +54,11 @@ public:
 	bool TaskManagement::checkMaster(int login);
 	void TaskManagement::AddMaster(int login);
 	void TaskManagement::DeleteMaster(int login);
+
+	string TaskManagement::getTaskKey(int master_server_id,string master_id,int follower_server_id, string follower_id);
+	string TaskManagement::getTaskKey(TradeTask* task);
+
+	void TaskManagement::getTaskList(list<TradeTask*>& query);
+	void TaskManagement::clearTask(list<TradeTask*>& m_task);
 };
 

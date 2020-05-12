@@ -39,7 +39,7 @@ TaskManagement::~TaskManagement()
 
 	for (auto tmp = this->m_task.cbegin(); tmp != this->m_task.cend(); ++tmp) {
 
-		TradeTask* task = (*tmp);
+		TradeTask* task = *tmp;
 		if (task != NULL) {
 			delete task;
 			task = NULL;
@@ -48,7 +48,7 @@ TaskManagement::~TaskManagement()
 
 	for (auto tmp = this->m_buff.cbegin(); tmp != this->m_buff.cend(); ++tmp) {
 
-		TradeTask* task = (*tmp);
+		TradeTask* task = *tmp;
 		if (task != NULL) {
 			delete task;
 			task = NULL;
@@ -135,7 +135,14 @@ void TaskManagement::finishInit() {
 		TradeTask *task = *it;
 		this->master_set.insert(atoi(task->master_id.c_str()));
 	}
-	this->clearTask();
+	for (auto tmp = this->m_task.cbegin(); tmp != this->m_task.cend(); ++tmp) {
+
+		TradeTask* task = *tmp;
+		if (task != NULL) {
+			delete task;
+			task = NULL;
+		}
+	}
 	this->m_task = this->m_buff;
 	this->m_buff.clear();
 	m_ContextLock.UnLock();
@@ -171,7 +178,8 @@ bool TaskManagement::inital(string data)
 			nlohmann::json tmp = tasks[i];
 			TradeTask* task = this->getTask(tmp);
 			if (task != NULL) {
-				this->m_buff.push_back(   task);
+			//	string key = this->getTaskKey(task);
+				this->m_buff.push_back(task);
 			}
 			 
 		}
@@ -256,9 +264,9 @@ void TaskManagement::checkData() {
 	m_ContextLock.Lock();
 	for (auto tmp = this->m_buff.cbegin(); tmp != this->m_buff.cend(); ++tmp) {
 	 
-		TradeTask* task = (*tmp);
+		/*TradeTask* task = (*tmp);
 		map<string, TradeTask*>::iterator it;
-		 
+		 */
 
 
 
@@ -292,7 +300,8 @@ void TaskManagement::testData() {
 		task->master_disable = false;
 		task->master_server_id = 1;
 		task->follower_server_id = 1;
-		this->m_buff.push_back(task);
+		//string key = this->getTaskKey(task);
+			this->m_buff.push_back(task);
 	}
 	this->finishInit();
 	
@@ -305,7 +314,7 @@ void TaskManagement::AddOrder(TradeRecord *trade, const UserInfo *user, const Co
 	m_ContextLock.Lock();
 	for (auto tmp = this->m_task.cbegin(); tmp != this->m_task.cend(); ++tmp) {
 	 
-		TradeTask* task = (*tmp);
+		TradeTask* task = *tmp;
 
 		if (task->follower_disable == true || task->master_disable == true) {
 			return;
@@ -329,7 +338,7 @@ string TaskManagement::printTask() {
 	string str = "task list: ";
 	for (auto tmp = this->m_task.cbegin(); tmp != this->m_task.cend(); ++tmp) {
 	 
-		TradeTask* task = (*tmp);
+		TradeTask* task = *tmp;
 		ExtProcessor.LOG(CmdTrade, "LifeByte::Testing", task->dumpTask().c_str());
 		str = str+ task->dumpTask()  ;
 	}
@@ -339,16 +348,28 @@ string TaskManagement::printTask() {
 
  }
 
+void TaskManagement::clearTask(list<TradeTask*>& m_task) {
+	for (auto tmp = m_task.cbegin(); tmp != m_task.cend(); ++tmp) {
 
+		TradeTask* task = *tmp;
+		if (task != NULL) {
+			delete task;
+			task = NULL;
+		}
+	}
+}
 void TaskManagement::clearTask() {
+	m_ContextLock.Lock();
+
 	for (auto tmp = this->m_task.cbegin(); tmp != this->m_task.cend(); ++tmp) {
 
-		TradeTask* task = (*tmp);
+		TradeTask* task = *tmp;
 		if (task!=NULL) {
 			delete task;
 			task = NULL;
 		}
 	}
+	m_ContextLock.UnLock();
 }
 
 
@@ -408,5 +429,50 @@ void TaskManagement::AddMaster(int login) {
 void TaskManagement::DeleteMaster(int login) {
 	m_ContextLock.Lock();
 	this->master_set.erase(login);
+	m_ContextLock.UnLock();
+}
+
+
+
+string TaskManagement::getTaskKey(int master_server_id, string master_id, int follower_server_id, string follower_id) {
+
+	return to_string(master_server_id) + "_" + master_id + to_string(follower_server_id) + "_" + follower_id;
+
+}
+
+string TaskManagement::getTaskKey(TradeTask* task) {
+	if (task==NULL) {
+		return "NULL";
+	}
+	return this->getTaskKey(task->master_server_id, task->master_id, task->follower_server_id, task->follower_id);
+}
+
+void TaskManagement::getTaskList(list<TradeTask*>& query) {
+	m_ContextLock.Lock();
+	 
+	for (auto it = this->m_task.begin(); it != this->m_task.end();it++) {
+		TradeTask* tmp = *it;
+		TradeTask* task = new TradeTask();
+	 
+
+		task->task_id = tmp->task_id;
+		task->follower_ratio = tmp->follower_ratio;
+		task->follower_max_vol = tmp->follower_max_vol;
+		task->follower_id = tmp->follower_id;
+		task->master_id = tmp->master_id;
+		task->portal_id = tmp->portal_id;
+		task->follower_disable = tmp->follower_disable;
+		task->follower_max_drawback = tmp->follower_max_drawback;
+		task->auto_reconciliation = tmp->auto_reconciliation;
+		task->master_ratio = tmp->master_ratio;
+		task->master_strategy = tmp->master_strategy;
+		task->master_disable = tmp->master_disable;
+		task->master_server_id = tmp->master_server_id;
+		task->follower_server_id = tmp->follower_server_id;
+
+		query.push_back(task);
+	}
+
+
 	m_ContextLock.UnLock();
 }

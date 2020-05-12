@@ -1,0 +1,11 @@
+Log file created at: 2020/05/12 20:09:58
+Running on machine: LAPTOP-JGHPUBTE
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0512 20:09:58.645473 10972 mylog.cpp:23] 
+W0512 20:09:58.645473 10972 mylog.cpp:24] 
+I0512 20:10:19.845254 19860 mylog.cpp:23] LifeByte::New receive open order 20455, state 0,login 3020, name 3020, symbol AUDUSD,comment ,mode 0
+W0512 20:10:19.845254 19860 mylog.cpp:24] LifeByte::New receive open order 20455, state 0,login 3020, name 3020, symbol AUDUSD,comment ,mode 0
+I0512 20:10:19.845254 19860 mylog.cpp:23] LifeByte::ask LifeByte::askLPtoOpenTrade login 4004   margin request id 2000.000000  ,free margin  -280.000000, new margin  1000.000000 
+W0512 20:10:19.845254 19860 mylog.cpp:24] LifeByte::ask LifeByte::askLPtoOpenTrade login 4004   margin request id 2000.000000  ,free margin  -280.000000, new margin  1000.000000 
+I0512 20:10:19.846243 19860 mylog.cpp:23] askLPtoOpenTrade: not enough margin failed
+W0512 20:10:19.846243 19860 mylog.cpp:24] askLPtoOpenTrade: not enough margin failed

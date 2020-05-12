@@ -20,7 +20,9 @@ MyLOG::~MyLOG()
 
 
 void MyLOG::LOG_I(string msg) {
-	google:LOG(INFO) << msg;
+ LOG(INFO) << msg;
+
+	 
 }
 MyLOG* MyLOG::instance;
 MyLOG* MyLOG::getInstance() {

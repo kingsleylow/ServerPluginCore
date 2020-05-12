@@ -34,7 +34,7 @@ public:
 	void SrvTradesAdd(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol);
 	void SrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
 	void SrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int mode);
-	void SrvTradeRequestApply(RequestInfo *request, const int isdemo);
+ 
 	void SrvDealerGet(const ConManager *manager, const RequestInfo *request);
 	void SrvDealerConfirm(const int id, const UserInfo *us, double *prices);
 	void SrvTradeTransaction(TradeTransInfo* trans, const UserInfo *user, int *request_id);
@@ -65,10 +65,8 @@ private:
 	void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade* trade);
 	void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade  trade);
 	static UINT __cdecl confirm_order_worker_thread(void* param);
-	static UINT __cdecl add_order_worker_thread(void* param);
-	static UINT __cdecl close_order_worker_thread(void* param);
-	static UINT __cdecl CProcessor::open_order_worker_thread(void* param);
-	static UINT __cdecl CProcessor::direct_close_order_worker_thread(void* param);
+	static UINT __cdecl CProcessor::close_order_worker_thread(void* param);
+ 
 	char              m_ip[128];       //ip
 	char              m_port[32];   // port
 	char              m_ip_backup[128];       //ip
@@ -94,7 +92,6 @@ protected:
 	 
  
 	void CProcessor::processingDeadRequest();
-	bool CProcessor::DealAddRequest(int login, string symbol, int cmd, int volume, string comment, double tp, double sl, int order, int type);
-	void CProcessor::checkRequestTaskByLogin(int login);
+ 
 };
 extern CProcessor ExtProcessor;

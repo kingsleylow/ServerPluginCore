@@ -1,0 +1,5 @@
+Log file created at: 2020/05/12 19:37:45
+Running on machine: LAPTOP-JGHPUBTE
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0512 19:37:45.817653  9816 mylog.cpp:23] 
+W0512 19:37:45.817653  9816 mylog.cpp:24] 

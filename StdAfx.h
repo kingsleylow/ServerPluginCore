@@ -32,7 +32,11 @@ public:
 	 
 };
 
-
+#ifdef _DEBUG
+#pragma comment(lib,"glogd.lib")
+#else
+#pragma comment(lib,"glog.lib")
+#endif
  
 #include <stdio.h>
 #include <tchar.h>
@@ -50,9 +54,11 @@ public:
 //#define LOG_DIR "\\\\192.168.87.30\\win_doc\\9158"
 #define LOG_DIR "c:\\LifeByteTrader\\"
 #else
-#define LOG_DIR ".\\LifeByteTrader\\"
+#define LOG_DIR "c:\\LifeByteTrader\\"
 #endif
  
 
 #define COPY_STR(dst,src) { strncpy(dst,src,sizeof(dst)-1); dst[sizeof(dst)-1]=0; }
 #define ORDER_COMMENT_PRE "o:"
+
+

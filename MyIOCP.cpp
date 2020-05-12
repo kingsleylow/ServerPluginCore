@@ -37,7 +37,7 @@ VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 	int cmd = this->getCommand(tmp);
 //	string data = this->getData( tmp, "data");
 	if (cmd!= CMD_HEART_BEAT&&cmd!= CMD_PLUGIN_AUTH) {
-	//	ExtProcessor.LOG(false,tmp);
+//		ExtProcessor.LOG(false,tmp);
 	}
 	this->m_heart_count = 0;
 	switch (cmd)

@@ -290,7 +290,7 @@ void CProcessor::SrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int m
 		case UPDATE_CLOSE:
 
  
-  	 	HandlerCloseOrder(tmp, user, mode);
+			this->HandlerCloseOrder(tmp, user, mode);
 			break;
 		case UPDATE_DELETE:
 			break;
@@ -1160,9 +1160,15 @@ void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mod
 				string comment(record.comment);
 				if ((comment).find(to_string(order)) != std::string::npos) {
 					find_order = true;
-					if (vol > trade->volume) {
-						vol = trade->volume;
+					if (vol > record.volume) {
+						vol = record.volume;
 					}
+
+					if (trade->state == TS_CLOSED_NORMAL) {
+						vol = record.volume;
+					}
+
+
 					LOG(false, "LifeByte::New receive close order %d, state %d,login %d, symbol %s,comment %s,mode %d, vol %d", trade->order, trade->state, follower_id,  trade->symbol, trade->comment, mode ,vol);
 					LOG(CmdTrade, "LifeByte::New receive close order", "order %d, state %d,  login %d, symbol %s, comment %s, mode %d ,vol % d", trade->order, trade->state, follower_id, trade->symbol, trade->comment, mode ,vol);
 

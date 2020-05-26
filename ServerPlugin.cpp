@@ -11,7 +11,7 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-PluginInfo        ExtPluginInfo={ PLUGIN_NAME,103,COMPANY_NAME,{0} };
+PluginInfo        ExtPluginInfo={ PLUGIN_NAME,104,COMPANY_NAME,{0} };
 char              ExtProgramPath[MAX_PATH]="";
 CSync             ExtSync;
 CServerInterface *ExtServer=NULL;

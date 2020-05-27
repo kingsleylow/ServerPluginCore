@@ -1027,7 +1027,7 @@ void CProcessor::ThreadProcess(void)
 			iocp->SendInitTask(this->plugin_id);
 		}
 		
-		this->pool->ReleaseConnection(iocp);
+	
 	
 
 		if (man->initialTask == INITIAL_FINISH) {
@@ -1037,6 +1037,7 @@ void CProcessor::ThreadProcess(void)
 				task_check_cycle = 0;
 				//10 sec
 				iocp->SendInitTask(this->plugin_id);
+				LOG(CmdTrade,"LifeByte::synchronize task ", "LifeByte::synchronize task size %d", man->getTaskSize());
 			}
 		/*	else {
 			 string tasks=	man->printTask();
@@ -1045,6 +1046,7 @@ void CProcessor::ThreadProcess(void)
 
  
 		}
+		this->pool->ReleaseConnection(iocp);
 	}
  
 }

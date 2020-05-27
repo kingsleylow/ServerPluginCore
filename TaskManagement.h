@@ -26,7 +26,7 @@ public:
 	TaskManagement();
 	~TaskManagement();
 	int initialTask;
-
+	int initial_count;
 	std::map<string,MyTrade*> m_close_trade;	
 	set<int> master_set;
 
@@ -60,5 +60,6 @@ public:
 
 	void TaskManagement::getTaskList(list<TradeTask*>& query);
 	void TaskManagement::clearTask(list<TradeTask*>& m_task);
+	int  TaskManagement::getTaskSize();
 };
 

@@ -23,6 +23,7 @@ TaskManagement::TaskManagement()
 	this->m_task.clear();
 	this->m_buff.clear();
 	this->m_close_trade.clear();
+	this->initial_count = 0;
 }
 
 
@@ -347,6 +348,15 @@ string TaskManagement::printTask() {
 
 
  }
+
+
+int  TaskManagement::getTaskSize() {
+	m_ContextLock.Lock();
+	int size = this->m_task.size();
+	m_ContextLock.UnLock();
+
+	return size;
+}
 
 void TaskManagement::clearTask(list<TradeTask*>& m_task) {
 	for (auto tmp = m_task.cbegin(); tmp != m_task.cend(); ++tmp) {

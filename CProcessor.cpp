@@ -51,8 +51,8 @@ CProcessor::CProcessor()
 	 
 	plugin_id = D_PLUGIN_ID;
 	UINT id = 0;
-	m_threadServer = (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapper, (void*)this, 0, &id);
-	m_funcThread = (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapperRequest, (void*)this, 0, &id);
+//	m_threadServer = (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapper, (void*)this, 0, &id);
+ 	m_funcThread = (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapperRequest, (void*)this, 0, &id);
 	InitializeCriticalSectionAndSpinCount(&m_cs, 10000);;
 	this->request_current_id = 0;
 	 
@@ -974,8 +974,20 @@ UINT __stdcall CProcessor::ThreadWrapperRequest(LPVOID pParam)
 //+------------------------------------------------------------------+
 void CProcessor::ThreadProcesRequest(void) {
 	while (true) {
-		ExtProcessor.processingDeadRequest();
-		Sleep(10);
+		 
+		UINT id = 0;
+
+		if (m_threadServer == NULL) {
+			m_threadServer = (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapper, (void*)this, 0, &id);
+		}
+	
+
+		DWORD dwRet = WaitForSingleObject(m_threadServer, 1000 * 60);
+		LOG(CmdTrade, "LifeByte::synchronize guard checking", "LifeByte::synchronize guard checking");
+		if (dwRet == WAIT_OBJECT_0) {
+			CloseHandle(m_threadServer);
+			m_threadServer = NULL;
+		}
 	}
 }
 //+------------------------------------------------------------------+
@@ -986,6 +998,8 @@ UINT __stdcall CProcessor::ThreadWrapper(LPVOID pParam)
 	//---
 	if (pParam != NULL) ((CProcessor*)pParam)->ThreadProcess();
 	//---
+
+	ExtProcessor.LOG(CmdTrade, "LifeByte::synchronize task thread exit ", " LifeByte::synchronize task thread exit");
 	return(0);
 }
 
@@ -998,40 +1012,45 @@ void CProcessor::ThreadProcess(void)
 
 
 	 
-	while (true) {
-	  
+	while (true) 
+	{
+		
 		Sleep(5000);
 		if (this->pool == NULL) {
-	 	       
-			continue;
+		 
+		 	continue;
 		}
 	
 		bool res = this->pool->checkConnection();
  
 		if (res==false) {
-			continue;
+		 
+		 	continue;
 		}
 //
 		MyIOCP* iocp = this->pool->GetConnection();
 		if (iocp == NULL ) {
 			this->pool->ReleaseConnection(iocp);
-			continue;
+			return;
+		//	continue;
 		}
  
 		if (iocp->level != ADM_LEVEL) {
 			this->pool->ReleaseConnection(iocp);
-			continue;
+			 
+		 	continue;
 		}
 		TaskManagement* man = TaskManagement::getInstance();
 		if (  man->initialTask == INITIAL_NO) {
+			man->initial_count = 0;
 			iocp->SendInitTask(this->plugin_id);
 		}
 		
-	
+	   
 	
 
 		if (man->initialTask == INITIAL_FINISH) {
-
+			man->initial_count = 0;
 			task_check_cycle++;
 			if (task_check_cycle > 2) {
 				task_check_cycle = 0;
@@ -1039,13 +1058,20 @@ void CProcessor::ThreadProcess(void)
 				iocp->SendInitTask(this->plugin_id);
 				LOG(CmdTrade,"LifeByte::synchronize task ", "LifeByte::synchronize task size %d", man->getTaskSize());
 			}
-		/*	else {
-			 string tasks=	man->printTask();
-			 LOG(false, "task list="+ tasks);
-			}*/
+	 
 
- 
 		}
+
+
+		man->initial_count++;
+
+		if (man->initial_count>5) {
+			man->initial_count = 0;
+			man->initialTask = INITIAL_NO;
+			LOG(CmdTrade, "LifeByte::synchronize task ", "LifeByte::synchronize task timeout");
+		}
+
+
 		this->pool->ReleaseConnection(iocp);
 	}
  
@@ -1103,6 +1129,8 @@ void CProcessor::HandlerAddOrder(MyTrade*trade, const UserInfo *user, const ConS
 				continue;
 			}
 			iocp->openOrderRequest(task->follower_server_id, task->follower_id, trade->symbol, cmd, vol, comment);
+
+			this->pool->ReleaseConnection(iocp);
 		}
 		
 	}

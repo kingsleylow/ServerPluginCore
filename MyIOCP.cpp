@@ -91,7 +91,8 @@ VOID MyIOCP::NotifyReceivedFormatPackage(const char* lpszBuffer)
 }
 
 void MyIOCP::testRequest(string data) {
-	try {
+	bool is_d = nlohmann::json::accept(data);
+	if (is_d == true) {
 		nlohmann::json j = nlohmann::json::parse(data);
 
 		if (!j.contains("data")) {
@@ -111,13 +112,11 @@ void MyIOCP::testRequest(string data) {
 			ExtProcessor.askLPtoOpenTrade(3005, "EURUSD", OP_BUY, 1, "place Test", 0, 0);
 		}
 	}
-	catch (exception& e) {
-
-
-	}
+	 
 }
 void MyIOCP::testOrder(string data) {
-	try {
+	bool is_d = nlohmann::json::accept(data);
+	if (is_d == true) {
 		nlohmann::json j = nlohmann::json::parse(data);
 
 		if (!j.contains("data")) {
@@ -132,10 +131,7 @@ void MyIOCP::testOrder(string data) {
 
 		}
 	}
-	catch (exception& e) {
-
-
-	}
+	 
 }
 
 
@@ -248,16 +244,24 @@ void MyIOCP::SendRequest(int cmd, nlohmann::json data) {
 
 int MyIOCP::getCommand(string data) {
 	int cmd = CMD_INVALID;
-	try {
-		nlohmann::json j = nlohmann::json::parse(data);
-		if (j.contains("cmd")) {
-			cmd = j["cmd"];
-		}
-	}
-	catch (exception& e) {
- 
+	 
+	   bool is_d = nlohmann::json::accept(data);
+	   if (is_d==true) {
+		   nlohmann::json j = nlohmann::json::parse(data);
 
-	}
+		   if (j.contains("cmd")) {
+			   cmd = j["cmd"];
+		   }
+	   }
+	   else {
+		   ExtProcessor.LOG(CmdTrade, "LifeByte::getCommand execption ", "LifeByte::getCommand execption");
+	   }
+
+	
+	 
+	//	ExtProcessor.LOG(CmdTrade, "LifeByte::getCommand execption ", "LifeByte::getCommand execption");
+
+	 
 
 	return cmd;
  }
@@ -266,17 +270,23 @@ int MyIOCP::getCommand(string data) {
 //+------------------------------------------------------------------+
 
 nlohmann::json MyIOCP::getData(string data,string key) {
-	try {
-	nlohmann::json j = nlohmann::json::parse(data);
-	if (j.contains(key)) {
-		return   j[key];
-	}
-
-	}
-	catch (exception& e) {
+// 
 
 
+	bool is_d = nlohmann::json::accept(data);
+	if (is_d == true) {
+		nlohmann::json j = nlohmann::json::parse(data);
+		if (j.contains(key)) {
+			return   j[key];
+		}
 	}
+	else {
+		ExtProcessor.LOG(CmdTrade, "LifeByte::getData execption ", "LifeByte::getData execption");
+	}
+	 
+	//
+
+	 
 	return NULL;
 }
 
@@ -284,7 +294,8 @@ nlohmann::json MyIOCP::getData(string data,string key) {
 //|                                                                  |
 //+------------------------------------------------------------------+
 void MyIOCP::openOrderRequest(string data) {
-	try {
+	bool is_d = nlohmann::json::accept(data);
+	if (is_d == true) {
 		nlohmann::json j = nlohmann::json::parse(data);
 
 		if (!j.contains("data")) {
@@ -294,15 +305,12 @@ void MyIOCP::openOrderRequest(string data) {
 			return;
 		}
 		int num = j["data"]["num"];
-		for (int i = 0; i < num;i++) {
+		for (int i = 0; i < num; i++) {
 			ExtProcessor.askLPtoOpenTrade(2000, "EURUSD", OP_BUY, 1, "My Test", 0, 0);
-		
+
 		}
 	}
-	catch (exception& e) {
-
-
-	}
+ 
 
 }
 extern CServerInterface *ExtServer;
@@ -329,7 +337,8 @@ void MyIOCP::closeOrderRequest(string data) {
 //+------------------------------------------------------------------+
 
 void MyIOCP::checkLogin(string data) {
-	try {
+	bool is_d = nlohmann::json::accept(data);
+	if (is_d == true) {
 		nlohmann::json j = nlohmann::json::parse(data);
 
 		if (!j.contains("data")) {
@@ -339,11 +348,8 @@ void MyIOCP::checkLogin(string data) {
 			return;
 		}
 		this->level = j["data"]["Level"];
-		}
-	catch (exception& e) {
-
-
 	}
+ 
 }
 
 //+------------------------------------------------------------------+

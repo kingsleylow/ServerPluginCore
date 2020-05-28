@@ -70,7 +70,7 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;GLOG_NO_ABBREVIATED_SEVERITIES;GOOGLE_GLOG_DLL_DECL=</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
-      <ExceptionHandling />
+      <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -86,6 +86,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalIncludeDirectories>C:\Dev\ServerPluginCore;C:\Dev\MYIOCP;\\Mac\Home\Documents\WIN_DOC\vm\ServerAPi\myPlugin\MYIOCP;\\192.168.87.30\win_doc\vm\ServerAPi\myPlugin\MYIOCP;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerOutput>All</AssemblerOutput>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -144,6 +145,8 @@
       <AdditionalIncludeDirectories>C:\Dev\MYIOCP;\\Mac\Home\Documents\WIN_DOC\vm\ServerAPi\myPlugin\MYIOCP;\\192.168.87.30\win_doc\vm\ServerAPi\myPlugin\MYIOCP;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerOutput>All</AssemblerOutput>
       <AdditionalOptions>/Oy- %(AdditionalOptions)</AdditionalOptions>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>

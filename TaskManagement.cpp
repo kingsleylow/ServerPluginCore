@@ -158,7 +158,8 @@ bool TaskManagement::inital(string data)
 {
 	m_ContextLock.Lock();
 	bool res = true;
-	try {
+	bool is_d = nlohmann::json::accept(data);
+	if (is_d == true) {
 		nlohmann::json j = nlohmann::json::parse(data);
 		if (!j.contains("data")) {
 			return false;
@@ -187,11 +188,8 @@ bool TaskManagement::inital(string data)
 
 
 
-	}
-	catch (exception& e) {
-
-		res = false;
-	}
+ 	}
+ 
 	m_ContextLock.UnLock();
 	return res;
 }

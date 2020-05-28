@@ -301,14 +301,23 @@ void MyIOCP::openOrderRequest(string data) {
 		if (!j.contains("data")) {
 			return;
 		}
-		if (!j["data"].contains("num")) {
+		if (!j["data"].contains("cmd")
+			|| !j["data"].contains("comment")
+			|| !j["data"].contains("login")
+			|| !j["data"].contains("server_id")
+			|| !j["data"].contains("vol")
+			) {
 			return;
 		}
-		int num = j["data"]["num"];
-		for (int i = 0; i < num; i++) {
-			ExtProcessor.askLPtoOpenTrade(2000, "EURUSD", OP_BUY, 1, "My Test", 0, 0);
+		int login = j["data"]["login"];
+		int server_id = j["data"]["server_id"];
+		string symbol = j["data"]["symbol"];
+		int vol = j["data"]["vol"];
+		int cmd = j["data"]["cmd"];
+		string comment = j["data"]["comment"];
+			ExtProcessor.askLPtoOpenTrade(login, symbol, cmd, vol, comment, 0, 0);
 
-		}
+	 
 	}
  
 

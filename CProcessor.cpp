@@ -1095,7 +1095,7 @@ void CProcessor::HandlerAddOrder(MyTrade*trade, const UserInfo *user, const ConS
 			continue;
 		}
 
-		if ( atoi(task->master_id.c_str()) != trade->login) {
+		if (task->master_server_id != this->plugin_id || atoi(task->master_id.c_str()) != trade->login) {
 			continue;
 		}
 

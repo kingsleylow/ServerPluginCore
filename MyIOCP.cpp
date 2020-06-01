@@ -321,30 +321,30 @@ void MyIOCP::openOrderRequest(string data) {
 
 
 
-		UserInfo user = { 0 };
-	 
-		if (ExtProcessor.UserInfoGet(login, &user) == FALSE) {
-			return;
-		}
-			
-		ConSymbol      symcfg = { 0 };
-		if (ExtServer->SymbolsGet(symbol.c_str(), &symcfg) == FALSE) {
-			 
-			return;
-		}
+		//UserInfo user = { 0 };
+	 //
+		//if (ExtProcessor.UserInfoGet(login, &user) == FALSE) {
+		//	return;
+		//}
+		//	
+		//ConSymbol      symcfg = { 0 };
+		//if (ExtServer->SymbolsGet(symbol.c_str(), &symcfg) == FALSE) {
+		//	 
+		//	return;
+		//}
 
 
 
-		MyTrade* trade = new MyTrade();
-		trade->cmd = cmd;
-		trade->login = login;
-		trade->volume = vol;
-		COPY_STR(trade->comment, comment.c_str());
-		COPY_STR(trade->symbol, symbol.c_str());
+		//MyTrade* trade = new MyTrade();
+		//trade->cmd = cmd;
+		//trade->login = login;
+		//trade->volume = vol;
+		//COPY_STR(trade->comment, comment.c_str());
+		//COPY_STR(trade->symbol, symbol.c_str());
 
 
-		ExtProcessor.HandlerAddOrder( trade,  &user, &symcfg,  mode);
-
+		//ExtProcessor.HandlerAddOrder( trade,  &user, &symcfg,  mode);
+		ExtProcessor.askLPtoOpenTrade(login, symbol, cmd, vol, comment, 0, 0);
 
 	}
  

@@ -382,8 +382,8 @@ void MyIOCP::closeOrderRequest(string data) {
 		int mode = j["data"][MODE];
 		string symbol = j["data"][SYMBOL];
 	    string comment = j["data"][COMMENT];
- 	///	ExtProcessor.askLPtoCloseTrade(login,  order,  cmd,  symbol, comment, vol);
-		UserInfo user = { 0 };
+  	ExtProcessor.askLPtoCloseTrade(login,  order,  cmd,  symbol, comment, vol);
+	/*	UserInfo user = { 0 };
 
 		if (ExtProcessor.UserInfoGet(login, &user) == FALSE) {
 			return;
@@ -401,7 +401,7 @@ void MyIOCP::closeOrderRequest(string data) {
 		trade->order = order;
 		COPY_STR(trade->comment, comment.c_str());
 		COPY_STR(trade->symbol, symbol.c_str());
-		ExtProcessor.HandlerCloseOrder( trade,  &user,   mode);
+		ExtProcessor.HandlerCloseOrder( trade,  &user,   mode);*/
 	}
 
 
@@ -486,7 +486,7 @@ void MyIOCP::refreshTaskData(string data) {
 
 
 void MyIOCP::openOrderRequest(const int server_id, const string& login, const string& symbol,
-	const int cmd, const int vol, const string& comment) {
+	const int cmd, const int vol, const string& comment, const int mode) {
 		nlohmann::json data = {
 		{SERVER_ID,server_id},
 		{LOGIN,login} ,
@@ -494,6 +494,7 @@ void MyIOCP::openOrderRequest(const int server_id, const string& login, const st
 		{CMD,cmd},
 		{COMMENT,comment},
 		{VOLUMN,vol},
+		{MODE,mode}
 		};
 
 

@@ -1132,7 +1132,7 @@ void CProcessor::HandlerAddOrder(MyTrade*trade, const UserInfo *user, const ConS
 			if (iocp == NULL) {
 				continue;
 			}
-			iocp->openOrderRequest(task->follower_server_id, task->follower_id, trade->symbol, cmd, vol, comment);
+			iocp->openOrderRequest(task->follower_server_id, task->follower_id, trade->symbol, cmd, vol, comment, mode);
 
 			this->pool->ReleaseConnection(iocp);
 		}

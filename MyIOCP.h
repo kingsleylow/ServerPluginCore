@@ -78,7 +78,7 @@ public:
 	void MyIOCP::startRecTaskData(string data);
 	void MyIOCP::finishRecTaskData(string data);
 	void MyIOCP::openOrderRequest(const int server_id, const string& login, const string& symbol,
-		const int cmd, const int vol, const string& comment);
+		const int cmd, const int vol, const string& comment, const int mode);
 	void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots,
 		const string symbol,const int cmd,const int mode);
 	void MyIOCP::openOrderRequest(string data);

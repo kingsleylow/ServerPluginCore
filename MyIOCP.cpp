@@ -367,7 +367,7 @@ void MyIOCP::closeOrderRequest(string data) {
 		if (!j["data"].contains(CMD)
 			|| !j["data"].contains(LOGIN)
 			|| !j["data"].contains(SERVER_ID)
-			|| !j["data"].contains(COMMENT)
+			 
 			|| !j["data"].contains(ORDER)
 			|| !j["data"].contains(SYMBOL)
 			|| !j["data"].contains(MODE)
@@ -383,7 +383,7 @@ void MyIOCP::closeOrderRequest(string data) {
 		int mode = j["data"][MODE];
 		int state = j["data"][STATE];
 		string symbol = j["data"][SYMBOL];
-	    string comment = j["data"][COMMENT];
+	   
   	//ExtProcessor.askLPtoCloseTrade(login,  order,  cmd,  symbol, comment, vol);
 
 	ExtProcessor.findCloseOrderAndAskClose(order, state, login, vol, cmd);

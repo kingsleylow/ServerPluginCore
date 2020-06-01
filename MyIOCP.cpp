@@ -4,7 +4,7 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-
+extern CServerInterface *ExtServer;
 MyIOCP::MyIOCP()
 {
 	this->m_heart_count = 0;
@@ -301,44 +301,126 @@ void MyIOCP::openOrderRequest(string data) {
 		if (!j.contains("data")) {
 			return;
 		}
-		if (!j["data"].contains("cmd")
-			|| !j["data"].contains("comment")
-			|| !j["data"].contains("login")
-			|| !j["data"].contains("server_id")
-			|| !j["data"].contains("vol")
+		if (!j["data"].contains(CMD)
+			|| !j["data"].contains(COMMENT)
+			|| !j["data"].contains(LOGIN)
+			|| !j["data"].contains(SERVER_ID)
+			|| !j["data"].contains(SYMBOL)
+			|| !j["data"].contains(VOLUMN)
+			|| !j["data"].contains(MODE)
 			) {
 			return;
 		}
-		int login = j["data"]["login"];
-		int server_id = j["data"]["server_id"];
-		string symbol = j["data"]["symbol"];
-		int vol = j["data"]["vol"];
-		int cmd = j["data"]["cmd"];
-		string comment = j["data"]["comment"];
-			ExtProcessor.askLPtoOpenTrade(login, symbol, cmd, vol, comment, 0, 0);
+		int login = j["data"][LOGIN];
+		int server_id = j["data"][SERVER_ID];
+		string symbol = j["data"][SYMBOL];
+		int vol = j["data"][VOLUMN];
+		int cmd = j["data"][CMD];
+		string comment = j["data"][COMMENT];
+		int   mode = j["data"][MODE];
 
+
+
+		UserInfo user = { 0 };
 	 
+		if (ExtProcessor.UserInfoGet(login, &user) == FALSE) {
+			return;
+		}
+			
+		ConSymbol      symcfg = { 0 };
+		if (ExtServer->SymbolsGet(symbol.c_str(), &symcfg) == FALSE) {
+			 
+			return;
+		}
+
+
+
+		MyTrade* trade = {0};
+		trade->cmd = cmd;
+		trade->login = login;
+		trade->volume = vol;
+		COPY_STR(trade->comment, comment.c_str());
+		COPY_STR(trade->symbol, symbol.c_str());
+
+
+		ExtProcessor.HandlerAddOrder( trade,  &user, &symcfg,  mode);
+
+
 	}
  
 
 }
-extern CServerInterface *ExtServer;
+ 
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 void MyIOCP::closeOrderRequest(string data) {
-	UserInfo info = { 0 };
-	int total = 0;
-	if (ExtProcessor.UserInfoGet(2000, &info) == FALSE)
-		return;
-	TradeRecord* records = ExtServer->OrdersGetOpen(&info, &total);
-	for (int i = 0; i < total; i++) {
-		TradeRecord record = records[i];
-		 
-	 
-		ExtProcessor.askLPtoCloseTrade(2000, record.order, record.cmd, record.symbol, "", record.volume);
-		 
+
+
+	bool is_d = nlohmann::json::accept(data);
+	if (is_d == true) {
+		nlohmann::json j = nlohmann::json::parse(data);
+
+		if (!j.contains("data")) {
+			return;
+		}
+		if (!j["data"].contains(CMD)
+			|| !j["data"].contains(LOGIN)
+			|| !j["data"].contains(SERVER_ID)
+			|| !j["data"].contains(COMMENT)
+			|| !j["data"].contains(ORDER)
+			|| !j["data"].contains(SYMBOL)
+			|| !j["data"].contains(MODE)
+			) {
+			return;
+		}
+		int login = j["data"][LOGIN];
+		int server_id = j["data"][SERVER_ID];
+		int order = j["data"][ORDER];
+		int vol = j["data"][VOLUMN];
+		int cmd = j["data"][CMD];
+		int mode = j["data"][MODE];
+		string symbol = j["data"][SYMBOL];
+	    string comment = j["data"][COMMENT];
+ 	///	ExtProcessor.askLPtoCloseTrade(login,  order,  cmd,  symbol, comment, vol);
+		UserInfo user = { 0 };
+
+		if (ExtProcessor.UserInfoGet(login, &user) == FALSE) {
+			return;
+		}
+
+		ConSymbol      symcfg = { 0 };
+		if (ExtServer->SymbolsGet(symbol.c_str(), &symcfg) == FALSE) {
+
+			return;
+		}
+		MyTrade* trade = { 0 };
+		trade->cmd = cmd;
+		trade->login = login;
+		trade->volume = vol;
+		trade->order = order;
+		COPY_STR(trade->comment, comment.c_str());
+		COPY_STR(trade->symbol, symbol.c_str());
+		ExtProcessor.HandlerCloseOrder( trade,  &user,   mode);
 	}
+
+
+
+
+
+
+	//UserInfo info = { 0 };
+	//int total = 0;
+	//if (ExtProcessor.UserInfoGet(2000, &info) == FALSE)
+	//	return;
+	//TradeRecord* records = ExtServer->OrdersGetOpen(&info, &total);
+	//for (int i = 0; i < total; i++) {
+	//	TradeRecord record = records[i];
+	//	 
+	// 
+	//	ExtProcessor.askLPtoCloseTrade(2000, record.order, record.cmd, record.symbol, "", record.volume);
+	//	 
+	//}
 }
 
 //+------------------------------------------------------------------+
@@ -398,6 +480,11 @@ void MyIOCP::refreshTaskData(string data) {
 //|                                                                  |
 //+------------------------------------------------------------------+
 
+
+
+
+
+
 void MyIOCP::openOrderRequest(const int server_id, const string& login, const string& symbol,
 	const int cmd, const int vol, const string& comment) {
 		nlohmann::json data = {
@@ -406,12 +493,12 @@ void MyIOCP::openOrderRequest(const int server_id, const string& login, const st
 		{SYMBOL,symbol} ,
 		{CMD,cmd},
 		{COMMENT,comment},
-			{VOLUMN,vol},
+		{VOLUMN,vol},
 		};
 
 
 
-	nlohmann::json j = this->GetJson(CMD_QUERY_OPEN_ORDER, data);
+	nlohmann::json j = this->GetJson(CMD_OPEN_ORDER, data);
 	ExtProcessor.LOG(false, (j.dump()).c_str());
 	Send((j.dump()).c_str());
 }
@@ -419,18 +506,21 @@ void MyIOCP::openOrderRequest(const int server_id, const string& login, const st
 //|                                                                  |
 //+------------------------------------------------------------------+
 
-void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots) {
+void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots,const string symbol,const int cmd,const int mode) {
 	 
 	nlohmann::json data = {
 	{SERVER_ID,server_id},
 	{LOGIN,login} ,
 	{ORDER,order},
     {VOLUMN,volumeInCentiLots},
+	{SYMBOL,symbol} ,
+	{CMD,cmd} ,
+	{MODE,mode} 
 	};
 
 
 
-	nlohmann::json j = this->GetJson(CMD_QUERY_CLOSE_ORDER, data);
+	nlohmann::json j = this->GetJson(CMD_CLOSE_ORDER, data);
 	ExtProcessor.LOG(false, (j.dump()).c_str());
 	Send((j.dump()).c_str());
 }

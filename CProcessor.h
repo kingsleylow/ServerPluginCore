@@ -31,6 +31,7 @@ public:
 	CProcessor();
 	~CProcessor();
 	//trade hooks
+	 
 	void SrvTradesAdd(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol);
 	void SrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
 	void SrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int mode);
@@ -53,6 +54,7 @@ public:
 	int OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
 		const double open_price, const int volum, const string comment);
 private:
+	friend class MyIOCP;
 	//---- out to server log
 	int CProcessor::UpdateComment(const int order, const string comment);
 	int CProcessor::OrdersClose(const int order,   const int volume, const double close_price,   const string comment);

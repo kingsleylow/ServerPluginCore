@@ -153,7 +153,7 @@ void CProcessor::SrvDealerGet(const ConManager *manager, const RequestInfo *requ
 {
 	LOG(CmdTrade, "LifeByte::SrvDealerGet", "LifeByte::SrvDealerGet");
 }
-
+ 
 //+------------------------------------------------------------------+
 //| Prepare UserInfo for login                                       |
 //+------------------------------------------------------------------+
@@ -1225,7 +1225,8 @@ void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mod
 				continue;
 			}
 		 
-			iocp->closeOrderRequest(task->follower_server_id, task->follower_id, trade->order,vol);
+			iocp->closeOrderRequest(task->follower_server_id, task->follower_id, trade->order,vol,trade->symbol,cmd,mode);
+			this->pool->ReleaseConnection(iocp);
 		}
 	}
 	if (trade != NULL) {

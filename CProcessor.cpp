@@ -1095,7 +1095,7 @@ void CProcessor::HandlerAddOrder(MyTrade*trade, const UserInfo *user, const ConS
 			continue;
 		}
 
-		if (task->master_server_id != this->plugin_id || atoi(task->master_id.c_str()) != trade->login) {
+		if ( atoi(task->master_id.c_str()) != trade->login) {
 			continue;
 		}
 
@@ -1115,6 +1115,10 @@ void CProcessor::HandlerAddOrder(MyTrade*trade, const UserInfo *user, const ConS
 		string comment = ORDER_COMMENT_PRE + to_string(trade->order);
 		int follower_id = atoi(task->follower_id.c_str());
 		if (task->follower_server_id == this->plugin_id) {
+
+		 
+
+
 			LOG(false, "LifeByte::New receive open order %d, state %d,login %d, name %s, symbol %s,comment %s,mode %d", trade->order, trade->state, user->login, user->name, trade->symbol, trade->comment, mode);
 			LOG(CmdTrade, "LifeByte::New receive open order", "%d,%d,%d,%s,%s,%s,%d", trade->order, trade->state, user->login, user->name, trade->symbol, trade->comment, mode);
 

@@ -31,7 +31,7 @@ public:
 	CProcessor();
 	~CProcessor();
 	//trade hooks
-	 
+	bool CProcessor::findCloseOrderAndAskClose(int master_order, int trade_state, int follower_id, int vol ,int cmd  );
 	void SrvTradesAdd(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol);
 	void SrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
 	void SrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int mode);
@@ -61,11 +61,12 @@ private:
  
 	void CProcessor::HandlerAddOrder(MyTrade *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
 	void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mode);
-	void CProcessor::HandlerActiveOrder(MyTrade *trade, UserInfo *user, const int mode);
+ 
 	//bool CProcessor::ActionCheck(const int order,  const int login, const double price);
 	void CProcessor::HandleQuickCloseIssue(int login, int order);
 	void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade* trade);
 	void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade  trade);
+	void CProcessor::AddToQuickCloseQueue(int follower_id, int order, int cmd, int login, int vol, string symbol);
 	static UINT __cdecl confirm_order_worker_thread(void* param);
 	static UINT __cdecl CProcessor::close_order_worker_thread(void* param);
  

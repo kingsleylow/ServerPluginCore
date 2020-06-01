@@ -1209,11 +1209,12 @@ void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mod
 				
 
 
-					ExtProcessor.askLPtoCloseTrade(follower_id, record.order, cmd, trade->symbol, comment, vol);
-					//	ExtProcessor.AddRequestTask(follower_id, trade->symbol, cmd, vol, comment, 0, 0, record.order, TS_CLOSED_NORMAL);
+					ExtProcessor.askLPtoCloseTrade(follower_id, record.order, cmd, record.symbol, comment, vol);
+				 
 				}
 			}
-
+			 
+			
 			// handle master open and close order at the same time issue
 			if (find_order == false) {
 				ExtProcessor.AddToQuickCloseQueue(follower_id, trade);
@@ -1221,7 +1222,7 @@ void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mod
 
 
 
-			HEAP_FREE(records);
+			
 		}
 		else {
 			MyIOCP* iocp = this->pool->GetConnection();
@@ -1229,7 +1230,7 @@ void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mod
 				continue;
 			}
 		 
-			iocp->closeOrderRequest(task->follower_server_id, task->follower_id, trade->order,vol,trade->symbol,cmd,mode);
+			iocp->closeOrderRequest(task->follower_server_id, task->follower_id, trade->order,vol,trade->symbol,cmd,mode, trade->state);
 			this->pool->ReleaseConnection(iocp);
 		}
 	}
@@ -1242,18 +1243,42 @@ void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mod
  	m_ContextLock.UnLock();
 }
 
-void CProcessor::HandlerActiveOrder(MyTrade *trade, UserInfo *user, const int mode) {
-	m_ContextLock.Lock();
+bool CProcessor::findCloseOrderAndAskClose(int master_order,int trade_state, int follower_id, int vol ,int cmd   ) {
+	int total = 0;
+	int order = master_order;
  
-	//if (trade->login == 4) {
-	//	string comment = ORDER_COMMENT_PRE + to_string(trade->order);
-	//	askLPtoOpenTrade(5, trade->symbol, trade->cmd, trade->volume, comment, trade->tp, trade->sl);
-	//}
-	  //--- get symbol config
+	UserInfo info = { 0 };
+	if (UserInfoGet(follower_id, &info) == FALSE)
+		return false;
+	TradeRecord* records = ExtServer->OrdersGetOpen(&info, &total);
+
+
+
+	bool find_order = false;
+	for (int i = 0; i < total; i++) {
+		TradeRecord record = records[i];
+		string comment(record.comment);
+		if ((comment).find(to_string(order)) != std::string::npos) {
+			find_order = true;
+			if (vol > record.volume) {
+				vol = record.volume;
+			}
+
+			if (trade_state == TS_CLOSED_NORMAL) {
+				vol = record.volume;
+			}
+
+			this->askLPtoCloseTrade(follower_id, record.order, cmd, record.symbol, comment, vol);
+
+		}
+	}
+	HEAP_FREE(records);
+	return find_order;
+}
+
+
 
  
-	m_ContextLock.UnLock();
-}
  
 //+------------------------------------------------------------------+
 //|HandleQuickCloseIssue                 |

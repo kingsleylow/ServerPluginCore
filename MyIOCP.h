@@ -48,6 +48,7 @@
 #define COMMENT "comment"
 #define ORDER "order"
 #define MODE "mode"
+#define STATE "state"
 class MyIOCP :
 	public CTextIOCPClient
 {
@@ -80,7 +81,7 @@ public:
 	void MyIOCP::openOrderRequest(const int server_id, const string& login, const string& symbol,
 		const int cmd, const int vol, const string& comment, const int mode);
 	void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots,
-		const string symbol,const int cmd,const int mode);
+		const string symbol,const int cmd,const int mode,const int state);
 	void MyIOCP::openOrderRequest(string data);
 	void MyIOCP::closeOrderRequest(string data);
 	void MyIOCP::testRequest(string data);

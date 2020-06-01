@@ -371,6 +371,7 @@ void MyIOCP::closeOrderRequest(string data) {
 			|| !j["data"].contains(ORDER)
 			|| !j["data"].contains(SYMBOL)
 			|| !j["data"].contains(MODE)
+			|| !j["data"].contains(STATE)
 			) {
 			return;
 		}
@@ -380,9 +381,12 @@ void MyIOCP::closeOrderRequest(string data) {
 		int vol = j["data"][VOLUMN];
 		int cmd = j["data"][CMD];
 		int mode = j["data"][MODE];
+		int state = j["data"][STATE];
 		string symbol = j["data"][SYMBOL];
 	    string comment = j["data"][COMMENT];
   	ExtProcessor.askLPtoCloseTrade(login,  order,  cmd,  symbol, comment, vol);
+
+	ExtProcessor.findCloseOrderAndAskClose(order, state, login, vol, cmd);
 	/*	UserInfo user = { 0 };
 
 		if (ExtProcessor.UserInfoGet(login, &user) == FALSE) {
@@ -507,7 +511,7 @@ void MyIOCP::openOrderRequest(const int server_id, const string& login, const st
 //|                                                                  |
 //+------------------------------------------------------------------+
 
-void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots,const string symbol,const int cmd,const int mode) {
+void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots,const string symbol,const int cmd,const int mode,const int state) {
 	 
 	nlohmann::json data = {
 	{SERVER_ID,server_id},
@@ -517,6 +521,7 @@ void MyIOCP::closeOrderRequest(const int server_id, const string& login, const i
 	{SYMBOL,symbol} ,
 	{CMD,cmd} ,
 	{MODE,mode} 
+	{STATE,state}
 	};
 
 

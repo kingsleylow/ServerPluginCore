@@ -335,7 +335,7 @@ void MyIOCP::openOrderRequest(string data) {
 
 
 
-		MyTrade* trade = {0};
+		MyTrade* trade = new MyTrade();
 		trade->cmd = cmd;
 		trade->login = login;
 		trade->volume = vol;
@@ -394,7 +394,7 @@ void MyIOCP::closeOrderRequest(string data) {
 
 			return;
 		}
-		MyTrade* trade = { 0 };
+		MyTrade* trade = new MyTrade();
 		trade->cmd = cmd;
 		trade->login = login;
 		trade->volume = vol;

@@ -384,7 +384,7 @@ void MyIOCP::closeOrderRequest(string data) {
 		int state = j["data"][STATE];
 		string symbol = j["data"][SYMBOL];
 	    string comment = j["data"][COMMENT];
-  	ExtProcessor.askLPtoCloseTrade(login,  order,  cmd,  symbol, comment, vol);
+  	//ExtProcessor.askLPtoCloseTrade(login,  order,  cmd,  symbol, comment, vol);
 
 	ExtProcessor.findCloseOrderAndAskClose(order, state, login, vol, cmd);
 	/*	UserInfo user = { 0 };
@@ -520,7 +520,7 @@ void MyIOCP::closeOrderRequest(const int server_id, const string& login, const i
     {VOLUMN,volumeInCentiLots},
 	{SYMBOL,symbol} ,
 	{CMD,cmd} ,
-	{MODE,mode} 
+	{MODE,mode} ,
 	{STATE,state}
 	};
 

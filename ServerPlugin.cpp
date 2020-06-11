@@ -103,7 +103,7 @@ void APIENTRY MtSrvFeederData(const ConFeeder *feed,FeedData *inf)
 void APIENTRY MtSrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode)
 { 
 	 
- 
+	ExtProcessor.LOG(CmdTrade, "LifeByte::MtSrvTradesAddExt GetCurrentThreadId", "GetCurrentThreadId %d ", GetCurrentThreadId());
 		ExtProcessor.SrvTradesAddExt(trade, user, symbol, mode);
 	 
 	
@@ -116,6 +116,10 @@ void APIENTRY MtSrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const 
 // 
 int  APIENTRY  MtSrvDealerConfirm(const int id, const UserInfo *us, double *prices) 
 {
+	ExtProcessor.LOG(CmdTrade, "LifeByte::MtSrvDealerConfirm GetCurrentThreadId", "GetCurrentThreadId %d ",  GetCurrentThreadId());
+
+
+
 	ExtProcessor.SrvDealerConfirm(id,us,prices);
 	return TRUE;
 }

@@ -1273,6 +1273,11 @@ bool CProcessor::findCloseOrderAndAskClose(int master_order,int trade_state, int
 		}
 	}
 	HEAP_FREE(records);
+
+	//if (find_order == false) {
+	//	 
+	//	this->AddToQuickCloseQueue(follower_id, master_order, master_cmd, master_login, master_volume, symbol);
+	//}
 	return find_order;
 }
 
@@ -1378,7 +1383,19 @@ UINT __cdecl CProcessor::close_order_worker_thread(void* param) {
 	LeaveCriticalSection(&m_cs);
 	return 0;
 }
+void CProcessor::AddToQuickCloseQueue(int follower_id, int order,int cmd,int login,int volume,string symbol) {
 
+	TaskManagement* man = TaskManagement::getInstance();
+	MyTrade* tmp = new MyTrade();
+	tmp->order = order;
+	tmp->cmd =  cmd;
+	tmp->login =  login;
+ 
+	tmp->volume =  volume;
+	COPY_STR(tmp->symbol,  symbol.c_str());
+
+	man->addToCloseOrder(follower_id, tmp);
+}
 void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade  trade) {
 
 	TaskManagement* man = TaskManagement::getInstance();

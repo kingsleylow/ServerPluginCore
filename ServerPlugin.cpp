@@ -11,7 +11,7 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-PluginInfo        ExtPluginInfo={ PLUGIN_NAME,104,COMPANY_NAME,{0} };
+PluginInfo        ExtPluginInfo={ PLUGIN_NAME,105,COMPANY_NAME,{0} };
 char              ExtProgramPath[MAX_PATH]="";
 CSync             ExtSync;
 CServerInterface *ExtServer=NULL;
@@ -102,11 +102,13 @@ void APIENTRY MtSrvFeederData(const ConFeeder *feed,FeedData *inf)
 //}
 void APIENTRY MtSrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode)
 { 
-	 
-	ExtProcessor.LOG(CmdTrade, "LifeByte::MtSrvTradesAddExt GetCurrentThreadId", "GetCurrentThreadId %d ", GetCurrentThreadId());
+	TaskManagement* man = TaskManagement::getInstance();
+	if (man->checkMaster(trade->login) == true) {
 		ExtProcessor.SrvTradesAddExt(trade, user, symbol, mode);
-	 
+	}
 	
+ 
+	 
 }
 //int  APIENTRY  MtSrvDealerGet(const ConManager *manager, const RequestInfo *request)
 //{
@@ -116,8 +118,6 @@ void APIENTRY MtSrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const 
 // 
 int  APIENTRY  MtSrvDealerConfirm(const int id, const UserInfo *us, double *prices) 
 {
-	ExtProcessor.LOG(CmdTrade, "LifeByte::MtSrvDealerConfirm GetCurrentThreadId", "GetCurrentThreadId %d ",  GetCurrentThreadId());
-
 
 
 	ExtProcessor.SrvDealerConfirm(id,us,prices);
@@ -133,7 +133,18 @@ int  APIENTRY  MtSrvDealerConfirm(const int id, const UserInfo *us, double *pric
 
 void APIENTRY MtSrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int mode)
 {
-	ExtProcessor.SrvTradesUpdate(trade, user, mode);
+
+	 
+		 TaskManagement* man = TaskManagement::getInstance();
+		if (man->checkMaster(trade->login) == true) {
+				ExtProcessor.SrvTradesUpdate(trade, user, mode);
+		} 
+	 
+	
+	 
+		
+	 
+ 
 }
 
 
@@ -176,3 +187,16 @@ int APIENTRY MtSrvPluginCfgNext(const int index, PluginCfg *cfg) { return ExtCon
 //|                                                                  |
 //+------------------------------------------------------------------+
 int APIENTRY MtSrvPluginCfgTotal() { return ExtConfig.Total(); }
+
+
+
+ 
+
+
+void APIENTRY  MtSrvScheduler(const time_t   curtime) {
+
+}
+
+void APIENTRY  MtSrvService(const DWORD curtime) {
+
+}

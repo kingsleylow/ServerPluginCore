@@ -7,6 +7,7 @@
 #include "SocketConnectionPool.h"
 #include <thread>
 #include "executePool.h"
+
 struct RequestMetaData {
 	TradeTransInfo info;
 	int login;
@@ -51,6 +52,10 @@ public:
 	std::threadpool excutor{0};
 	IOCPMutex m_ContextLock;
 	int				  plugin_id;
+	int request_sleep_time;
+	int request_buffer;
+	int request_busy_size;
+
 	int OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
 		const double open_price, const int volum, const string comment);
 private:
@@ -78,7 +83,13 @@ private:
 	char			  m_key_backup[64];   // key
 	char	          m_plugin_id[32]; // plugin id
 
+	char	          m_request_sleep[32]; // sleep time
+	char	          m_reqeust_buffer[32]; // send task once time
+	char	          m_request_busy[32]; // plugin busy size
+
+
 	HANDLE            m_threadServer;    // thread handle
+	HANDLE            m_threadHandlerRequest;    // thread handle
 	HANDLE            m_funcThread;    // thread handle
 	int request_current_id;
 	list<RequestTask*> request_task;
@@ -87,14 +98,22 @@ private:
 	std::map<int, RequestMetaData> requestsMadeByCode;
 
 protected:
+	virtual void      RequestProcess(void);
 	virtual void      ThreadProcess(void);
 	static UINT __stdcall ThreadWrapper(LPVOID pParam);
 	virtual void      ThreadProcesRequest(void);
+	virtual void      ThreadProcesHandlerRequest(void);
 	static UINT __stdcall ThreadWrapperRequest(LPVOID pParam);
+	static UINT __stdcall CProcessor::HandeleThreadWrapper(LPVOID pParam);
 	void CProcessor::AddRequestTask(int login, string symbol, int cmd, int volume, string comment, double tp, double sl, int order, int type);
 	 
- 
+	static UINT __stdcall ThreadWrapperHanderRequest(LPVOID pParam);
 	void CProcessor::processingDeadRequest();
- 
+	bool AddOpenRequestToQueue(int login, string symbol,int cmd,int vol, string comment);
+	bool AddCloseRequestToQueue(int login, int order, int cmd, string symbol, string comment, int vol);
+	void CheckRequest();
+	bool CheckInQueue(int login);
+	RequestTask*  getRequestTask();
+	bool CProcessor::CheckBusyQueue();
 };
 extern CProcessor ExtProcessor;

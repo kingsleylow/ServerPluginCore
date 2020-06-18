@@ -15,7 +15,7 @@ namespace std
 {
 	 
  
-#define  THREADPOOL_MAX_NUM  1
+#define  THREADPOOL_MAX_NUM  16
 
 #define  THREADPOOL_AUTO_GROW
 

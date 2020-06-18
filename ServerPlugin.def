@@ -13,3 +13,5 @@ EXPORTS
     MtSrvPluginCfgNext
     MtSrvPluginCfgDelete
     MtSrvPluginCfgTotal
+	MtSrvScheduler
+	MtSrvService

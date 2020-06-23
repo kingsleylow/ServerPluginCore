@@ -23,6 +23,8 @@ public:
 	double master_ratio;
 	string master_id;
 	double follower_max_drawback;
+
+	set<string> symbol_filter;
 	string dumpTask();
 };
 

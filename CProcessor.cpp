@@ -9,34 +9,6 @@
 extern CServerInterface *ExtServer;
 CProcessor               ExtProcessor;
 TaskManagement			 TaskManager;
-#define TIME_RATE ((double)1.6777216)
-#define OURTIME(stdtime) ((DWORD)((double)(stdtime)/TIME_RATE))
-#define CORE_IP "IP"
-#define CORE_BACKUP_IP "BACKUP_IP"
-#define DEFAULT_IP "0"
-#define CORE_PORT "PORT"
-#define CORE_BACKUP_PORT "BACKUP_PORT"
-#define DEFAULT_PORT "0"
-#define REQUEST_SLEEP "REQUEST_SLEEP"
-#define REQUEST_BUFFER "REQUEST_BUFFER"
-#define REQUEST_BUSY_MAX "REQUEST_BUSY_MAX"
-#define REQUEST_SLEEP_DEFAULT "100"
-#define REQUEST_BUFFER_DEFAULT "100"
-#define REQUEST_BUSY_MAX_DEFAULT "200"
-
-#define CORE_KEY "KEY"
-#define CORE_KEY_BACKUP "BACKUP_KEY"
-#define DEFAULT_KEY ""
-#define PLUGIN_ID "PLUGIN_ID"
-#define DEFAULT_PLUGIN_ID "0"
-#define D_PLUGIN_ID 0
-
-
-#define REQUEST_TASK_BUSY   200
-#define REQUEST_TASK_PRE  100
-#define REQUEST_TASK_WAIT   100
-
-
 
 CRITICAL_SECTION m_cs;
 class OrderTask {
@@ -65,7 +37,7 @@ CProcessor::CProcessor()
  	m_funcThread = (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapperRequest, (void*)this, 0, &id);
 	InitializeCriticalSectionAndSpinCount(&m_cs, 10000);;
 	this->request_current_id = 0;
-	 
+	
 }
 CProcessor::~CProcessor()
 {
@@ -104,7 +76,23 @@ void CProcessor::Initialize(void) {
 	request_busy_size = atoi(m_request_busy);
 
 
+	ExtConfig.GetString(SYMBOL_SEPARATOR, m_seperator, sizeof(m_seperator) - 1, SYMBOL_SEPARATOR_DEFAULT);
 
+	this->symbol_seperator = m_seperator;
+
+	ExtConfig.GetString(SYMBOL_SEPARATOR_POSITION, m_seperator_position, sizeof(m_seperator_position) - 1, SYMBOL_SEPARATORPOSITION_DEFAULT);
+
+
+
+
+	this->symbol_seperator_position = atoi(m_seperator_position);
+
+	if (this->symbol_seperator_position !=0 || this->symbol_seperator_position != 1) {
+		this->symbol_seperator_position = 0;
+	}
+
+
+ 	TaskManagement::getInstance()->init_symbol_group();
 
 	this->setupSocket();
 
@@ -324,15 +312,6 @@ void CProcessor::SrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int m
 
 void CProcessor::SrvDealerConfirm(const int id, const UserInfo *us, double *prices)
 {
-	//m_ContextLock.Lock();
-	//std::map<int, RequestMetaData>::iterator it = requestsMadeByCode.find(id);
-	//if (it == requestsMadeByCode.end()) {
-	//	m_ContextLock.UnLock();
-	//	return;
-	//}
-	//m_ContextLock.UnLock();
-	//LOG(CmdTrade,"LifeByte::SrvDealerConfirm", "LifeByte::SrvDealerConfirm: request %d", id);
-
  
  
 
@@ -361,11 +340,11 @@ void CProcessor::SrvDealerConfirm(const int id, const UserInfo *us, double *pric
 //+------------------------------------------------------------------+
 
 UINT __cdecl  CProcessor::confirm_order_worker_thread(void* param) {
-	OrderTask* task = (OrderTask*)param;
-	int id = task->id;
+
  
  	EnterCriticalSection(&m_cs);
-
+	OrderTask* task = (OrderTask*)param;
+	int id = task->id;
 		std::map<int, RequestMetaData>::iterator it = ExtProcessor.requestsMadeByCode.find(id);
 	 	 
 	 	if (it != ExtProcessor.requestsMadeByCode.end()) {
@@ -480,23 +459,53 @@ void CProcessor::askLPtoCloseTrade(int login, int order, int cmd, string symbol,
 		}
 
 
-
-		if (ExtServer->SymbolsGet(symbol.c_str(), &symcfg) == FALSE) {
-			LOG(false, " askLPtoCloseTrade: SymbolsGet failed");
-			return;
+		if (this->checkSymbolIsEnable(symbol, info.group) == false) {
+			string new_symbol;
+			bool is_get = this->getNewSymbol(symbol, info.group, new_symbol);
+			if (is_get == true) {
+				symbol = new_symbol;
+			}
+			else {
+				return;
+			}
 		}
+
+
+
 		if (ExtServer->GroupsGet(info.group, &grpcfg) == FALSE) {
 			LOG(false, " askLPtoCloseTrade: GroupsGet failed ");
 			return;
 		}
 
 
+	
+	
+
+		if (ExtServer->SymbolsGet(symbol.c_str(), &symcfg) == FALSE) {
+			LOG(false, " askLPtoCloseTrade: SymbolsGet failed");
+			return;
+		}
 
 		int security = symcfg.type;
 		int isTrade = grpcfg.secgroups[security].trade;
 		int isShow = grpcfg.secgroups[security].show;
 		if (isTrade==0 || isShow ==0) {
 			LOG(false, "askLPtoCloseTrade: symbol disable");
+
+			string new_symbol = "";
+			bool res = this->getNewSymbol(symbol, info.group,new_symbol);
+				 
+			if (res == true) {
+				if (ExtServer->SymbolsGet(new_symbol.c_str(), &symcfg) == FALSE) {
+					LOG(false, " askLPtoCloseTrade: SymbolsGet failed");
+					return;
+				}
+			}
+			else {
+				return;
+			}
+
+
 			return;
 		}
 
@@ -564,7 +573,7 @@ void CProcessor::askLPtoCloseTrade(int login, int order, int cmd, string symbol,
 	}
 }
 
-void CProcessor::askLPtoOpenTrade(int login, const std::string& symbol, int cmd, int volumeInCentiLots, const std::string& comment, double tp, double sl) {
+void CProcessor::askLPtoOpenTrade(int login,   std::string symbol, int cmd, int volumeInCentiLots, const std::string& comment, double tp, double sl) {
 	//Check if cmd is OP_BUY, OP_SELL, volume is positive
 	//Check symbol is not long_only and cmd is sell
 	//Check symbol is tradeable (TRADE_FULL)
@@ -596,6 +605,21 @@ void CProcessor::askLPtoOpenTrade(int login, const std::string& symbol, int cmd,
 			LOG(false, "askLPtoOpenTrade: login %d RO", login);
 			return;
         }
+
+
+		if (this->checkSymbolIsEnable(symbol, info.group) == false) {
+			string new_symbol;
+			bool is_get = this->getNewSymbol(symbol, info.group, new_symbol);
+			if (is_get == true) {
+				symbol = new_symbol;
+			}
+			else {
+				return;
+			}
+		}
+
+
+
 	 
 		if (ExtServer->SymbolsGet(symbol.c_str(), &symcfg) == FALSE) {
 			LOG(false, " askLPtoOpenTrade: SymbolsGet failed");
@@ -1148,15 +1172,38 @@ void CProcessor::HandlerAddOrder(MyTrade*trade, const UserInfo *user, const ConS
 
 		 
 			UserInfo info = { 0 };
-			if (UserInfoGet(follower_id, &info) == FALSE)
-				continue;
+			if (UserInfoGet(follower_id, &info) == FALSE) {
 
-		//	LOG(false, "LifeByte::New receive open order %d, state %d,login %d, name %s, symbol %s,comment %s,mode %d", trade->order, trade->state, user->login, user->name, trade->symbol, trade->comment, mode);
-		//	LOG(CmdTrade, "LifeByte::New receive open order", "%d,%d,%d,%s,%s,%s,%d", trade->order, trade->state, user->login, user->name, trade->symbol, trade->comment, mode);
+				continue;
+			}
+			string trade_symbol = trade->symbol;
+				if (this->checkSymbolIsEnable(trade_symbol, info.group) == false) {
+					string new_symbol;
+					bool is_get = this->getNewSymbol(trade_symbol, info.group, new_symbol);
+					if (is_get == true) {
+						trade_symbol = new_symbol;
+					}
+					else {
+						continue;
+					}
+				}
+
+				for (auto it = task->symbol_filter.begin(); it != task->symbol_filter.end(); it++) {
+				 
+					if (trade_symbol.compare(*it) == 0) {
+						continue;
+					}
+				}
+
+
+
+
+		 	LOG(false, "LifeByte::New receive open order %d, state %d,login %d, name %s, symbol %s,comment %s,mode %d", trade->order, trade->state, user->login, user->name, trade->symbol, trade->comment, mode);
+		 	LOG(CmdTrade, "LifeByte::New receive open order", "%d,%d,%d,%s,%s,%s,%d", trade->order, trade->state, user->login, user->name, trade->symbol, trade->comment, mode);
 
 			 
 		// 	askLPtoOpenTrade(follower_id, trade->symbol, cmd, vol, comment, trade->tp, trade->sl);
-			AddOpenRequestToQueue(follower_id, trade->symbol, cmd, vol, comment);
+			AddOpenRequestToQueue(follower_id, trade_symbol, cmd, vol, comment);
 		}
 		else {
 			//handle another server
@@ -1215,8 +1262,10 @@ void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mod
 			int order = trade->order;
 			int follower_id = atoi(task->follower_id.c_str());
 			UserInfo info = { 0 };
-			if (UserInfoGet(follower_id, &info) == FALSE)
+			if (UserInfoGet(follower_id, &info) == FALSE) {
 				continue;
+			}
+ 
 			TradeRecord* records = ExtServer->OrdersGetOpen(&info, &total);
 			 
 
@@ -1236,11 +1285,16 @@ void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mod
 					}
 
 
-			//		LOG(false, "LifeByte::New receive close order %d, state %d,login %d, symbol %s,comment %s,mode %d, vol %d", trade->order, trade->state, follower_id,  trade->symbol, trade->comment, mode ,vol);
-//LOG(CmdTrade, "LifeByte::New receive close order", "order %d, state %d,  login %d, symbol %s, comment %s, mode %d ,vol % d", trade->order, trade->state, follower_id, trade->symbol, trade->comment, mode ,vol);
+		 		LOG(false, "LifeByte::New receive close order %d, state %d,login %d, symbol %s,comment %s,mode %d, vol %d", trade->order, trade->state, follower_id,  trade->symbol, trade->comment, mode ,vol);
+                LOG(CmdTrade, "LifeByte::New receive close order", "order %d, state %d,  login %d, symbol %s, comment %s, mode %d ,vol % d", trade->order, trade->state, follower_id, trade->symbol, trade->comment, mode ,vol);
 
-				
+					string str(record.symbol);
+					for (auto it = task->symbol_filter.begin(); it != task->symbol_filter.end(); it++) {
 
+						if (str.compare(*it) == 0) {
+							continue;
+						}
+					}
 
 				//	ExtProcessor.askLPtoCloseTrade(follower_id, record.order, cmd, record.symbol, comment, vol);
 					AddCloseRequestToQueue(follower_id, record.order, cmd, record.symbol, comment, vol);
@@ -1618,4 +1672,95 @@ bool CProcessor::CheckBusyQueue() {
 
 	return false;
 
+}
+
+bool CProcessor::getNewSymbol(string symbol, string group, string& new_symbol) {
+	string seperator = this->symbol_seperator;
+	int fix = this->symbol_seperator_position;
+	string src_symbol;
+	if (symbol.find(seperator) != std::string::npos) {
+		try
+		{
+			size_t pos = symbol.find(seperator);
+			if (fix == atoi(SYMBOL_SEPARATOR_POSITION_PRE)) {
+				src_symbol = symbol.substr(0, pos);
+			}
+			else {
+				src_symbol = symbol.substr(pos, symbol.size() - 1);
+			}
+
+
+		}
+		catch (const std::exception&)
+		{
+
+			return "";
+		}
+	}
+	else {
+		src_symbol = symbol;
+	}
+
+	TaskManagement * task_man = TaskManagement::getInstance();
+
+	set<string> symbols = task_man->group_symbol[group];
+	for (auto it2 = symbols.begin(); it2 != symbols.end(); it2++) {
+		string tSym = *it2;
+		string dst_symbol;
+
+
+
+		if (tSym.find(seperator) != std::string::npos) {
+			try
+			{
+				size_t pos = tSym.find(seperator);
+
+				if (fix == atoi(SYMBOL_SEPARATOR_POSITION_PRE)) {
+					dst_symbol = tSym.substr(0, pos);
+				}
+				else {
+					dst_symbol = tSym.substr(pos, tSym.size() - 1);
+				}
+			}
+			catch (const std::exception&)
+			{
+
+				return  false;
+			}
+		}
+		else {
+			dst_symbol = tSym;
+		}
+
+		if (dst_symbol.compare(src_symbol) == 0) {
+			new_symbol = tSym;
+			return true;
+		}
+	}
+
+	return  false;
+}
+
+
+bool  CProcessor::checkSymbolIsEnable(string symbol, string group) {
+	ConSymbol      symcfg = { 0 };
+	ConGroup grpcfg = { 0 };
+	if (ExtServer->SymbolsGet(symbol.c_str(), &symcfg) == FALSE) {
+		LOG(false, " checkSymbolIsEnable: SymbolsGet failed");
+		return false;
+	}
+	if (ExtServer->GroupsGet( group.c_str(), &grpcfg) == FALSE) {
+		LOG(false, " checkSymbolIsEnable: GroupsGet failed ");
+		return false;
+	}
+	int security = symcfg.type;
+	int isTrade = grpcfg.secgroups[security].trade;
+	int isShow = grpcfg.secgroups[security].show;
+	if (isTrade == 0 || isShow == 0) {
+		 
+
+
+		return false;;
+	}
+	return true;
 }

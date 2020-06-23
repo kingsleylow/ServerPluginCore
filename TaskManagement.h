@@ -14,13 +14,18 @@
 #define STRATEGY_TRADE_BY_ORDER 2 /// trace summary
 
 
+
+
 class TaskManagement
 {
 
 private :
+
+	
 	std::list<TradeTask*> m_buff;
 	std::list<TradeTask*> m_task;
 public:
+	map<string, set<string>> group_symbol;
 	static TaskManagement* taskManager;
 	static TaskManagement* getInstance();
 	TaskManagement();
@@ -61,5 +66,8 @@ public:
 	void TaskManagement::getTaskList(list<TradeTask*>& query);
 	void TaskManagement::clearTask(list<TradeTask*>& m_task);
 	int  TaskManagement::getTaskSize();
+
+	void TaskManagement::init_symbol_group();
+	bool TaskManagement::getNewSymbol(string symbol, string group, string& new_group);
 };
 

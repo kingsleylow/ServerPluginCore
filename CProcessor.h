@@ -7,7 +7,41 @@
 #include "SocketConnectionPool.h"
 #include <thread>
 #include "executePool.h"
+#define TIME_RATE ((double)1.6777216)
+#define OURTIME(stdtime) ((DWORD)((double)(stdtime)/TIME_RATE))
+#define CORE_IP "IP"
+#define CORE_BACKUP_IP "BACKUP_IP"
+#define DEFAULT_IP "0"
+#define CORE_PORT "PORT"
+#define CORE_BACKUP_PORT "BACKUP_PORT"
+#define DEFAULT_PORT "0"
+#define REQUEST_SLEEP "REQUEST_SLEEP"
+#define REQUEST_BUFFER "REQUEST_BUFFER"
+#define REQUEST_BUSY_MAX "REQUEST_BUSY_MAX"
+#define REQUEST_SLEEP_DEFAULT "100"
+#define REQUEST_BUFFER_DEFAULT "100"
+#define REQUEST_BUSY_MAX_DEFAULT "200"
 
+#define CORE_KEY "KEY"
+#define CORE_KEY_BACKUP "BACKUP_KEY"
+#define DEFAULT_KEY ""
+#define PLUGIN_ID "PLUGIN_ID"
+#define DEFAULT_PLUGIN_ID "0"
+#define D_PLUGIN_ID 0
+
+
+#define REQUEST_TASK_BUSY   200
+#define REQUEST_TASK_PRE  100
+#define REQUEST_TASK_WAIT   100
+
+
+#define SYMBOL_SEPARATOR "SYMBOL SEPARATOR"
+#define SYMBOL_SEPARATOR_POSITION "SYMBOL SEPARATOR POSITION"
+#define SYMBOL_SEPARATOR_DEFAULT "."
+
+#define SYMBOL_SEPARATOR_POSITION_PRE "0"
+#define SYMBOL_SEPARATOR_POSITION_SUF "1"
+#define SYMBOL_SEPARATORPOSITION_DEFAULT SYMBOL_SEPARATOR_POSITION_PRE
 struct RequestMetaData {
 	TradeTransInfo info;
 	int login;
@@ -43,7 +77,7 @@ public:
 	 
 	int CProcessor::UserInfoGet(const int login, UserInfo *info);
 	void CProcessor::askLPtoCloseTrade(int login, int order, int cmd,string symbol, string comment,int volumeInCentiLots);
-	void CProcessor::askLPtoOpenTrade(int login, const std::string& symbol, int cmd, int volumeInCentiLots, const std::string& comment, double tp, double sl);
+	void CProcessor::askLPtoOpenTrade(int login,   std::string symbol, int cmd, int volumeInCentiLots, const std::string& comment, double tp, double sl);
 	void CProcessor::setupSocket();
 	void CProcessor::LOG(bool debug = false,string msg = "", ... ) const;
 	void CProcessor::LOG(const int code, LPCSTR ip, LPCSTR msg, ...) const;
@@ -55,7 +89,8 @@ public:
 	int request_sleep_time;
 	int request_buffer;
 	int request_busy_size;
-
+	string symbol_seperator;
+	int symbol_seperator_position;
 	int OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
 		const double open_price, const int volum, const string comment);
 private:
@@ -70,10 +105,10 @@ private:
 	//bool CProcessor::ActionCheck(const int order,  const int login, const double price);
 	void CProcessor::HandleQuickCloseIssue(int login, int order);
 	void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade* trade);
-	void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade  trade);
+ 
 	void CProcessor::AddToQuickCloseQueue(int follower_id, int order, int cmd, int login, int vol, string symbol);
 	static UINT __cdecl confirm_order_worker_thread(void* param);
-	static UINT __cdecl CProcessor::close_order_worker_thread(void* param);
+ 
  
 	char              m_ip[128];       //ip
 	char              m_port[32];   // port
@@ -87,6 +122,8 @@ private:
 	char	          m_reqeust_buffer[32]; // send task once time
 	char	          m_request_busy[32]; // plugin busy size
 
+	char              m_seperator[32];
+	char              m_seperator_position[32];
 
 	HANDLE            m_threadServer;    // thread handle
 	HANDLE            m_threadHandlerRequest;    // thread handle
@@ -105,15 +142,16 @@ protected:
 	virtual void      ThreadProcesHandlerRequest(void);
 	static UINT __stdcall ThreadWrapperRequest(LPVOID pParam);
 	static UINT __stdcall CProcessor::HandeleThreadWrapper(LPVOID pParam);
-	void CProcessor::AddRequestTask(int login, string symbol, int cmd, int volume, string comment, double tp, double sl, int order, int type);
-	 
+ 
 	static UINT __stdcall ThreadWrapperHanderRequest(LPVOID pParam);
-	void CProcessor::processingDeadRequest();
+ 
 	bool AddOpenRequestToQueue(int login, string symbol,int cmd,int vol, string comment);
 	bool AddCloseRequestToQueue(int login, int order, int cmd, string symbol, string comment, int vol);
 	void CheckRequest();
 	bool CheckInQueue(int login);
 	RequestTask*  getRequestTask();
 	bool CProcessor::CheckBusyQueue();
+	bool CProcessor::getNewSymbol(string old_symbol, string group, string& new_symbol);
+	bool  CProcessor::checkSymbolIsEnable(string symbol, string group);
 };
 extern CProcessor ExtProcessor;

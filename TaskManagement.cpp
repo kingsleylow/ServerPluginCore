@@ -1,6 +1,7 @@
 #include "Stdafx.h"
 #include "TaskManagement.h"
 #include "CProcessor.h"
+extern CServerInterface *ExtServer;
 TaskManagement* TaskManagement::taskManager;
 TaskManagement* TaskManagement::getInstance() {
 	if (taskManager == NULL) {
@@ -249,6 +250,16 @@ TradeTask* TaskManagement::getTask(nlohmann::json data) {
 	task->master_disable = data["master_disable"].get<bool>();
 	task->master_server_id = data["master_server_id"].get<int>();
 	task->follower_server_id = data["follower_server_id"].get<int>();
+
+	nlohmann::json symbol_filter = data["symbol_filter"];
+	int size =data["symbol_filter_size"];
+
+	for (int i = 0; i < size;i++) {
+		string symbol = symbol_filter[i].get<string>();
+		task->symbol_filter.insert(symbol);
+	}
+
+
 	return task;
 }
 
@@ -477,10 +488,42 @@ void TaskManagement::getTaskList(list<TradeTask*>& query) {
 		task->master_disable = tmp->master_disable;
 		task->master_server_id = tmp->master_server_id;
 		task->follower_server_id = tmp->follower_server_id;
-
+		task->symbol_filter = tmp->symbol_filter;
 		query.push_back(task);
 	}
 
 
 	m_ContextLock.UnLock();
 }
+
+
+
+void TaskManagement::init_symbol_group() {
+	this->group_symbol.clear();
+	int group_pos = 0;
+	
+	ConSymbol symb;
+	ConGroup groupb;
+
+
+	while (ExtServer->GroupsNext(group_pos,&groupb)!=FALSE) {
+		string group_name = groupb.group;
+		int symbol_pos = 0;
+			while (ExtServer->SymbolsNext(symbol_pos, &symb) != FALSE) {
+
+				int security = symb.type;
+				string symbol_name = symb.symbol;
+				int isTrade = groupb.secgroups[security].trade;
+				int isShow = groupb.secgroups[security].show;
+				if (isTrade !=0 && isShow!=0) {
+					this->group_symbol[group_name].insert(symbol_name);
+				}
+				symbol_pos++;
+			}
+			group_pos++;
+	}
+	
+}
+
+
+ 

@@ -2,7 +2,6 @@ LIBRARY ServerPlugin
 
 EXPORTS
     MtSrvAbout
-    MtSrvFeederData
     MtSrvStartup
 	MtSrvDealerConfirm
 	MtSrvTradesAddExt

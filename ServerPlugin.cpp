@@ -11,7 +11,7 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-PluginInfo        ExtPluginInfo={ PLUGIN_NAME,105,COMPANY_NAME,{0} };
+PluginInfo        ExtPluginInfo={ PLUGIN_NAME,106,COMPANY_NAME,{0} };
 char              ExtProgramPath[MAX_PATH]="";
 CSync             ExtSync;
 CServerInterface *ExtServer=NULL;
@@ -73,25 +73,25 @@ int APIENTRY MtSrvStartup(CServerInterface *server)
 //+------------------------------------------------------------------+
 //| DataFeed                                                         |
 //+------------------------------------------------------------------+
-void APIENTRY MtSrvFeederData(const ConFeeder *feed,FeedData *inf)
-  {
-   char  tmp[MAX_PATH];
-   FILE *out;
-//--- checking
-   if(inf==NULL)          return;
-   if(inf->ticks_count<1) return;
-//--- open a file
-   _snprintf(tmp,sizeof(tmp)-1,"%s\\ticks.txt",ExtProgramPath);
-   ExtSync.Lock();
-   if((out=fopen(tmp,"at"))!=NULL)
-     {
-      for(int i=0;i<inf->ticks_count;i++)
-            fprintf(out,"%s: %.5lf / %.5lf\n",inf->ticks[i].symbol,inf->ticks[i].bid,inf->ticks[i].ask);
-      fclose(out);
-     }
-   ExtSync.Unlock();
-//---
-  }
+//void APIENTRY MtSrvFeederData(const ConFeeder *feed,FeedData *inf)
+//  {
+//   char  tmp[MAX_PATH];
+//   FILE *out;
+////--- checking
+//   if(inf==NULL)          return;
+//   if(inf->ticks_count<1) return;
+////--- open a file
+//   _snprintf(tmp,sizeof(tmp)-1,"%s\\ticks.txt",ExtProgramPath);
+//   ExtSync.Lock();
+//   if((out=fopen(tmp,"at"))!=NULL)
+//     {
+//      for(int i=0;i<inf->ticks_count;i++)
+//            fprintf(out,"%s: %.5lf / %.5lf\n",inf->ticks[i].symbol,inf->ticks[i].bid,inf->ticks[i].ask);
+//      fclose(out);
+//     }
+//   ExtSync.Unlock();
+////---
+//  }
 //+------------------------------------------------------------------+
 
 

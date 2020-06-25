@@ -196,7 +196,30 @@ int APIENTRY MtSrvPluginCfgTotal() { return ExtConfig.Total(); }
 void APIENTRY  MtSrvScheduler(const time_t   curtime) {
 
 }
-
+//+------------------------------------------------------------------+
+//|           100ms                                                        |
+//+------------------------------------------------------------------+
 void APIENTRY  MtSrvService(const DWORD curtime) {
 
+
+
+
+
+	TaskManagement* man = TaskManagement::getInstance();
+	if (man->initialTask == INITIAL_FINISH) {
+
+		MyIOCP* iocp = ExtProcessor.pool->GetConnection();
+		if (iocp == NULL) {
+			ExtProcessor.pool->ReleaseConnection(iocp);
+			return;
+
+		}
+		if (iocp->level != ADM_LEVEL) {
+			ExtProcessor.pool->ReleaseConnection(iocp);
+
+			return;
+		}
+		iocp->RequestCrossTradeRequest();
+		ExtProcessor.pool->ReleaseConnection(iocp);
+	}
 }

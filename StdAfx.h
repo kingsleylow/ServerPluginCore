@@ -18,19 +18,7 @@ using namespace std;
 #include "..\..\include\MT4ServerAPI.h"
 #include "config/Configuration.h"
 #include "config/StringFile.h"
-class MyTrade {
-public:
-	int               order;
-	int               cmd;
-	int               login;
-	double            sl, tp;
-	int               volume;
-	char              symbol[12];
-	double price;
-	int state;
-	char              comment[32];                // comment
-	 
-};
+
 
 #ifdef _DEBUG
 #pragma comment(lib,"glogd.lib")
@@ -43,6 +31,26 @@ public:
 #include <string>
 #include <iostream>
 #include <vector>
+
+
+
+
+
+class MyTrade {
+public:
+	int               order;
+	int               cmd;
+	int               login;
+	double            sl, tp;
+	int               volume;
+	char              symbol[12];
+	double price;
+	int state;
+	char              comment[32];                // comment
+	int mode;
+	string task_id;
+};
+
 #include "Utils.h"
 #include "nlohmann/json.hpp"
 #include "MyIOCP.h"

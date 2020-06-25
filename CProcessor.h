@@ -93,6 +93,11 @@ public:
 	int symbol_seperator_position;
 	int OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
 		const double open_price, const int volum, const string comment);
+	static UINT __cdecl  CProcessor::open_order_worker_thread(void* param);
+	static UINT __cdecl  CProcessor::close_order_worker_thread(void* param);
+ 
+	void  CProcessor::ExternalOpenOrder(int server_id,int login,string symbol,int vol,int cmd,string comment,int mode,string task_id);
+	void  CProcessor::ExternalCloseOrder(int server_id, int login, string symbol, int vol, int cmd, string comment, int mode, int order, string task_id);
 private:
 	friend class MyIOCP;
 	//---- out to server log
@@ -103,13 +108,10 @@ private:
 	void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mode);
  
 	//bool CProcessor::ActionCheck(const int order,  const int login, const double price);
-	void CProcessor::HandleQuickCloseIssue(int login, int order);
-	void CProcessor::AddToQuickCloseQueue(int follower_id, MyTrade* trade);
  
-	void CProcessor::AddToQuickCloseQueue(int follower_id, int order, int cmd, int login, int vol, string symbol);
+ 
 	static UINT __cdecl confirm_order_worker_thread(void* param);
- 
- 
+
 	char              m_ip[128];       //ip
 	char              m_port[32];   // port
 	char              m_ip_backup[128];       //ip

@@ -38,7 +38,7 @@
 
 
 #define CMD_REQUEST_TEST 1002
-#define CMD_ORDER_TEST 1003
+#define CMD_REQUEST_ORDER_CROSS 1003
 
 #define SERVER_ID "server_id"
 #define LOGIN "login"
@@ -49,6 +49,8 @@
 #define ORDER "order"
 #define MODE "mode"
 #define STATE "state"
+#define TASK_ID "task_id"
+#define TYPE "type"
 class MyIOCP :
 	public CTextIOCPClient
 {
@@ -72,20 +74,19 @@ public:
 	nlohmann::json MyIOCP::getData(string data, string key);
 
 
-
+	void MyIOCP::RequestCrossTradeRequest();
 	void MyIOCP::checkLogin(string data);
 	void MyIOCP::refreshTaskData(string data);
 	VOID MyIOCP::SendInitTask(int server_id);
 	void MyIOCP::startRecTaskData(string data);
 	void MyIOCP::finishRecTaskData(string data);
 	void MyIOCP::openOrderRequest(const int server_id, const string& login, const string& symbol,
-		const int cmd, const int vol, const string& comment, const int mode);
+		const int cmd, const int vol, const int& order, const int mode, const int state, const string comment,const string task_id);
 	void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots,
-		const string symbol,const int cmd,const int mode,const int state);
+		const string symbol,const int cmd,const int mode,const int state, const string comment, const string task_id);
 	void MyIOCP::openOrderRequest(string data);
 	void MyIOCP::closeOrderRequest(string data);
-	void MyIOCP::testRequest(string data);
-	void MyIOCP::testOrder(string data);
-
+	void MyIOCP::HandleCrossTrade(string data);
+	void MyIOCP::HandleCrossTrade(nlohmann::json data);
 };
 

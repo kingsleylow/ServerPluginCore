@@ -20,8 +20,8 @@ class TaskManagement
 {
 
 private :
-
-	
+	std::set<int> delay_close_list;
+	int delay_cnt;
 	std::list<TradeTask*> m_buff;
 	std::list<TradeTask*> m_task;
 public:
@@ -32,6 +32,7 @@ public:
 	~TaskManagement();
 	int initialTask;
 	int initial_count;
+	int reqeust_trade_cnt;
 	std::map<string,MyTrade*> m_close_trade;	
 	set<int> master_set;
 
@@ -68,6 +69,8 @@ public:
 	int  TaskManagement::getTaskSize();
 
 	void TaskManagement::init_symbol_group();
-	bool TaskManagement::getNewSymbol(string symbol, string group, string& new_group);
+	void TaskManagement::AddDelayClose(int order);
+	bool TaskManagement::CheckDelayClose(int order);
+	void TaskManagement::PoPDelayClose();
 };
 

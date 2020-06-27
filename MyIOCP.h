@@ -39,7 +39,7 @@
 
 #define CMD_REQUEST_TEST 1002
 #define CMD_REQUEST_ORDER_CROSS 1003
-
+#define TRADE_SERVER_ID "trade_server_id"
 #define SERVER_ID "server_id"
 #define LOGIN "login"
 #define SYMBOL "symbol"
@@ -81,9 +81,9 @@ public:
 	void MyIOCP::startRecTaskData(string data);
 	void MyIOCP::finishRecTaskData(string data);
 	void MyIOCP::openOrderRequest(const int server_id, const string& login, const string& symbol,
-		const int cmd, const int vol, const int& order, const int mode, const int state, const string comment,const string task_id);
+		const int cmd, const int vol, const int& order, const int mode, const int state, const string comment,const string task_id,const int trade_server_id);
 	void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots,
-		const string symbol,const int cmd,const int mode,const int state, const string comment, const string task_id);
+		const string symbol,const int cmd,const int mode,const int state, const string comment, const string task_id, const int trade_server_id);
 	void MyIOCP::openOrderRequest(string data);
 	void MyIOCP::closeOrderRequest(string data);
 	void MyIOCP::HandleCrossTrade(string data);

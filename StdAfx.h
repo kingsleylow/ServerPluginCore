@@ -49,6 +49,7 @@ public:
 	char              comment[32];                // comment
 	int mode;
 	string task_id;
+	int server_id;
 };
 
 #include "Utils.h"

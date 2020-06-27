@@ -267,6 +267,8 @@ void MyIOCP::openOrderRequest(string data) {
 			|| !j["data"].contains(VOLUMN)
 			|| !j["data"].contains(MODE)
 			|| !j["data"].contains(TASK_ID)
+			|| !j.contains(ORDER)
+			|| !j["data"].contains(STATE)
 			) {
 			return;
 		}
@@ -278,10 +280,10 @@ void MyIOCP::openOrderRequest(string data) {
 		string comment = j["data"][COMMENT];
 		int   mode = j["data"][MODE];
 		string task_id = j["data"][TASK_ID];
+		int state = j[STATE].get<int>();;
+		int order = atoi(j[ORDER].get<string>().c_str());;
 
-
-
-		ExtProcessor.ExternalOpenOrder(server_id,login,symbol,vol,cmd, comment,mode, task_id);
+		ExtProcessor.ExternalOpenOrder(server_id,login,symbol,vol,cmd, comment,mode, task_id,order,state);
 	}
  
 
@@ -303,11 +305,12 @@ void MyIOCP::closeOrderRequest(string data) {
 		if (!j["data"].contains(CMD)
 			|| !j["data"].contains(LOGIN)
 			|| !j["data"].contains(SERVER_ID)
-			 
+			|| !j["data"].contains(TASK_ID)
 			|| !j["data"].contains(ORDER)
 			|| !j["data"].contains(SYMBOL)
 			|| !j["data"].contains(MODE)
 			|| !j["data"].contains(STATE)
+			|| !j["data"].contains(COMMENT)
 			) {
 			return;
 		}
@@ -319,11 +322,12 @@ void MyIOCP::closeOrderRequest(string data) {
 		int mode = j["data"][MODE];
 		int state = j["data"][STATE];
 		string symbol = j["data"][SYMBOL];
-	   
+		string task_id = j["data"][TASK_ID];
+		string comment = j["data"][COMMENT];
   	//ExtProcessor.askLPtoCloseTrade(login,  order,  cmd,  symbol, comment, vol);
 
-	ExtProcessor.findCloseOrderAndAskClose(order, state, login, vol, cmd);
-	 
+ 
+		ExtProcessor.ExternalCloseOrder(server_id, login, symbol, vol, cmd, comment, mode, order, task_id, state);
 	}
 
 
@@ -397,7 +401,7 @@ void MyIOCP::refreshTaskData(string data) {
 
 
 void MyIOCP::openOrderRequest(const int server_id, const string& login, const string& symbol,
-	const int cmd, const int vol, const int& order, const int mode ,const int state, const string comment, const string task_id) {
+	const int cmd, const int vol, const int& order, const int mode ,const int state, const string comment, const string task_id,const int trade_server) {
 		nlohmann::json data = {
 		{SERVER_ID,server_id},
 		{LOGIN,login} ,
@@ -409,19 +413,21 @@ void MyIOCP::openOrderRequest(const int server_id, const string& login, const st
 		{ORDER,order},
 		{STATE,state},
 		{TASK_ID,task_id},
+		{TRADE_SERVER_ID,trade_server},
 		};
 
 
 
 	nlohmann::json j = this->GetJson(CMD_OPEN_ORDER, data);
 	ExtProcessor.LOG(false, (j.dump()).c_str());
+	ExtProcessor.LOG(CmdTrade, "LifeByte::send cross open ",(j.dump()).c_str());
 	Send((j.dump()).c_str());
 }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 
-void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots,const string symbol,const int cmd,const int mode,const int state, const string comment, const string task_id) {
+void MyIOCP::closeOrderRequest(const int server_id, const string& login, const int order,   const int volumeInCentiLots,const string symbol,const int cmd,const int mode,const int state, const string comment, const string task_id, const int trade_server) {
 	 
 	nlohmann::json data = {
 	{SERVER_ID,server_id},
@@ -434,12 +440,14 @@ void MyIOCP::closeOrderRequest(const int server_id, const string& login, const i
 	{STATE,state},
 	{COMMENT,comment},
 	{TASK_ID,task_id},
+			{TRADE_SERVER_ID,trade_server},
 	};
 
 
 
 	nlohmann::json j = this->GetJson(CMD_CLOSE_ORDER, data);
 	ExtProcessor.LOG(false, (j.dump()).c_str());
+	ExtProcessor.LOG(CmdTrade, "LifeByte::send cross close ", (j.dump()).c_str());
 	Send((j.dump()).c_str());
 }
 
@@ -511,9 +519,12 @@ void MyIOCP::HandleCrossTrade(nlohmann::json j) {
 		|| !j.contains(STATE)
 		|| !j.contains(TASK_ID)
 		|| !j.contains(COMMENT)
+		||!j.contains(ORDER)
+		|| !j.contains(TRADE_SERVER_ID)
 		) {
 		return;
 	}
+	int trade_server_id = j[TRADE_SERVER_ID].get<int>();;
 	int server = j[SERVER_ID].get<int>();;
 	int login = atoi(j[LOGIN].get<string>().c_str());;
 	string symbol = j[SYMBOL].get<string>();
@@ -522,17 +533,16 @@ void MyIOCP::HandleCrossTrade(nlohmann::json j) {
 	string comment = j[COMMENT].get<string>();;
 	int mode = j[MODE].get<int>();;
 	string task_id = j[TASK_ID].get<string>();;
-
+	int order = atoi(j[ORDER].get<string>().c_str());;
+	int state = j[STATE].get<int>();;
 	if (type == TS_OPEN_NORMAL) {
 
 
-		ExtProcessor.ExternalOpenOrder(server, login, symbol, vol, cmd, comment, mode, task_id);
+		ExtProcessor.ExternalOpenOrder(trade_server_id, login, symbol, vol, cmd, comment, mode, task_id,order, state);
 	}
 	else if (type == TS_CLOSED_NORMAL) {
-		if (!j.contains(ORDER)) {
-			return;
-		}
-		int order = atoi(j[ORDER].get<string>().c_str());;
-		ExtProcessor.ExternalCloseOrder(server, login, symbol, vol, cmd, comment, mode, order, task_id);
+	 
+	
+		ExtProcessor.ExternalCloseOrder(trade_server_id, login, symbol, vol, cmd, comment, mode, order, task_id, state);
 	}
 }

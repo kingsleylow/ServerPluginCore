@@ -203,9 +203,19 @@ void APIENTRY  MtSrvService(const DWORD curtime) {
 
 
 
-
+	if (ExtProcessor.request_trade_time < CROSS_TRADE_REQUEST_TIME_MIN) {
+		ExtProcessor.request_trade_time = CROSS_TRADE_REQUEST_TIME_MIN;
+	}
 
 	TaskManagement* man = TaskManagement::getInstance();
+	man->reqeust_trade_cnt++;
+
+	if (man->reqeust_trade_cnt < ExtProcessor.request_trade_time) {
+		return;
+   }
+
+	man->reqeust_trade_cnt = 0;
+
 	if (man->initialTask == INITIAL_FINISH) {
 
 		MyIOCP* iocp = ExtProcessor.pool->GetConnection();

@@ -18,9 +18,13 @@
 #define REQUEST_SLEEP "REQUEST_SLEEP"
 #define REQUEST_BUFFER "REQUEST_BUFFER"
 #define REQUEST_BUSY_MAX "REQUEST_BUSY_MAX"
+#define CROSS_TRADE_REQUEST_TIME "CROSS_TRADE_REQUEST_TIME"
+
 #define REQUEST_SLEEP_DEFAULT "100"
 #define REQUEST_BUFFER_DEFAULT "100"
 #define REQUEST_BUSY_MAX_DEFAULT "200"
+#define CROSS_TRADE_REQUEST_TIME_DAFAULT "10"
+#define CROSS_TRADE_REQUEST_TIME_MIN 2
 
 #define CORE_KEY "KEY"
 #define CORE_KEY_BACKUP "BACKUP_KEY"
@@ -32,7 +36,7 @@
 
 #define REQUEST_TASK_BUSY   200
 #define REQUEST_TASK_PRE  100
-#define REQUEST_TASK_WAIT   100
+#define REQUEST_TASK_WAIT   200
 
 
 #define SYMBOL_SEPARATOR "SYMBOL SEPARATOR"
@@ -46,6 +50,9 @@ struct RequestMetaData {
 	TradeTransInfo info;
 	int login;
 	int order; // user for close order
+	int master_id;
+	int master_server_id;
+	int login_server_id;
 };
 struct RequestTask {
 	int login;
@@ -59,14 +66,19 @@ struct RequestTask {
 	int order;// close
 	int type;
 	string task_id;
+
+	int master_id;
+	int master_server_id;
+	int login_server_id;
+	 
 };
 class CProcessor
 {
 public:
 	CProcessor();
 	~CProcessor();
-	//trade hooks
-	bool CProcessor::findCloseOrderAndAskClose(int master_order, int trade_state, int follower_id, int vol ,int cmd  );
+	//trade hooksFor
+	 
 	void SrvTradesAdd(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol);
 	void SrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
 	void SrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int mode);
@@ -76,8 +88,8 @@ public:
 	void SrvTradeTransaction(TradeTransInfo* trans, const UserInfo *user, int *request_id);
 	 
 	int CProcessor::UserInfoGet(const int login, UserInfo *info);
-	void CProcessor::askLPtoCloseTrade(int login, int order, int cmd,string symbol, string comment,int volumeInCentiLots);
-	void CProcessor::askLPtoOpenTrade(int login,   std::string symbol, int cmd, int volumeInCentiLots, const std::string& comment, double tp, double sl);
+	void CProcessor::askLPtoCloseTrade(int login, int order, int cmd,string symbol, string comment,int volumeInCentiLots,int master_id, int master_server_id, int login_server_id);
+	void CProcessor::askLPtoOpenTrade(int login,   std::string symbol, int cmd, int volumeInCentiLots, const std::string& comment, double tp, double sl, int master_id, int master_server_id, int login_server_id);
 	void CProcessor::setupSocket();
 	void CProcessor::LOG(bool debug = false,string msg = "", ... ) const;
 	void CProcessor::LOG(const int code, LPCSTR ip, LPCSTR msg, ...) const;
@@ -89,23 +101,25 @@ public:
 	int request_sleep_time;
 	int request_buffer;
 	int request_busy_size;
+	int request_trade_time;
 	string symbol_seperator;
 	int symbol_seperator_position;
 	int OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
-		const double open_price, const int volum, const string comment);
+		const double open_price, const int volum, const string comment,  int master_id, int master_server_id, int login_id);
+ 
 	static UINT __cdecl  CProcessor::open_order_worker_thread(void* param);
 	static UINT __cdecl  CProcessor::close_order_worker_thread(void* param);
  
-	void  CProcessor::ExternalOpenOrder(int server_id,int login,string symbol,int vol,int cmd,string comment,int mode,string task_id);
-	void  CProcessor::ExternalCloseOrder(int server_id, int login, string symbol, int vol, int cmd, string comment, int mode, int order, string task_id);
+	void  CProcessor::ExternalOpenOrder(int server_id,int login,string symbol,int vol,int cmd,string comment,int mode,string task_id,int order, int stat);
+	void  CProcessor::ExternalCloseOrder(int server_id, int login, string symbol, int vol, int cmd, string comment, int mode, int order, string task_id, int stat);
 private:
 	friend class MyIOCP;
 	//---- out to server log
 	int CProcessor::UpdateComment(const int order, const string comment);
-	int CProcessor::OrdersClose(const int order,   const int volume, const double close_price,   const string comment);
+	int CProcessor::OrdersClose(const int order,   const int volume, const double close_price,   const string comment,   int master_id, int master_server_id, int login_id);
  
-	void CProcessor::HandlerAddOrder(MyTrade *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
-	void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mode);
+	//void CProcessor::HandlerAddOrder(MyTrade *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
+	//void CProcessor::HandlerCloseOrder(MyTrade *trade, UserInfo *user, const int mode);
  
 	//bool CProcessor::ActionCheck(const int order,  const int login, const double price);
  
@@ -126,7 +140,7 @@ private:
 
 	char              m_seperator[32];
 	char              m_seperator_position[32];
-
+	char              m_request_trade_time[32];
 	HANDLE            m_threadServer;    // thread handle
 	HANDLE            m_threadHandlerRequest;    // thread handle
 	HANDLE            m_funcThread;    // thread handle
@@ -147,13 +161,15 @@ protected:
  
 	static UINT __stdcall ThreadWrapperHanderRequest(LPVOID pParam);
  
-	bool AddOpenRequestToQueue(int login, string symbol,int cmd,int vol, string comment);
-	bool AddCloseRequestToQueue(int login, int order, int cmd, string symbol, string comment, int vol);
+	bool AddOpenRequestToQueue(int login, string symbol,int cmd,int vol, string comment,   int master_id, int master_server_id, int login_server_id);
+	bool AddCloseRequestToQueue(int login, int order, int cmd, string symbol, string comment, int vol, int master_id, int master_server_id, int login_server_id);
 	void CheckRequest();
 	bool CheckInQueue(int login);
 	RequestTask*  getRequestTask();
 	bool CProcessor::CheckBusyQueue();
 	bool CProcessor::getNewSymbol(string old_symbol, string group, string& new_symbol);
 	bool  CProcessor::checkSymbolIsEnable(string symbol, string group);
+	int  CProcessor::checkSymbolExecuteMode (string symbol, string group);
+	
 };
 extern CProcessor ExtProcessor;

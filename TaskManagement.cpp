@@ -25,6 +25,8 @@ TaskManagement::TaskManagement()
 	this->m_buff.clear();
 	this->m_close_trade.clear();
 	this->initial_count = 0;
+	this->reqeust_trade_cnt = 0;
+	this->delay_cnt = 0;
 }
 
 
@@ -527,3 +529,48 @@ void TaskManagement::init_symbol_group() {
 
 
  
+void TaskManagement::AddDelayClose(int order) {
+	m_ContextLock.Lock();
+	ExtProcessor.LOG(CmdTrade, "LifeByte::delay close ", "LifeByte::ADD  %d", order);
+	if (this->delay_close_list.find(order) != this->delay_close_list.end()) {
+		 
+		m_ContextLock.UnLock();
+		return  ;
+	}
+
+
+	this->delay_close_list.insert(order);
+	ExtProcessor.LOG(CmdTrade, "LifeByte::delay close ", "LifeByte::insert  %d", order);
+	this->delay_cnt = 0;
+	m_ContextLock.UnLock();
+}
+
+bool TaskManagement::CheckDelayClose(int order) {
+	m_ContextLock.Lock();
+	if (this->delay_close_list.find(order) != this->delay_close_list.end()) {
+		ExtProcessor.LOG(CmdTrade, "LifeByte::delay close ", "LifeByte::find  %d", order);
+		m_ContextLock.UnLock();
+		return true;
+	}
+	ExtProcessor.LOG(CmdTrade, "LifeByte::delay close ", "LifeByte::did not find  %d", order);
+	m_ContextLock.UnLock();
+	return false;
+
+}
+void TaskManagement::PoPDelayClose() {
+	m_ContextLock.Lock();
+
+	this->delay_cnt++;
+
+	if (delay_cnt<2) {
+		m_ContextLock.UnLock();
+		return;
+	}
+	this->delay_cnt = 0;
+	if (this->delay_close_list.empty() == false()) {
+		this->delay_close_list.erase(this->delay_close_list.begin());
+	}
+
+ 
+	m_ContextLock.UnLock();
+}

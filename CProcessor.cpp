@@ -359,9 +359,6 @@ void CProcessor::SrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int m
 void CProcessor::SrvDealerReset(const int id, const UserInfo *us, const char flag)
 {
 
-
-
- 
 	OrderTask* task = new OrderTask();
 	task->id = id;
 

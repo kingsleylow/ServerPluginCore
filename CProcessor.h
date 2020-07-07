@@ -19,13 +19,17 @@
 #define REQUEST_BUFFER "REQUEST_BUFFER"
 #define REQUEST_BUSY_MAX "REQUEST_BUSY_MAX"
 #define CROSS_TRADE_REQUEST_TIME "CROSS_TRADE_REQUEST_TIME"
+#define TASK_REQUEST_TIME "TASK_REQUEST_TIME"
 
-#define REQUEST_SLEEP_DEFAULT "100"
+
+#define REQUEST_TASK_DEFAULT "20"
+#define REQUEST_SLEEP_DEFAULT "2"
 #define REQUEST_BUFFER_DEFAULT "100"
 #define REQUEST_BUSY_MAX_DEFAULT "200"
 #define CROSS_TRADE_REQUEST_TIME_DAFAULT "10"
-#define CROSS_TRADE_REQUEST_TIME_MIN 2
-
+#define CROSS_TRADE_REQUEST_TIME_MIN 20
+#define TASK_REQUEST_TIME_MIN_DEAFULT "200"
+#define TASK_REQUEST_TIME_MIN 200
 #define CORE_KEY "KEY"
 #define CORE_KEY_BACKUP "BACKUP_KEY"
 #define DEFAULT_KEY ""
@@ -36,7 +40,7 @@
 
 #define REQUEST_TASK_BUSY   200
 #define REQUEST_TASK_PRE  100
-#define REQUEST_TASK_WAIT   200
+#define REQUEST_TASK_WAIT   2
 
 
 #define SYMBOL_SEPARATOR "SYMBOL SEPARATOR"
@@ -78,7 +82,8 @@ public:
 	CProcessor();
 	~CProcessor();
 	//trade hooksFor
-	 
+	void CProcessor::startCheckingThread();
+	void CProcessor::startRequestThread();
 	void SrvTradesAdd(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol);
 	void SrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode);
 	void SrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int mode);
@@ -86,7 +91,7 @@ public:
 	void SrvDealerGet(const ConManager *manager, const RequestInfo *request);
 	void SrvDealerConfirm(const int id, const UserInfo *us, double *prices);
 	void SrvTradeTransaction(TradeTransInfo* trans, const UserInfo *user, int *request_id);
-	 
+	void CProcessor::SrvDealerReset(const int id, const UserInfo *us, const char flag);
 	int CProcessor::UserInfoGet(const int login, UserInfo *info);
 	void CProcessor::askLPtoCloseTrade(int login, int order, int cmd,string symbol, string comment,int volumeInCentiLots,int master_id, int master_server_id, int login_server_id);
 	void CProcessor::askLPtoOpenTrade(int login,   std::string symbol, int cmd, int volumeInCentiLots, const std::string& comment, double tp, double sl, int master_id, int master_server_id, int login_server_id);
@@ -102,6 +107,7 @@ public:
 	int request_buffer;
 	int request_busy_size;
 	int request_trade_time;
+	int request_task_time;
 	string symbol_seperator;
 	int symbol_seperator_position;
 	int OrdersOpen(const int login, const int cmd, LPCTSTR symbol,
@@ -123,7 +129,7 @@ private:
  
 	//bool CProcessor::ActionCheck(const int order,  const int login, const double price);
  
- 
+	static UINT __cdecl  CProcessor::reject_order_worker_thread(void* param);
 	static UINT __cdecl confirm_order_worker_thread(void* param);
 
 	char              m_ip[128];       //ip
@@ -141,6 +147,7 @@ private:
 	char              m_seperator[32];
 	char              m_seperator_position[32];
 	char              m_request_trade_time[32];
+	char              m_request_task_time[32];
 	HANDLE            m_threadServer;    // thread handle
 	HANDLE            m_threadHandlerRequest;    // thread handle
 	HANDLE            m_funcThread;    // thread handle

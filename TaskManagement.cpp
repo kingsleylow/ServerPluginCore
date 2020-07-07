@@ -137,7 +137,9 @@ void TaskManagement::finishInit() {
 
 	for (auto it = this->m_buff.begin(); it != this->m_buff.end();it++) {
 		TradeTask *task = *it;
-		this->master_set.insert(atoi(task->master_id.c_str()));
+
+		string full_ta = this->getFullAccout(atoi(task->master_id.c_str()), ExtProcessor.plugin_id);
+		this->master_set.insert(full_ta);
 	}
 	for (auto tmp = this->m_task.cbegin(); tmp != this->m_task.cend(); ++tmp) {
 
@@ -233,6 +235,8 @@ TradeTask* TaskManagement::getTask(nlohmann::json data) {
 		data.contains("master_disable") == false ||
 		data.contains("master_server_id") == false ||
 		data.contains("follower_server_id") == false
+		||
+		data.contains("symbol_filter") == false
 		) {
 		return NULL;
 	}
@@ -433,23 +437,27 @@ MyTrade* TaskManagement::findCloseOrder(int login,int order) {
 	return trade;
 }
 
-bool TaskManagement::checkMaster(int login) {
+bool TaskManagement::checkMaster(int login,int server_id) {
 	bool res = false;
 	m_ContextLock.Lock();
-	if (this->master_set.find(login) != this->master_set.end()) {
+
+	string full_ta = this->getFullAccout(login, server_id);
+	if (this->master_set.find(full_ta) != this->master_set.end()) {
 		res = true;
 	}
 	m_ContextLock.UnLock();
 	return res;
 }
-void TaskManagement::AddMaster(int login) {
+void TaskManagement::AddMaster(int login, int server_id) {
 	m_ContextLock.Lock();
-	this->master_set.insert(login);
+	string full_ta = this->getFullAccout(login, server_id);
+	this->master_set.insert(full_ta);
 	m_ContextLock.UnLock();
 }
-void TaskManagement::DeleteMaster(int login) {
+void TaskManagement::DeleteMaster(int login, int server_id) {
 	m_ContextLock.Lock();
-	this->master_set.erase(login);
+	string full_ta = this->getFullAccout(login, server_id);
+	this->master_set.erase(full_ta);
 	m_ContextLock.UnLock();
 }
 
@@ -573,4 +581,8 @@ void TaskManagement::PoPDelayClose() {
 
  
 	m_ContextLock.UnLock();
+}
+
+string TaskManagement::getFullAccout(int login, int server) {
+	return to_string(server) + "_" + to_string(login);
 }

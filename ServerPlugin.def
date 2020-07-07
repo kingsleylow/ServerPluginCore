@@ -14,3 +14,4 @@ EXPORTS
     MtSrvPluginCfgTotal
 	MtSrvScheduler
 	MtSrvService
+	MtSrvDealerReset

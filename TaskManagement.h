@@ -34,8 +34,8 @@ public:
 	int initial_count;
 	int reqeust_trade_cnt;
 	std::map<string,MyTrade*> m_close_trade;	
-	set<int> master_set;
-
+	set<string> master_set;
+	set<string> follower_set;
 	bool inital(string data);
 	bool updataTask(nlohmann::json task);
 	TradeTask* TaskManagement::getTask(nlohmann::json task);
@@ -56,11 +56,13 @@ public:
 	MyTrade* TaskManagement::findCloseOrder(int login, int order);
 
 	string TaskManagement::genMissOrderKey(int login, int master_order);
-
-	bool TaskManagement::checkMaster(int login);
-	void TaskManagement::AddMaster(int login);
-	void TaskManagement::DeleteMaster(int login);
-
+	string TaskManagement::getFullAccout(int login, int server);;
+	bool TaskManagement::checkMaster(int login, int server_id);
+	void TaskManagement::AddMaster(int login, int server_id);
+	void TaskManagement::DeleteMaster(int login, int server_id);
+	bool TaskManagement::checkFollower(int login, int server_id);
+	void TaskManagement::AddFollower(int login, int server_id);
+	void TaskManagement::DeleteFollower(int login, int server_id);
 	string TaskManagement::getTaskKey(int master_server_id,string master_id,int follower_server_id, string follower_id);
 	string TaskManagement::getTaskKey(TradeTask* task);
 

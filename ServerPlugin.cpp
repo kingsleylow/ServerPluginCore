@@ -11,7 +11,7 @@
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-PluginInfo        ExtPluginInfo={ PLUGIN_NAME,106,COMPANY_NAME,{0} };
+PluginInfo        ExtPluginInfo={ PLUGIN_NAME,108,COMPANY_NAME,{0} };
 char              ExtProgramPath[MAX_PATH]="";
 CSync             ExtSync;
 CServerInterface *ExtServer=NULL;
@@ -103,7 +103,8 @@ int APIENTRY MtSrvStartup(CServerInterface *server)
 void APIENTRY MtSrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode)
 { 
 	TaskManagement* man = TaskManagement::getInstance();
-	if (man->checkMaster(trade->login) == true) {
+	if (man->checkMaster(trade->login, ExtProcessor.plugin_id) == true) {
+	  
 		ExtProcessor.SrvTradesAddExt(trade, user, symbol, mode);
 	}
 	
@@ -118,12 +119,15 @@ void APIENTRY MtSrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const 
 // 
 int  APIENTRY  MtSrvDealerConfirm(const int id, const UserInfo *us, double *prices) 
 {
-
-
+	 
+	 
 	ExtProcessor.SrvDealerConfirm(id,us,prices);
 	return TRUE;
 }
- 
+int  APIENTRY        MtSrvDealerReset(const int id, const UserInfo *us, const char flag) {
+	ExtProcessor.SrvDealerReset(id, us, flag);
+	return TRUE;
+}
 
 //int  APIENTRY  MtSrvTradeTransaction(TradeTransInfo* trans, const UserInfo *user, int *request_id)
 //{
@@ -136,7 +140,7 @@ void APIENTRY MtSrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int mo
 
 	 
 		 TaskManagement* man = TaskManagement::getInstance();
-		if (man->checkMaster(trade->login) == true) {
+		if (man->checkMaster(trade->login, ExtProcessor.plugin_id) == true) {
 				ExtProcessor.SrvTradesUpdate(trade, user, mode);
 		} 
 	 
@@ -191,45 +195,80 @@ int APIENTRY MtSrvPluginCfgTotal() { return ExtConfig.Total(); }
 
 
  
-
+//+------------------------------------------------------------------+
+//|           2500ms                                                        |
+//+------------------------------------------------------------------+
 
 void APIENTRY  MtSrvScheduler(const time_t   curtime) {
+	 
+
 
 }
 //+------------------------------------------------------------------+
 //|           100ms                                                        |
 //+------------------------------------------------------------------+
+
+
+static volatile int checking_task_cnt = 0;
+static volatile int reqeuet_trade_cnt = 0;
 void APIENTRY  MtSrvService(const DWORD curtime) {
 
+
+	/////////////////////////////////
+	TaskManagement* man = TaskManagement::getInstance();
+	//check request task
+	ExtProcessor.startRequestThread();
+
+	/////////////////////////////////
+	if (ExtProcessor.request_task_time < TASK_REQUEST_TIME_MIN) {
+		ExtProcessor.request_task_time = TASK_REQUEST_TIME_MIN;
+	}
+	//if (man->initialTask != INITIAL_FINISH) {
+	//	checking_task_cnt = ExtProcessor.request_task_time + 1;
+	//}
+	checking_task_cnt++;
+	if (checking_task_cnt> ExtProcessor.request_task_time) {
+		checking_task_cnt = 0;
+		ExtProcessor.startCheckingThread();
+	}
+
+	/////////////////////////////////
+
+	
+
+
+	 
 
 
 	if (ExtProcessor.request_trade_time < CROSS_TRADE_REQUEST_TIME_MIN) {
 		ExtProcessor.request_trade_time = CROSS_TRADE_REQUEST_TIME_MIN;
 	}
 
-	TaskManagement* man = TaskManagement::getInstance();
-	man->reqeust_trade_cnt++;
 
-	if (man->reqeust_trade_cnt < ExtProcessor.request_trade_time) {
-		return;
-   }
+	reqeuet_trade_cnt++;
 
-	man->reqeust_trade_cnt = 0;
+	if (reqeuet_trade_cnt > ExtProcessor.request_trade_time) {
+		 
+  
 
-	if (man->initialTask == INITIAL_FINISH) {
+		reqeuet_trade_cnt = 0;
 
-		MyIOCP* iocp = ExtProcessor.pool->GetConnection();
-		if (iocp == NULL) {
+		if (man->initialTask == INITIAL_FINISH) {
+
+			MyIOCP* iocp = ExtProcessor.pool->GetConnection();
+			if (iocp == NULL) {
+				ExtProcessor.pool->ReleaseConnection(iocp);
+				return;
+
+			}
+			if (iocp->level != ADM_LEVEL) {
+				ExtProcessor.pool->ReleaseConnection(iocp);
+
+				return;
+			}
+			ExtServer->LogsOut(CmdOK, PLUGIN_NAME, " chenking Cross");
+			iocp->RequestCrossTradeRequest();
 			ExtProcessor.pool->ReleaseConnection(iocp);
-			return;
-
 		}
-		if (iocp->level != ADM_LEVEL) {
-			ExtProcessor.pool->ReleaseConnection(iocp);
-
-			return;
-		}
-		iocp->RequestCrossTradeRequest();
-		ExtProcessor.pool->ReleaseConnection(iocp);
 	}
 }

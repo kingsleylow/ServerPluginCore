@@ -32,13 +32,44 @@ CProcessor::CProcessor()
 	  request_busy_size = REQUEST_TASK_BUSY;
 	 
 	plugin_id = D_PLUGIN_ID;
-	UINT id = 0;
- 	 (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapperHanderRequest, (void*)this, 0, &id);
- 	m_funcThread = (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapperRequest, (void*)this, 0, &id);
+
 	InitializeCriticalSectionAndSpinCount(&m_cs, 10000);;
 	this->request_current_id = 0;
 	
 }
+
+void CProcessor::startCheckingThread() {
+	UINT id = 0;
+//	
+ //	m_funcThread = (HANDLE)_beginthreadex(NULL, 256000, ThreadWrapper, (void*)this, 0, &id);
+	this->excutor.commit(ThreadWrapper, this);
+}
+
+static volatile int request_check_cycle = 0;
+void CProcessor::startRequestThread() {
+	UINT id = 0;
+	
+
+	//while (true)
+//{
+	int sleep_time = this->request_sleep_time;
+
+	if (sleep_time < 2 || sleep_time >20) {
+		sleep_time = REQUEST_TASK_WAIT;
+	}
+
+	//	Sleep(sleep_time);
+
+	request_check_cycle++;
+	if (request_check_cycle > sleep_time) {
+		request_check_cycle = 0;
+	//	(HANDLE)_beginthreadex(NULL, 256000, HandeleThreadWrapper, (void*)this, 0, &id);
+
+		this->excutor.commit(HandeleThreadWrapper,this);
+	}
+}
+
+
 CProcessor::~CProcessor()
 {
 	if (pool !=NULL) {
@@ -92,12 +123,20 @@ void CProcessor::Initialize(void) {
 		this->symbol_seperator_position = 0;
 	}
 
+	ExtConfig.GetString(TASK_REQUEST_TIME, m_request_task_time, sizeof(m_request_task_time) - 1, TASK_REQUEST_TIME_MIN_DEAFULT);
+
+
+	this->request_task_time = atoi(m_request_task_time);
+
+
+
+
 
  	TaskManagement::getInstance()->init_symbol_group();
 
 	this->setupSocket();
 
-	this->excutor.addThread(THREADPOOL_MAX_NUM);
+ 	this->excutor.addThread(THREADPOOL_MAX_NUM);
 }
 
  
@@ -241,9 +280,8 @@ void CProcessor::SrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const
 	}
  
 
-	LOG(CmdTrade, "LifeByte::SrvTradesAdd", "%d,%d,%d,%s,%s,%s", trade->order, trade->state, user->login, user->name, symbol->symbol, trade->comment);
-
-
+ 
+	 
 	MyTrade* tmp = new MyTrade();
 	tmp->login = trade->login;
 	tmp->cmd = trade->cmd;
@@ -258,7 +296,10 @@ void CProcessor::SrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const
 	tmp->task_id = "";
 	tmp->server_id = this->plugin_id;
  //	this->HandlerAddOrder(tmp,user,symbol,mode);
-	this->excutor.commit(open_order_worker_thread, tmp);
+	
+		this->excutor.commit(open_order_worker_thread, tmp);
+ 
+
 }
 
 
@@ -314,7 +355,20 @@ void CProcessor::SrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int m
 
 }
 
+
+void CProcessor::SrvDealerReset(const int id, const UserInfo *us, const char flag)
+{
+
+
+
  
+	OrderTask* task = new OrderTask();
+	task->id = id;
+
+	this->excutor.commit(reject_order_worker_thread, task);
+
+
+}
 
 void CProcessor::SrvDealerConfirm(const int id, const UserInfo *us, double *prices)
 {
@@ -402,13 +456,20 @@ void CProcessor::SrvDealerConfirm(const int id, const UserInfo *us, double *pric
 					 continue;
 				 }
 			 }
-
+			 bool find_symbol = false;
 			 for (auto it = task->symbol_filter.begin(); it != task->symbol_filter.end(); it++) {
-
+			
 				 if (trade_symbol.compare(*it) == 0) {
-					 continue;
+					 find_symbol = true;
+					 break;
 				 }
+
 			 }
+			 if (find_symbol == true) {
+				 continue;
+			 }
+
+
 			 int total = 0;
 			 TradeRecord* records = ExtServer->OrdersGetOpen(&info, &total);
 
@@ -424,7 +485,7 @@ void CProcessor::SrvDealerConfirm(const int id, const UserInfo *us, double *pric
 					 break;
 				 }
 			 }
-
+			 HEAP_FREE(records);
 
 			
 			 if (find_order ==false) {
@@ -549,11 +610,17 @@ void CProcessor::SrvDealerConfirm(const int id, const UserInfo *us, double *pric
 					 ExtProcessor.LOG(CmdTrade, "LifeByte::New receive close order", "order %d, state %d,  login %d, symbol %s, comment %s, mode %d ,vol % d", trade->order, trade->state, follower_id, trade->symbol, trade->comment, trade->mode, vol);
 
 					 string str(record.symbol);
+					 bool find_symbol = false;
 					 for (auto it = task->symbol_filter.begin(); it != task->symbol_filter.end(); it++) {
 
 						 if (str.compare(*it) == 0) {
-							 continue;
+							 find_symbol = true;
+							 break;
 						 }
+
+					 }
+					 if (find_symbol == true) {
+						 continue;
 					 }
 
 					 //	ExtProcessor.askLPtoCloseTrade(follower_id, record.order, cmd, record.symbol, comment, vol);
@@ -595,7 +662,33 @@ void CProcessor::SrvDealerConfirm(const int id, const UserInfo *us, double *pric
 	 LeaveCriticalSection(&m_cs);
 	 return 0;
  }
- 
+ //+------------------------------------------------------------------+
+//| order_worker_thread
+//|  place order to db or close order on db
+//+------------------------------------------------------------------+
+
+ UINT __cdecl  CProcessor::reject_order_worker_thread(void* param) {
+	 EnterCriticalSection(&m_cs);
+	 OrderTask* task = (OrderTask*)param;
+	 int id = task->id;
+	 std::map<int, RequestMetaData>::iterator it = ExtProcessor.requestsMadeByCode.find(id);
+	 if (it != ExtProcessor.requestsMadeByCode.end()) {
+		 RequestMetaData data = it->second;
+		 int login = data.login;
+		 
+		 int order = data.order;
+		 ExtProcessor.LOG(false, "LifeByte::MtSrvDealerReset: request %d,login %d, order %d  ", id, login,order);
+		 ExtProcessor.LOG(CmdTrade, "LifeByte::MtSrvDealerReset", "LifeByte::SrvDealerConfirm: request %d,login %d, order %d", id, login, order);
+
+		 ExtProcessor.requestsMadeByCode.erase(it);
+	 }
+	 if (task != NULL) {
+		 delete task;
+		 task = NULL;
+	 }
+	 LeaveCriticalSection(&m_cs);
+	 return 0;
+ }
 //+------------------------------------------------------------------+
 //| order_worker_thread
 //|  place order to db or close order on db
@@ -1409,7 +1502,7 @@ UINT __stdcall CProcessor::ThreadWrapper(LPVOID pParam)
 	if (pParam != NULL) ((CProcessor*)pParam)->ThreadProcess();
 	//---
 
-	ExtProcessor.LOG(CmdTrade, "LifeByte::synchronize task thread exit ", " LifeByte::synchronize task thread exit");
+	//ExtProcessor.LOG(CmdTrade, "LifeByte::synchronize task thread exit ", " LifeByte::synchronize task thread exit");
 	return(0);
 }
 
@@ -1422,33 +1515,33 @@ void CProcessor::ThreadProcess(void)
 
 
 	 
-	while (true) 
+	//while (true) 
 	{
 		
-		Sleep(5000);
+	//	Sleep(5000);
 		if (this->pool == NULL) {
-		 
-		 	continue;
+			return;
+		 //	continue;
 		}
 	
 		bool res = this->pool->checkConnection();
  
 		if (res==false) {
-		 
-		 	continue;
+			return;
+		 //	continue;
 		}
 //
 		MyIOCP* iocp = this->pool->GetConnection();
 		if (iocp == NULL ) {
 			this->pool->ReleaseConnection(iocp);
+			//continue;
 			return;
-		//	continue;
 		}
  
 		if (iocp->level != ADM_LEVEL) {
 			this->pool->ReleaseConnection(iocp);
 			 
-		 	continue;
+			return;
 		}
 		TaskManagement* man = TaskManagement::getInstance();
 		if (  man->initialTask == INITIAL_NO) {
@@ -1462,7 +1555,8 @@ void CProcessor::ThreadProcess(void)
 		if (man->initialTask == INITIAL_FINISH) {
 			man->initial_count = 0;
 			task_check_cycle++;
-			if (task_check_cycle > 2) {
+			//if (task_check_cycle > 2)
+			{
 				task_check_cycle = 0;
 				//10 sec
 				iocp->SendInitTask(this->plugin_id);
@@ -1778,7 +1872,7 @@ UINT __stdcall CProcessor::HandeleThreadWrapper(LPVOID pParam)
 	if (pParam != NULL) ((CProcessor*)pParam)->RequestProcess();
 	//---
 
-	ExtProcessor.LOG(CmdTrade, "LifeByte::request thread exit ", " LifeByte::request thread exit");
+ //	ExtProcessor.LOG(CmdTrade, "LifeByte::request thread exit ", " LifeByte::request thread exit");
 	return(0);
 }
 
@@ -1788,17 +1882,23 @@ void CProcessor::RequestProcess(void)
 
 
 
-	while (true)
-	{
-		int sleep_time = this->request_sleep_time;
+	//while (true)
+	//{
+	//	int sleep_time = this->request_sleep_time;
 
-		if (sleep_time<10 || sleep_time >256) {
-			sleep_time = REQUEST_TASK_WAIT;
-		}
+	//	if (sleep_time<2 || sleep_time >20) {
+	//		sleep_time = REQUEST_TASK_WAIT;
+	//	}
 
-		Sleep(sleep_time);
-		ExtProcessor.CheckRequest();
-	}
+	////	Sleep(sleep_time);
+ //
+	//request_check_cycle++;
+	//if (request_check_cycle> sleep_time) {
+	//	request_check_cycle = 0;
+	//
+	//}
+		
+	ExtProcessor.CheckRequest();
 
 }
 
@@ -1892,7 +1992,7 @@ RequestTask* CProcessor::getRequestTask() {
 bool CProcessor::CheckInQueue(int login) {
 	int key = 0;
 	RequestInfo reqs[256];
-	int max = 246;
+	int max = 256;
 	int total = ExtServer->RequestsGet(&key, reqs, max);
 	int cnt = 0;
  
@@ -1916,8 +2016,8 @@ bool CProcessor::CheckInQueue(int login) {
 
 bool CProcessor::CheckBusyQueue() {
 	int key = 0;
-	RequestInfo reqs[256];
-	int max = 256;
+	RequestInfo reqs[128];
+	int max = 128;
 	int total = ExtServer->RequestsGet(&key, reqs, max);
  
 	int requesting_cnt = 0;

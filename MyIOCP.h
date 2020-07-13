@@ -39,6 +39,8 @@
 
 #define CMD_REQUEST_TEST 1002
 #define CMD_REQUEST_ORDER_CROSS 1003
+#define FOLLOWER_ID "follower_id"
+#define FOLLOWER_SERVER_ID "follower_server_id"
 #define TRADE_SERVER_ID "trade_server_id"
 #define SERVER_ID "server_id"
 #define LOGIN "login"
@@ -86,7 +88,7 @@ public:
 		const string symbol,const int cmd,const int mode,const int state, const string comment, const string task_id, const int trade_server_id);
 	void MyIOCP::openOrderRequest(string data);
 	void MyIOCP::closeOrderRequest(string data);
-	void MyIOCP::HandleCrossTrade(string data);
-	void MyIOCP::HandleCrossTrade(nlohmann::json data);
+	  void MyIOCP::HandleCrossTrade(string data);
+	  void MyIOCP::HandleCrossTrade(nlohmann::json data);
 };
 

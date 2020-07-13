@@ -34,7 +34,23 @@ using namespace std;
 
 
 
-
+class CrossTrade {
+public:
+	int               order;
+	int               cmd;
+	int               login;
+	double            sl, tp;
+	int               volume;
+	char              symbol[12];
+	double price;
+	int state;
+	char              comment[32];                // comment
+ 
+ 
+	int server_id;
+ 
+	int type;
+};
 
 class MyTrade {
 public:

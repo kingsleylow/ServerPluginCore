@@ -208,7 +208,7 @@ int MyIOCP::getCommand(string data) {
 		   nlohmann::json j = nlohmann::json::parse(data);
 
 		   if (j.contains("cmd")) {
-			   cmd = j["cmd"];
+			   cmd = atoi(j["cmd"].get<string>().c_str());
 		   }
 	   }
 	   else {

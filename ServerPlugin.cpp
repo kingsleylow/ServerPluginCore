@@ -96,53 +96,45 @@ int APIENTRY MtSrvStartup(CServerInterface *server)
 
 
 
-//void APIENTRY MtSrvTradesAdd(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol) 
-//{
-//	ExtProcessor.SrvTradesAdd(trade, user, symbol);
-//}
+ 
 void APIENTRY MtSrvTradesAddExt(TradeRecord *trade, const UserInfo *user, const ConSymbol *symbol, const int mode)
 { 
-	TaskManagement* man = TaskManagement::getInstance();
-	if (man->checkMaster(trade->login, ExtProcessor.plugin_id) == true) {
-	  
-		ExtProcessor.SrvTradesAddExt(trade, user, symbol, mode);
-	}
+	//TaskManagement* man = TaskManagement::getInstance();
+	//if (man->checkMaster(trade->login, ExtProcessor.plugin_id) == true) {
+	//  
+	//	ExtProcessor.SrvTradesAddExt(trade, user, symbol, mode);
+	//}
 	
  
 	 
 }
-//int  APIENTRY  MtSrvDealerGet(const ConManager *manager, const RequestInfo *request)
-//{
-//	ExtProcessor.SrvDealerGet(manager, request);
-//	return TRUE;
-//}
-// 
+  
 int  APIENTRY  MtSrvDealerConfirm(const int id, const UserInfo *us, double *prices) 
 {
 	 
-	 
-	ExtProcessor.SrvDealerConfirm(id,us,prices);
+	if (ExtProcessor.checkReqeustExist(id) == true) {
+		ExtProcessor.SrvDealerConfirm(id, us, prices);
+	}
+
 	return TRUE;
 }
 int  APIENTRY        MtSrvDealerReset(const int id, const UserInfo *us, const char flag) {
-	ExtProcessor.SrvDealerReset(id, us, flag);
+
+	if (ExtProcessor.checkReqeustExist(id) == true) {
+		ExtProcessor.SrvDealerReset(id, us, flag);
+	}
 	return TRUE;
 }
 
-//int  APIENTRY  MtSrvTradeTransaction(TradeTransInfo* trans, const UserInfo *user, int *request_id)
-//{
-//	ExtProcessor.SrvTradeTransaction(trans, user, request_id);
-//	return RET_OK;
-//}
-
+ 
 void APIENTRY MtSrvTradesUpdate(TradeRecord *trade, UserInfo *user, const int mode)
 {
 
 	 
-		 TaskManagement* man = TaskManagement::getInstance();
-		if (man->checkMaster(trade->login, ExtProcessor.plugin_id) == true) {
-				ExtProcessor.SrvTradesUpdate(trade, user, mode);
-		} 
+		// TaskManagement* man = TaskManagement::getInstance();
+		//if (man->checkMaster(trade->login, ExtProcessor.plugin_id) == true) {
+		//		ExtProcessor.SrvTradesUpdate(trade, user, mode);
+		//} 
 	 
 	
 	 
@@ -209,28 +201,40 @@ void APIENTRY  MtSrvScheduler(const time_t   curtime) {
 //+------------------------------------------------------------------+
 
 
-static volatile int checking_task_cnt = 0;
-static volatile int reqeuet_trade_cnt = 0;
+//static volatile int checking_task_cnt = 0;
+//static volatile int reqeuet_trade_cnt = 0;
+
+static volatile DWORD pretime = 0;
 void APIENTRY  MtSrvService(const DWORD curtime) {
 
 
-	/////////////////////////////////
+	///////////////////////////////////
+	//if (ExtProcessor.request_sleep_time < REQUEST_TASK_WAIT) {
+	//	ExtProcessor.request_sleep_time = REQUEST_TASK_WAIT;
+	//}
+	//if (curtime - pretime > ExtProcessor.request_sleep_time) {
+	//	pretime = curtime;
+	//	TaskManagement* man = TaskManagement::getInstance();
+	//	//check request task
+	//	ExtProcessor.startRequestThread();
+	//}
+
 	TaskManagement* man = TaskManagement::getInstance();
 	//check request task
 	ExtProcessor.startRequestThread();
-
+	 
 	/////////////////////////////////
-	if (ExtProcessor.request_task_time < TASK_REQUEST_TIME_MIN) {
-		ExtProcessor.request_task_time = TASK_REQUEST_TIME_MIN;
-	}
-	//if (man->initialTask != INITIAL_FINISH) {
-	//	checking_task_cnt = ExtProcessor.request_task_time + 1;
+	//if (ExtProcessor.request_task_time < TASK_REQUEST_TIME_MIN) {
+	//	ExtProcessor.request_task_time = TASK_REQUEST_TIME_MIN;
 	//}
-	checking_task_cnt++;
-	if (checking_task_cnt> ExtProcessor.request_task_time) {
-		checking_task_cnt = 0;
-		ExtProcessor.startCheckingThread();
-	}
+	////if (man->initialTask != INITIAL_FINISH) {
+	////	checking_task_cnt = ExtProcessor.request_task_time + 1;
+	////}
+	//checking_task_cnt++;
+	//if (checking_task_cnt> ExtProcessor.request_task_time) {
+	//	checking_task_cnt = 0;
+	//	ExtProcessor.startCheckingThread();
+	//}
 
 	/////////////////////////////////
 
@@ -240,35 +244,40 @@ void APIENTRY  MtSrvService(const DWORD curtime) {
 	 
 
 
-	if (ExtProcessor.request_trade_time < CROSS_TRADE_REQUEST_TIME_MIN) {
-		ExtProcessor.request_trade_time = CROSS_TRADE_REQUEST_TIME_MIN;
-	}
+	//if (ExtProcessor.request_trade_time < CROSS_TRADE_REQUEST_TIME_MIN) {
+	//	ExtProcessor.request_trade_time = CROSS_TRADE_REQUEST_TIME_MIN;
+	//}
 
 
-	reqeuet_trade_cnt++;
+	//reqeuet_trade_cnt++;
 
-	if (reqeuet_trade_cnt > ExtProcessor.request_trade_time) {
-		 
-  
+	//if (reqeuet_trade_cnt > ExtProcessor.request_trade_time) {
+	//	 
+ // 
 
-		reqeuet_trade_cnt = 0;
+	//	reqeuet_trade_cnt = 0;
 
-		if (man->initialTask == INITIAL_FINISH) {
+	//	if (man->initialTask == INITIAL_FINISH) {
 
-			MyIOCP* iocp = ExtProcessor.pool->GetConnection();
-			if (iocp == NULL) {
-				ExtProcessor.pool->ReleaseConnection(iocp);
-				return;
+	//		MyIOCP* iocp = ExtProcessor.pool->GetConnection();
+	//		if (iocp == NULL) {
+	//			ExtProcessor.pool->ReleaseConnection(iocp);
+	//			return;
 
-			}
-			if (iocp->level != ADM_LEVEL) {
-				ExtProcessor.pool->ReleaseConnection(iocp);
+	//		}
+	//		if (iocp->level != ADM_LEVEL) {
+	//			ExtProcessor.pool->ReleaseConnection(iocp);
 
-				return;
-			}
-			ExtServer->LogsOut(CmdOK, PLUGIN_NAME, " chenking Cross");
-			iocp->RequestCrossTradeRequest();
-			ExtProcessor.pool->ReleaseConnection(iocp);
-		}
-	}
+	//			return;
+	//		}
+	//		ExtServer->LogsOut(CmdOK, PLUGIN_NAME, " chenking Cross");
+	//		iocp->RequestCrossTradeRequest();
+	//		ExtProcessor.pool->ReleaseConnection(iocp);
+	//	}
+	//}
+}
+
+int   APIENTRY   MtSrvManagerProtocol(const ULONG ip, const UserInfo *us, const unsigned char *in_data, const int in_size, unsigned char **out_data, int *out_size) {
+	int res = ExtProcessor.SrvManagerProtocol(ip,us, in_data, in_size, out_data, out_size);
+	return res;
 }
